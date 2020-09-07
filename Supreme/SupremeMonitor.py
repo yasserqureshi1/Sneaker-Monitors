@@ -7,76 +7,33 @@ import datetime
 
 
 class SupremeMonitor:
-    def __init__(self):
+    def __init__(self, webhook):
         self.headers = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, '
                                       'like Gecko) Chrome/83.0.4103.116 Safari/537.36'}
         self.pages = []
         self.instock = []
         self.instock_copy = []
-
-    def scrape_main_site(self):
-        self.pages.clear()
-        s = rq.Session()
-        try:
-            html = s.get('https://www.supremenewyork.com/mobile_stock.json', headers=self.headers, verify=False,
-                         timeout=1)
-            output = json.loads(html.text)['products_and_categories']
-            self.pages.append(output)
-        except:
-            print('There was an Error')
-
-    def scrape_item_site(self, name, id):
-        try:
-            url = 'https://www.supremenewyork.com/shop/' + str(id) + '.json'
-            html = rq.get(url, headers=self.headers, verify=False, timeout=0.3)
-            output = json.loads(html.text)['styles']
-
-            for colour in output:
-                for size in colour['sizes']:
-                    if size['stock_level'] == 1:
-                        if self.checker(name, colour['name'], size['name']):
-                            pass
-                        else:
-                            self.instock.append([name, colour['name'], size['name']])
-                            restock = 'RESTOCK: ' + str(name) + ' in ' + str(colour['name']) + ' in size ' + str(
-                                size['name'])
-                            print(restock)
-                            message = {"content": restock}
-                            #rq.post(discord_webhook_url, data=message)
-                    else:
-                        if self.checker(name, colour['name'], size['name']):
-                            self.instock.remove([name, colour['name'], size['name']])
-        except:
-            print('There was an Error')
-
-    def checker(self, product, colour, size):
-        # check if item is in list
-        for item in self.instock_copy:
-            if item == [product, colour, size]:
-                self.instock_copy.remove([product, colour, size])
-                return True
-        return False
+        self.webhook = webhook
 
     def discord_webhook(self, product_item):
+        # product_item = [title, colour, image link, link, sizes]
         description = ''
         for i in range(len(product_item[1])):
             if i % 2 == 1:
-                description = description + str(product_item[1][i].replace(' : ', '/')) + '\n'
+                description = description + str(product_item[4][i].replace(' : ', '/')) + '\n'
             else:
-                description = description + str(product_item[1][i].replace(' : ', '/')) + '\t\t'
-
-        link = self.url.replace('.json', '/') + product_item[3]
+                description = description + str(product_item[4][i].replace(' : ', '/')) + '\t\t'
 
         data = {}
-        data["username"] = "[insert name]"
+        data["username"] = "Supreme Monitor"
         data["avatar_url"] = '[insert image url]'
         data["embeds"] = []
         embed = {}
-        embed["title"] = product_item[0]
-        embed["description"] = "**SHOP: **" + self.url.split('.com/')[0] + '.com/ \n\n' + '**SIZES:** \n' + description
-        embed['url'] = link
+        embed["title"] = product_item[0] + ' - ' + product_item[1]               # Item Name
+        embed["description"] = '**SIZES:** \n' + description                     # Item Sizes
+        embed['url'] = product_item[3]                                           # Item link
         embed["color"] = 15258703
-        embed["thumbnail"] = {'url': product_item[2]}
+        embed["thumbnail"] = {'url': product_item[2]}                            # Item image
         embed["footer"] = {'text': 'Made by Yasser Qureshi'}
         embed["timestamp"] = str(datetime.datetime.now())
         data["embeds"].append(embed)
@@ -90,6 +47,55 @@ class SupremeMonitor:
         else:
             print("Payload delivered successfully, code {}.".format(result.status_code))
 
+    def scrape_main_site(self):
+        self.pages.clear()
+        s = rq.Session()
+        try:
+            html = s.get('https://www.supremenewyork.com/mobile_stock.json', headers=self.headers, verify=False,
+                         timeout=1)
+            output = json.loads(html.text)['products_and_categories']
+            self.pages.append(output)
+        except:
+            print('There was an Error')
+
+    def scrape_item_site(self, name, id):
+        # product_item = [title, colour, image link, link, sizes]
+        try:
+            url = 'https://www.supremenewyork.com/shop/' + str(id) + '.json'
+            html = rq.get(url, headers=self.headers, verify=False, timeout=0.3)
+            output = json.loads(html.text)['styles']
+
+            for colour in output:
+                instock = [name, colour['name'], 'https' + colour['image_url'], url.split('.json')[0], []]
+                for size in colour['sizes']:
+                    if size['stock_level'] == 1:
+                        if self.checker(name, colour['name'], size['name']):
+                            pass
+                        else:
+                            instock[4].append(size['name'])
+                            self.instock.append([name, colour['name'], size['name']])
+
+                    else:
+                        if self.checker(name, colour['name'], size['name']):
+                            self.instock.remove([name, colour['name'], size['name']])
+
+                    if instock[1] == []:
+                        pass
+                    else:
+                        self.discord_webhook(instock)
+                        print(instock)
+            time.sleep(3)
+        except:
+            print('There was an Error')
+
+    def checker(self, product, colour, size):
+        # check if item is in list
+        for item in self.instock_copy:
+            if item == [product, colour, size]:
+                self.instock_copy.remove([product, colour, size])
+                return True
+        return False
+
     def monitor(self):
         while True:
             self.scrape_main_site()
@@ -101,10 +107,6 @@ class SupremeMonitor:
 
 
 if __name__ == '__main__':
-    t0 = time.time()
     discord_webhook_url = ''
-    test = SupremeMonitor()
+    test = SupremeMonitor(webhook=discord_webhook_url)
     test.monitor()
-    t1 = time.time()
-    print('Time Taken: ', t1 - t0)
-
