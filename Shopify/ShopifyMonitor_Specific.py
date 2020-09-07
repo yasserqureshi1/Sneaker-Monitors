@@ -119,7 +119,7 @@ class ShopifyMonitor:
 
 
 if __name__ == '__main__':
-    webhook = 'https://discordapp.com/api/webhooks/738175021083787305/XTJeMY_-vThNzoUDVcfdAegUopm3TRbTTdZgydtcYj_4FB2CK1MjIRXlWgAozoyBnRKX'
+    webhook = ''
     urls = ['https://www.hanon-shop.com/collections/whats-new/products/nike-air-max-iii-cj6779100.json',
             'https://www.hanon-shop.com/collections/whats-new/products/nike-jordan-zoom-92-ck9183103.json']
     test = ShopifyMonitor(urls, webhook)

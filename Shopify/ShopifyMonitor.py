@@ -116,7 +116,7 @@ class ShopifyMonitor:
 
 
 if __name__ == '__main__':
-    webhook = 'https://discordapp.com/api/webhooks/738175021083787305/XTJeMY_-vThNzoUDVcfdAegUopm3TRbTTdZgydtcYj_4FB2CK1MjIRXlWgAozoyBnRKX'
+    webhook = ''
     #url = 'https://www.hanon-shop.com/collections/whats-new/products.json'
     url = 'https://uj-iv.com/collections/all/products.json'
     Monitor = ShopifyMonitor(url, webhook)

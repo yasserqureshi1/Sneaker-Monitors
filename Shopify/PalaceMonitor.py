@@ -95,7 +95,7 @@ class PalaceMonitor:
 
 
 if __name__ == '__main__':
-    discord_webhook_url = 'https://discordapp.com/api/webhooks/731146564193746958/sSQ4Ml8IKYAwNPggDYxJmZNNGzJ27foJu2avbmoeYmeYxPRL5w4x9cqdyBu1Jx8mK3b7'
+    discord_webhook_url = ''
     test = PalaceMonitor(discord_webhook_url)
     test.monitor()
 

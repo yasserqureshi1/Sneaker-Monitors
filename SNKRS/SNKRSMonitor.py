@@ -85,7 +85,7 @@ class SNKRSMonitor:
 
 
 if __name__ == '__main__':
-    url = 'https://discordapp.com/api/webhooks/738175021083787305/XTJeMY_-vThNzoUDVcfdAegUopm3TRbTTdZgydtcYj_4FB2CK1MjIRXlWgAozoyBnRKX'
+    url = ''
     test = SNKRSMonitor(url)
     test.get_data()
     test.monitor()
