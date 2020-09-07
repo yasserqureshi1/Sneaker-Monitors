@@ -1,4 +1,4 @@
-# WebsiteMonitors
+# Sneaker Monitors
 A collection of web monitors that notify of restocks or updates on sneaker related sites through Discord Webhook.
 
 If you have any requests for sites, please let me know via Discord at @TheBrownPanther2#3801
