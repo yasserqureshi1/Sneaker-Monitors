@@ -45,7 +45,7 @@ class SNKRSMonitor:
     def discord_webhook(self, title, size):
         data = {}
         data["username"] = "Nike SNKRS EU"
-
+        data["avatar_url"] = ''
         data["embeds"] = []
         embed = {}
         embed["title"] = title
