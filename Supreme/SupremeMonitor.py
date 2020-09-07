@@ -26,16 +26,17 @@ class SupremeMonitor:
 
         data = {}
         data["username"] = "Supreme Monitor"
-        #data["avatar_url"] = 'image url'
+        data["avatar_url"] = 'https://lh3.googleusercontent.com/lPUZwKE_VV6_UxQOE_MlXVSYi77LssHVK0T9zZFFERORHI7ZhQXD-WvsMKXu5822NQ'
         data["embeds"] = []
         embed = {}
         embed["title"] = product_item[0] + ' - ' + product_item[1]               # Item Name
-        embed["description"] = '**SIZES:** \n' + description                     # Item Sizes
+        if description != '':
+            embed["description"] = '**SIZES:** \n' + description                     # Item Sizes
         embed['url'] = product_item[3]                                           # Item link
         embed["color"] = 15258703
         embed["thumbnail"] = {'url': product_item[2]}                            # Item image
-        embed["footer"] = {'text': 'Made by Yasser Qureshi'}
-        #embed["timestamp"] = str(datetime.datetime.now())
+        embed["footer"] = {'text': 'Made by Yasser'}
+        embed["timestamp"] = str(datetime.datetime.now())
         data["embeds"].append(embed)
         print(data)
 
@@ -80,10 +81,10 @@ class SupremeMonitor:
                         if self.checker(name, colour['name'], size['name']):
                             self.instock.remove([name, colour['name'], size['name']])
 
-                    if instock[1] == []:
-                        pass
-                    else:
-                        self.discord_webhook(instock)
+                if instock[1] == []:
+                    pass
+                else:
+                    self.discord_webhook(instock)
         except Exception as e:
             print('There was an Error - single site - ', e)
 
@@ -108,6 +109,6 @@ class SupremeMonitor:
 
 
 if __name__ == '__main__':
-    discord_webhook_url = 'https://discordapp.com/api/webhooks/752642067985072249/6-azDwmlcg2H82Cd4jfM45e_8iP7XljcD-oFABVeuoY-fbzo1gSaHVu8TKjagXBIp2a8'
+    discord_webhook_url = ''
     test = SupremeMonitor(webhook=discord_webhook_url)
     test.monitor()
