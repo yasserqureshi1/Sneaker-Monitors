@@ -16,7 +16,6 @@ class SupremeMonitor:
         self.webhook = webhook
 
     def discord_webhook(self, product_item):
-        # product_item = [title, colour, image link, link, sizes]
         description = ''
         for i in range(len(product_item[4])):
             if i % 2 == 1:
@@ -61,7 +60,6 @@ class SupremeMonitor:
             print('There was an Error - main site - ', e)
 
     def scrape_item_site(self, name, id):
-        # product_item = [title, colour, image link, link, sizes]
         try:
             url = 'https://www.supremenewyork.com/shop/' + str(id) + '.json'
             html = rq.get(url, headers=self.headers, verify=False, timeout=3)
@@ -89,7 +87,6 @@ class SupremeMonitor:
             print('There was an Error - single site - ', e)
 
     def checker(self, product, colour, size):
-        # check if item is in list
         for item in self.instock_copy:
             if item == [product, colour, size]:
                 self.instock_copy.remove([product, colour, size])
