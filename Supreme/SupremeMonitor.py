@@ -1,5 +1,3 @@
-# Fix Discord notification
-
 import requests as rq
 import json
 import time
