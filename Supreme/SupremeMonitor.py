@@ -1,8 +1,9 @@
-# may need to use beautifulsoup instead
+# Fix Discord notification
 
 import requests as rq
 import json
 import time
+import datetime
 
 
 class SupremeMonitor:
@@ -55,6 +56,39 @@ class SupremeMonitor:
                 self.instock_copy.remove([product, colour, size])
                 return True
         return False
+
+    def discord_webhook(self, product_item):
+        description = ''
+        for i in range(len(product_item[1])):
+            if i % 2 == 1:
+                description = description + str(product_item[1][i].replace(' : ', '/')) + '\n'
+            else:
+                description = description + str(product_item[1][i].replace(' : ', '/')) + '\t\t'
+
+        link = self.url.replace('.json', '/') + product_item[3]
+
+        data = {}
+        data["username"] = "[insert name]"
+        data["avatar_url"] = '[insert image url]'
+        data["embeds"] = []
+        embed = {}
+        embed["title"] = product_item[0]
+        embed["description"] = "**SHOP: **" + self.url.split('.com/')[0] + '.com/ \n\n' + '**SIZES:** \n' + description
+        embed['url'] = link
+        embed["color"] = 15258703
+        embed["thumbnail"] = {'url': product_item[2]}
+        embed["footer"] = {'text': 'Made by Yasser Qureshi'}
+        embed["timestamp"] = str(datetime.datetime.now())
+        data["embeds"].append(embed)
+
+        result = rq.post(self.webhook, data=json.dumps(data), headers={"Content-Type": "application/json"})
+
+        try:
+            result.raise_for_status()
+        except rq.exceptions.HTTPError as err:
+            print(err)
+        else:
+            print("Payload delivered successfully, code {}.".format(result.status_code))
 
     def monitor(self):
         while True:
