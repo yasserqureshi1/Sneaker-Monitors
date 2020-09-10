@@ -43,4 +43,6 @@ The following steps are needed:
 
 ## Need to Do
 
-The SNKRS monitor still needs some work with the Discord webhook. 
+- The SNKRS monitor still needs some work with the Discord webhook.
+- The ShopifyMonitor_Specific.py is a work in progress. This will be a more accessible Shopify monitor, working on multiple sites
+- SupremeMonitor_Specific.py needs to be fully tested
