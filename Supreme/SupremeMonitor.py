@@ -6,12 +6,13 @@ import datetime
 
 class SupremeMonitor:
     def __init__(self, webhook):
-        self.headers = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, '
-                                      'like Gecko) Chrome/83.0.4103.116 Safari/537.36'}
+        self.headers = {'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 '
+                                      '(KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1'}
         self.pages = []
         self.instock = []
         self.instock_copy = []
         self.webhook = webhook
+        self.first = 1
 
     def discord_webhook(self, product_item):
         description = ''
@@ -77,7 +78,7 @@ class SupremeMonitor:
                         if self.checker(name, colour['name'], size['name']):
                             self.instock.remove([name, colour['name'], size['name']])
 
-                if instock[1] == []:
+                if instock[1] == [] or self.first == 1:
                     pass
                 else:
                     self.discord_webhook(instock)
@@ -94,13 +95,14 @@ class SupremeMonitor:
     def monitor(self):
         while True:
             self.scrape_main_site()
-            time.sleep(0.5)
+            time.sleep(1)
             self.instock_copy = self.instock.copy()
             for cat in self.pages:
                 for i in cat:
                     for j in cat[i]:
                         self.scrape_item_site(j['name'], j['id'])
-                        time.sleep(0.5)
+                        time.sleep(1)
+            self.first = 0
 
 
 if __name__ == '__main__':
