@@ -1,5 +1,6 @@
 import requests as rq
 import json
+import time
 
 
 class SNKRSMonitor:
@@ -25,7 +26,7 @@ class SNKRSMonitor:
         anchor = 0
         while no_of_pages != 0:
             try:
-                html = rq.get(url=self.url[0] + str(anchor) + self.url[1], timeout=3, verify=False, headers=self.headers)
+                html = rq.get(url=self.url[0] + str(anchor) + self.url[1], timeout=5, verify=False, headers=self.headers)
                 output = json.loads(html.text)
                 for item in output['objects']:
                     self.items.append(item)
@@ -64,12 +65,14 @@ class SNKRSMonitor:
 
     def monitor(self):
         while True:
+            self.get_data()
             self.instock_copy = self.instock.copy()
             for item in self.items:
                 try:
                     for j in item['productInfo']:
                         if j['availability']['available'] == True and j['merchProduct']['status'] == 'ACTIVE':
                             if self.checker(j['merchProduct']['labelName'], j['productContent']['colorDescription']):
+                                #print('f')
                                 # nothing
                                 pass
                             else:
@@ -82,10 +85,12 @@ class SNKRSMonitor:
                                 self.instock.remove([j['merchProduct']['labelName'], j['productContent']['colorDescription']])
                 except:
                     pass
+                self.items.remove(item)
+            time.sleep(5)
 
 
 if __name__ == '__main__':
     url = ''
     test = SNKRSMonitor(url)
-    test.get_data()
+    #test.get_data()
     test.monitor()
