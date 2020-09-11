@@ -26,23 +26,25 @@ These scripts should be running continuously for the monitor to work. As such yo
 Below are details on how to use each of the monitors:
 
 ### Shopify Monitor
-The following steps are needed:
+Take the following steps to work the monitor:
 1. Insert a name for your bot on line 64
 2. Insert an image url for your bots avatar on line 65 (optional)
 3. Insert the Discord Server's webhook url on line 119
 4. Inset the url of the website you want to scrape. Note that the url should point to a .json file in a given category (e.g. myshop.com/collections/whats-new/products.json)
 
 ### Supreme
-The following steps are needed:
+Take the following steps to work the monitor:
 1. Insert a name for your bot on line 25 (default is 'Supreme Monitor')
-2. Insert an image url for your bots avater on line 26 (default is the Supreme logo)
+2. Insert an image url for your bots avatar on line 26 (default is the Supreme logo)
 3. Insert the Discord Server's webhook url on line 107
 
-### Nike SNKRS
-*Work in progress*
+### Nike SNKRS (EU)
+Take the following steps to work the monitor:
+1. Insert a name for your bot on line 50 (default is 'Nike SNKRS EU Bot')
+2. Insert an image url for your bots avatar on line 51 (default is Nike Logo)
+3. Insert the Discord Server's webhook url on line 98
 
 ## Need to Do
 
-- The SNKRS monitor still needs some work with the Discord webhook.
-- The ShopifyMonitor_Specific.py is a work in progress. This will be a more accessible Shopify monitor, working on multiple sites
+- The ShopifyMonitor_Specific.py is a work in progress. This will be a more accessible Shopify monitor which will work on more shopify sites.
 - SupremeMonitor_Specific.py needs to be fully tested
