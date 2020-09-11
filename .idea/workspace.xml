@@ -24,11 +24,9 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="32582f0a-a14d-4961-85a7-1609705c1344" name="Default Changelist" comment="Fixing issue - lots of initial notifications">
+    <list default="true" id="32582f0a-a14d-4961-85a7-1609705c1344" name="Default Changelist" comment="Update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SNKRS/SNKRSMonitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/SNKRS/SNKRSMonitor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Supreme/SupremeMonitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/Supreme/SupremeMonitor.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -288,7 +286,35 @@
       <option name="project" value="LOCAL" />
       <updated>1599777652328</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Update README.md">
+      <created>1599832253448</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1599832253448</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Fixed Discord notification issues">
+      <created>1599832273673</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1599832273673</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Updated Discord notification">
+      <created>1599832304448</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1599832304448</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Update">
+      <created>1599832312106</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1599832312106</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -310,11 +336,13 @@
     <MESSAGE value="fixing discord" />
     <MESSAGE value="Updated README.md" />
     <MESSAGE value="Clean up" />
-    <MESSAGE value="Update README.md" />
     <MESSAGE value="Fixing multiple alert issue" />
-    <MESSAGE value="Update" />
     <MESSAGE value="Fixing issue - lots of initial notifications" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixing issue - lots of initial notifications" />
+    <MESSAGE value="Update README.md" />
+    <MESSAGE value="Fixed Discord notification issues" />
+    <MESSAGE value="Updated Discord notification" />
+    <MESSAGE value="Update" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update" />
   </component>
   <component name="WindowStateProjectService">
     <state x="455" y="240" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1594385768964">
@@ -377,11 +405,12 @@
     <state width="1379" height="258" key="GridCell.Tab.0.right/0.23.1440.821@0.23.1440.821" timestamp="1598720694987" />
     <state width="1379" height="501" key="GridCell.Tab.0.right/0.23.1440.822@0.23.1440.822" timestamp="1596460741070" />
     <state width="1419" height="361" key="GridCell.Tab.0.right/0.23.1440.823@0.23.1440.823" timestamp="1594304682498" />
-    <state x="320" y="161" key="Vcs.Push.Dialog.v2" timestamp="1599765719732">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state x="320" y="169" key="Vcs.Push.Dialog.v2" timestamp="1599832319231">
+      <screen x="0" y="23" width="1440" height="816" />
     </state>
     <state x="320" y="161" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1599765719732" />
     <state x="320" y="169" key="Vcs.Push.Dialog.v2/0.23.1440.814@0.23.1440.814" timestamp="1599521587033" />
+    <state x="320" y="169" key="Vcs.Push.Dialog.v2/0.23.1440.816@0.23.1440.816" timestamp="1599832319231" />
     <state width="720" height="411" key="XDebugger.FullValuePopup" timestamp="1594470663901">
       <screen x="0" y="23" width="1440" height="822" />
     </state>
