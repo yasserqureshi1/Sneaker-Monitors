@@ -31,7 +31,7 @@ class SupremeMonitor:
         if description != '':
             embed["description"] = '**SIZES:** \n' + description                     # Item Sizes
         embed['url'] = product_item[3]                                           # Item link
-        embed["color"] = 15258703
+        embed["color"] = 12845619
         embed["thumbnail"] = {'url': product_item[2]}                            # Item image
         embed["footer"] = {'text': 'Made by Yasser'}
         embed["timestamp"] = str(datetime.datetime.now())
