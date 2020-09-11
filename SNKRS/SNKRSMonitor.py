@@ -83,6 +83,7 @@ class SNKRSMonitor:
                                 self.instock.append([j['merchProduct']['labelName'], j['productContent']['colorDescription']])
                                 if self.first == 0:
                                     self.discord_webhook(j['merchProduct']['labelName'], j['productContent']['colorDescription'], j['productContent']['slug'], j['imageUrls']['productImageUrl'])
+                                    time.sleep(1)
 
                         else:
                             if self.checker(j['merchProduct']['labelName'], j['productContent']['colorDescription']):
