@@ -1,6 +1,7 @@
 import requests as rq
 import json
 import time
+import datetime
 
 
 class SNKRSMonitor:
@@ -20,6 +21,7 @@ class SNKRSMonitor:
         self.instock = []
         self.instock_copy = []
         self.webhook = webhook
+        self.first = 1
 
     def get_data(self):
         no_of_pages = self.number_of_items//50
@@ -36,22 +38,26 @@ class SNKRSMonitor:
             no_of_pages -= 1
 
     def checker(self, product, colour):
-        # check if item is in list
         for item in self.instock_copy:
             if item == [product, colour]:
                 self.instock_copy.remove([product, colour])
                 return True
         return
 
-    def discord_webhook(self, title, size):
+    def discord_webhook(self, title, colour, slug, thumbnail):
+        # Sort out colour, slug, description, thumbnail
         data = {}
-        data["username"] = "Nike SNKRS EU"
-        data["avatar_url"] = ''
+        data["username"] = "Nike SNKRS EU Bot"
+        data["avatar_url"] = 'http://logostories.com/wp-content/uploads/2015/10/image-nike-logo-4.png'
         data["embeds"] = []
         embed = {}
         embed["title"] = title
-        embed["description"] = 'Size Restock: {}'.format(size)
-        embed["color"] = 15258703
+        embed["description"] = '*Item restock*\n Colour: ' + str(colour)
+        embed["url"] = 'https://www.nike.com/gb/launch/t/' + slug
+        embed["thumbnail"] = {'url': thumbnail}
+        embed["color"] = 16777215
+        embed["footer"] = {'text': 'Made by Yasser'}
+        embed["timestamp"] = str(datetime.datetime.now())
         data["embeds"].append(embed)
 
         result = rq.post(self.webhook, data=json.dumps(data), headers={"Content-Type": "application/json"})
@@ -72,25 +78,23 @@ class SNKRSMonitor:
                     for j in item['productInfo']:
                         if j['availability']['available'] == True and j['merchProduct']['status'] == 'ACTIVE':
                             if self.checker(j['merchProduct']['labelName'], j['productContent']['colorDescription']):
-                                #print('f')
-                                # nothing
                                 pass
                             else:
                                 self.instock.append([j['merchProduct']['labelName'], j['productContent']['colorDescription']])
-                                #self.discord_webhook(j['merchProduct']['labelName'], j['productContent']['colorDescription'])
-                                restock = 'RESTOCK: ' + str(j['merchProduct']['labelName']) + ' in size ' + str(j['productContent']['colorDescription'])
-                                print(restock)
+                                if self.first == 0:
+                                    self.discord_webhook(j['merchProduct']['labelName'], j['productContent']['colorDescription'], j['productContent']['slug'], j['imageUrls']['productImageUrl'])
+
                         else:
                             if self.checker(j['merchProduct']['labelName'], j['productContent']['colorDescription']):
                                 self.instock.remove([j['merchProduct']['labelName'], j['productContent']['colorDescription']])
                 except:
                     pass
                 self.items.remove(item)
+            self.first = 1
             time.sleep(5)
 
 
 if __name__ == '__main__':
     url = ''
     test = SNKRSMonitor(url)
-    #test.get_data()
     test.monitor()
