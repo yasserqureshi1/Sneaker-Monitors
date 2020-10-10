@@ -44,6 +44,72 @@ Take the following steps to work the monitor:
 2. Insert an image url for your bots avatar on line 51 (default is Nike Logo)
 3. Insert the Discord Server's webhook url on line 98
 
+## Example Set-Up with AWS 
+
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstances.html
+
+This requires you to have an account with AWS. Navigate to the `Console`, and click on the `Services` menu.
+Under the `Compute` heading, select `EC2`.
+From here, we will create our instance. 
+Select the `Launch Instance` button. 
+You will be taken to a page with a list of instances to choose from.
+We will be focusing on the 'free Tier'. 
+Lets choose the `Ubuntu Server 18.04 LTS (HVM), SSD Volume Type`. 
+The next page will ask you to choose an instance type - it should already have the Free Tier option selected which is what we will use.
+The next page will ask you to Review - click `Launch`. 
+
+We then need to create a Key Pair for our instance. 
+So for the first dropdown menu select `Create a new key pair`. 
+Then name it anything you want. 
+Then you should download this key pair and store it somewhere safe and accessible.
+This will be used to access your virtual machine.
+
+Now depending on your OS, there are different ways of accessing this instance.
+Below are a few ways
+
+**Windows:**
+
+There are a few options:
+- Use PuTTY
+- SSH Client
+
+**Mac/Linux:**
+
+The options include:
+- SSH Client
+- EC2 Instance Connect
+
+I use PuTTY. 
+We also need a file transfer system, to upload your code to the instance.
+I use FileZilla.
+
+Upload your files to your instance using FileZilla. 
+Then using PuTTY, type the following command to install Python:
+```
+$ sudo apt install python3-pip
+```
+
+Then using pip, install the packages needed:
+```
+$ pip3 install [package name]
+```
+
+Once everything is done, we can run our code. 
+Firstly, we want it to run continuously. 
+As such, we type in the command, where we can have multiple sessions on a single screen instance:
+```
+$ screen
+``` 
+
+Then run the code:
+```
+$ python3 [name of script].py
+```
+
+To disconnect from the screen, but leave it running, press ``CTRL A + D``.
+Now you can close the window, and the code should be running!
+
+
 ## Need to Do
 
 - The ShopifyMonitor_Specific.py is a work in progress. This will be a more accessible Shopify monitor which will work on more shopify sites.
