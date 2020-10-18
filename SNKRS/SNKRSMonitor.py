@@ -2,6 +2,7 @@ import requests as rq
 import json
 import time
 import datetime
+import urllib3
 
 
 class SNKRSMonitor:
@@ -23,7 +24,11 @@ class SNKRSMonitor:
         self.webhook = webhook
         self.first = 1
 
-    def get_data(self):
+    def scrape_site(self):
+        """
+        Scrapes SNKRS site and adds items to array
+        :return: None
+        """
         no_of_pages = self.number_of_items//50
         anchor = 0
         while no_of_pages != 0:
@@ -32,12 +37,18 @@ class SNKRSMonitor:
                 output = json.loads(html.text)
                 for item in output['objects']:
                     self.items.append(item)
-            except:
-                print('Error')
+            except Exception as e:
+                print('Error - ', e)
             anchor += 50
             no_of_pages -= 1
 
     def checker(self, product, colour):
+        """
+        Determines whether the product status has changed
+        :param product: Shoe name
+        :param colour: Shoe colour
+        :return: None
+        """
         for item in self.instock_copy:
             if item == [product, colour]:
                 self.instock_copy.remove([product, colour])
@@ -45,7 +56,15 @@ class SNKRSMonitor:
         return
 
     def discord_webhook(self, title, colour, slug, thumbnail):
-        # Sort out colour, slug, description, thumbnail
+        """
+        Sends a Discord webhook notification to the specified webhook URL
+        :param title: Shoe name
+        :param colour: Shoe Colour
+        :param slug: Shoe URL
+        :param thumbnail: URL to shoe image
+        :return: None
+        """
+
         data = {}
         data["username"] = "Nike SNKRS EU Bot"
         data["avatar_url"] = 'http://logostories.com/wp-content/uploads/2015/10/image-nike-logo-4.png'
@@ -70,8 +89,13 @@ class SNKRSMonitor:
             print("Payload delivered successfully, code {}.".format(result.status_code))
 
     def monitor(self):
+        """
+        Initiates the monitor
+        :return: None
+        """
+
         while True:
-            self.get_data()
+            self.scrape_site()
             self.instock_copy = self.instock.copy()
             for item in self.items:
                 try:
@@ -92,10 +116,11 @@ class SNKRSMonitor:
                     pass
                 self.items.remove(item)
             self.first = 1
-            time.sleep(5)
+            time.sleep(1)
 
 
 if __name__ == '__main__':
+    urllib3.disable_warnings()
     url = ''
     test = SNKRSMonitor(url)
     test.monitor()
