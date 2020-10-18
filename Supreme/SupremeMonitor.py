@@ -2,6 +2,7 @@ import requests as rq
 import json
 import time
 import datetime
+import urllib3
 
 
 class SupremeMonitor:
@@ -15,6 +16,12 @@ class SupremeMonitor:
         self.first = 1
 
     def discord_webhook(self, product_item):
+        """
+        Sends a Discord webhook notification to the specified webhook URL
+        :param product_item: An array of the product's details
+        :return: None
+        """
+
         description = ''
         for i in range(len(product_item[4])):
             if i % 2 == 1:
@@ -48,6 +55,11 @@ class SupremeMonitor:
             print("Payload delivered successfully, code {}.".format(result.status_code))
 
     def scrape_main_site(self):
+        """
+        Scrapes the Supreme webstore and adds the items to an array
+        :return: None
+        """
+
         self.pages.clear()
         s = rq.Session()
         try:
@@ -56,9 +68,17 @@ class SupremeMonitor:
             output = json.loads(html.text)['products_and_categories']
             self.pages.append(output)
         except Exception as e:
-            print('There was an Error - main site - ', e)
+            print('There was an Error - ', e)
 
     def scrape_item_site(self, name, id):
+        """
+        Scrapes each item on the webstore and checks whether the product is in-stock or not. If in-stock
+        it will send a Discord notification
+        :param name: Product name
+        :param id: Product ID
+        :return: None
+        """
+
         try:
             url = 'https://www.supremenewyork.com/shop/' + str(id) + '.json'
             html = rq.get(url, headers=self.headers, verify=False, timeout=3)
@@ -81,11 +101,20 @@ class SupremeMonitor:
                 if instock[1] == [] or self.first == 1:
                     pass
                 else:
+                    print('Sending new Notification')
                     self.discord_webhook(instock)
         except Exception as e:
-            print('There was an Error - single site - ', e)
+            print('There was an Error - ', e)
 
     def checker(self, product, colour, size):
+        """
+        Determines whether the product status has changed
+        :param product: Product name
+        :param colour: Product colour
+        :param size: Product size
+        :return: Boolean whether the status has changed or not
+        """
+
         for item in self.instock_copy:
             if item == [product, colour, size]:
                 self.instock_copy.remove([product, colour, size])
@@ -93,6 +122,11 @@ class SupremeMonitor:
         return False
 
     def monitor(self):
+        """
+        Initiates the monitor
+        :return: None
+        """
+
         while True:
             self.scrape_main_site()
             time.sleep(1)
@@ -106,6 +140,7 @@ class SupremeMonitor:
 
 
 if __name__ == '__main__':
+    urllib3.disable_warnings()
     discord_webhook_url = ''
     test = SupremeMonitor(webhook=discord_webhook_url)
     test.monitor()
