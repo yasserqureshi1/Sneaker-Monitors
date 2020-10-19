@@ -15,35 +15,41 @@ class ShopifyMonitor:
         self.webhook = webhook
 
     def check_url(self):
-        split = self.url.split('.com', 1)
-        self.url = split[0] + '.com/' + 'collections/new-arrivals-1/' + 'products.json?page='
+        """
+        Checks whether the supplied URL is valid
+        :return: Boolean - True if valid
+        """
+        return 'products.json' in self.url
 
     def scrape_site(self):
+        """
+        Scrapes the specified Shopify site and adds items to array
+        :return: None
+        """
         self.pages.clear()
         s = rq.Session()
-        num = 1
-        # scrape each product page
-        while num > 0:
+        page = 1
+        while page > 0:
             try:
-                # html = s.get(self.url + str(num) + '&limit=250', headers=self.headers, verify=False, timeout=1)
-                html = s.get(self.url, headers=self.headers, verify=False, timeout=1)
+                html = s.get(self.url + '?page=' + str(page) + '&limit=250', headers=self.headers, verify=False, timeout=5)
                 output = json.loads(html.text)['products']
                 if output == []:
-                    # once there are no more products - exit loop
-                    num = 0
+                    page = 0
                 else:
-                    # add product page to list
                     self.pages.append(output)
-                    num = num + 1
-                    num = 0
-            except:
-                print('There was an Error')
-                num = 0
-
+                    page += 1
+            except Exception as e:
+                print('Error - ', e)
+                page = 0
         s.close()
 
     def checker(self, product, size):
-        # check if item is in list
+        """
+        Determines whether the product status has changed
+        :param product: Product name
+        :param size: Product size
+        :return:
+        """
         for item in self.instock_products_copy:
             if item == [product, size]:
                 self.instock_products_copy.remove([product, size])
@@ -51,6 +57,11 @@ class ShopifyMonitor:
         return
 
     def discord_webhook(self, product_item):
+        """
+        Sends a Discord webhook notification to the specified webhook URL
+        :param product_item: An array containing the product name, product sizes in-stock ans the thumbnail URL
+        :return: None
+        """
         description = ''
         for i in range(len(product_item[1])):
             if i % 2 == 1:
@@ -62,7 +73,7 @@ class ShopifyMonitor:
 
         data = {}
         data["username"] = "[insert name]"
-        data["avatar_url"] = '[insert image url]'
+        #data["avatar_url"] = '[insert image url]'
         data["embeds"] = []
         embed = {}
         embed["title"] = product_item[0]
@@ -84,6 +95,14 @@ class ShopifyMonitor:
             print("Payload delivered successfully, code {}.".format(result.status_code))
 
     def monitor(self):
+        """
+        Initiates the monitor
+        :return: None
+        """
+        if self.check_url() == False:
+            print('Store URL not in correct format. Please ensure that it is a path pointing to a /products.json file')
+            return
+
         while True:
             self.scrape_site()
             self.instock_products_copy = self.instock_products.copy()
@@ -91,18 +110,12 @@ class ShopifyMonitor:
                 for product in page:
                     product_item = [product['title'], [], product['images'][0]['src'], product['handle']]
                     for size in product['variants']:
-                        # if the product is available....
                         if size['available'] == True:
-                            # check if product is already stored ...
                             if self.checker(product['title'], size['title']):
-                                # nothing
                                 pass
-                            # if not, means its a restock or a newly added item ...
                             else:
                                 self.instock_products.append([product['title'], size['title']])
                                 product_item[1].append(size['title'])
-
-                        # if not available, but stored, remove it
                         else:
                             if self.checker(product['title'], size['title']):
                                 self.instock_products.remove([product['title'], size['title']])
@@ -110,14 +123,13 @@ class ShopifyMonitor:
                     if product_item[1] == []:
                         pass
                     else:
-                        self.discord_webhook(product_item)
                         print(product_item)
+                        self.discord_webhook(product_item)
             time.sleep(3)
 
 
 if __name__ == '__main__':
     webhook = ''
-    #url = 'https://www.hanon-shop.com/collections/whats-new/products.json'
-    url = 'https://uj-iv.com/collections/all/products.json'
+    url = 'https://www.hanon-shop.com/collections/whats-new/products.json'
     Monitor = ShopifyMonitor(url, webhook)
     Monitor.monitor()

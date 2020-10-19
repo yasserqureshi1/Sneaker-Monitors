@@ -20,13 +20,17 @@
       <path>
         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
         <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:master" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="32582f0a-a14d-4961-85a7-1609705c1344" name="Default Changelist" comment="Update">
+    <list default="true" id="32582f0a-a14d-4961-85a7-1609705c1344" name="Default Changelist" comment="Clean up">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SNKRS/SNKRSMonitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/SNKRS/SNKRSMonitor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Shopify/PalaceMonitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/Shopify/PalaceMonitor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Shopify/ShopifyMonitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/Shopify/ShopifyMonitor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Shopify/ShopifyMonitor_Specific.py" beforeDir="false" afterPath="$PROJECT_DIR$/Shopify/ShopifyMonitor_Specific.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,7 +64,28 @@
       <recent name="$PROJECT_DIR$/Shopify" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.SNKRSMonitor (1)">
+  <component name="RunManager" selected="Python.ShopifyMonitor (1)">
+    <configuration name="Footlocker" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="WebsiteMonitors" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Footsites" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Footsites/Footlocker.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="SNKRSMonitor (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="WebsiteMonitors" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -124,27 +149,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="ShopifyMonitor_Specific" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="WebsiteMonitors" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Shopify/ShopifyMonitor_Specific.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="SupremeMonitor" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="WebsiteMonitors" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -168,11 +172,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.SNKRSMonitor (1)" />
-        <item itemvalue="Python.SupremeMonitor" />
         <item itemvalue="Python.ShopifyMonitor (1)" />
+        <item itemvalue="Python.SupremeMonitor" />
+        <item itemvalue="Python.Footlocker" />
+        <item itemvalue="Python.SNKRSMonitor (1)" />
         <item itemvalue="Python.ShopifyMonitor" />
-        <item itemvalue="Python.ShopifyMonitor_Specific" />
       </list>
     </recent_temporary>
   </component>
@@ -314,15 +318,79 @@
       <option name="project" value="LOCAL" />
       <updated>1599832312106</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Increasing delay">
+      <created>1599833400098</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1599833400098</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Update">
+      <created>1599833408200</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1599833408200</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Updating README.md">
+      <created>1602366770737</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1602366770737</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Updating README.md">
+      <created>1602799666058</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1602799666058</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Clean up">
+      <created>1603033760728</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1603033760728</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Clean up">
+      <created>1603064114905</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1603064114906</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -335,20 +403,18 @@
     <MESSAGE value="Discord webhook fix" />
     <MESSAGE value="fixing discord" />
     <MESSAGE value="Updated README.md" />
-    <MESSAGE value="Clean up" />
     <MESSAGE value="Fixing multiple alert issue" />
     <MESSAGE value="Fixing issue - lots of initial notifications" />
     <MESSAGE value="Update README.md" />
     <MESSAGE value="Fixed Discord notification issues" />
     <MESSAGE value="Updated Discord notification" />
+    <MESSAGE value="Increasing delay" />
     <MESSAGE value="Update" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update" />
+    <MESSAGE value="Updating README.md" />
+    <MESSAGE value="Clean up" />
+    <option name="LAST_COMMIT_MESSAGE" value="Clean up" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="455" y="240" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1594385768964">
-      <screen x="0" y="23" width="1440" height="822" />
-    </state>
-    <state x="455" y="240" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1440.822@0.23.1440.822" timestamp="1594385768964" />
     <state x="565" y="337" key="Github.ShareDialog" timestamp="1599490535376">
       <screen x="0" y="23" width="1440" height="812" />
     </state>
@@ -357,60 +423,65 @@
       <screen x="0" y="23" width="1440" height="812" />
     </state>
     <state x="462" y="145" key="Github.UntrackedFilesDialog/0.23.1440.812@0.23.1440.812" timestamp="1599490553760" />
-    <state width="1379" height="186" key="GridCell.Tab.0.bottom" timestamp="1599831944841">
-      <screen x="0" y="23" width="1440" height="816" />
+    <state width="1419" height="212" key="GridCell.Tab.0.bottom" timestamp="1603066011190">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1419" height="321" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1599766079745" />
+    <state width="1419" height="212" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1603066011190" />
     <state width="1403" height="56" key="GridCell.Tab.0.bottom/0.23.1440.812@0.23.1440.812" timestamp="1599505321569" />
     <state width="1379" height="155" key="GridCell.Tab.0.bottom/0.23.1440.813@0.23.1440.813" timestamp="1594936331874" />
     <state width="1379" height="101" key="GridCell.Tab.0.bottom/0.23.1440.814/-268.-1057.1920.1057@0.23.1440.814" timestamp="1599736570805" />
     <state width="1379" height="311" key="GridCell.Tab.0.bottom/0.23.1440.814@0.23.1440.814" timestamp="1599776824677" />
-    <state width="1379" height="186" key="GridCell.Tab.0.bottom/0.23.1440.816@0.23.1440.816" timestamp="1599831944841" />
+    <state width="1379" height="243" key="GridCell.Tab.0.bottom/0.23.1440.816/-268.-1057.1920.1057@0.23.1440.816" timestamp="1601149633279" />
+    <state width="1379" height="79" key="GridCell.Tab.0.bottom/0.23.1440.816/-271.-1057.1920.1057@0.23.1440.816" timestamp="1602413162964" />
+    <state width="1379" height="79" key="GridCell.Tab.0.bottom/0.23.1440.816@0.23.1440.816" timestamp="1602373864267" />
     <state width="1379" height="258" key="GridCell.Tab.0.bottom/0.23.1440.821@0.23.1440.821" timestamp="1598720694987" />
     <state width="1379" height="501" key="GridCell.Tab.0.bottom/0.23.1440.822@0.23.1440.822" timestamp="1596460741071" />
-    <state width="1419" height="361" key="GridCell.Tab.0.bottom/0.23.1440.823@0.23.1440.823" timestamp="1594304682498" />
-    <state width="1379" height="186" key="GridCell.Tab.0.center" timestamp="1599831944840">
-      <screen x="0" y="23" width="1440" height="816" />
+    <state width="1419" height="212" key="GridCell.Tab.0.center" timestamp="1603066011189">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1419" height="321" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1599766079744" />
+    <state width="1419" height="212" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1603066011189" />
     <state width="1403" height="56" key="GridCell.Tab.0.center/0.23.1440.812@0.23.1440.812" timestamp="1599505321569" />
     <state width="1379" height="155" key="GridCell.Tab.0.center/0.23.1440.813@0.23.1440.813" timestamp="1594936331874" />
     <state width="1379" height="101" key="GridCell.Tab.0.center/0.23.1440.814/-268.-1057.1920.1057@0.23.1440.814" timestamp="1599736570804" />
     <state width="1379" height="311" key="GridCell.Tab.0.center/0.23.1440.814@0.23.1440.814" timestamp="1599776824676" />
-    <state width="1379" height="186" key="GridCell.Tab.0.center/0.23.1440.816@0.23.1440.816" timestamp="1599831944840" />
+    <state width="1379" height="243" key="GridCell.Tab.0.center/0.23.1440.816/-268.-1057.1920.1057@0.23.1440.816" timestamp="1601149633278" />
+    <state width="1379" height="79" key="GridCell.Tab.0.center/0.23.1440.816/-271.-1057.1920.1057@0.23.1440.816" timestamp="1602413162963" />
+    <state width="1379" height="79" key="GridCell.Tab.0.center/0.23.1440.816@0.23.1440.816" timestamp="1602373864266" />
     <state width="1379" height="258" key="GridCell.Tab.0.center/0.23.1440.821@0.23.1440.821" timestamp="1598720694987" />
     <state width="1379" height="501" key="GridCell.Tab.0.center/0.23.1440.822@0.23.1440.822" timestamp="1596460741069" />
-    <state width="1419" height="361" key="GridCell.Tab.0.center/0.23.1440.823@0.23.1440.823" timestamp="1594304682498" />
-    <state width="1379" height="186" key="GridCell.Tab.0.left" timestamp="1599831944839">
-      <screen x="0" y="23" width="1440" height="816" />
+    <state width="1419" height="212" key="GridCell.Tab.0.left" timestamp="1603066011187">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1419" height="321" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1599766079743" />
+    <state width="1419" height="212" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1603066011187" />
     <state width="1403" height="56" key="GridCell.Tab.0.left/0.23.1440.812@0.23.1440.812" timestamp="1599505321568" />
     <state width="1379" height="155" key="GridCell.Tab.0.left/0.23.1440.813@0.23.1440.813" timestamp="1594936331873" />
     <state width="1379" height="101" key="GridCell.Tab.0.left/0.23.1440.814/-268.-1057.1920.1057@0.23.1440.814" timestamp="1599736570803" />
     <state width="1379" height="311" key="GridCell.Tab.0.left/0.23.1440.814@0.23.1440.814" timestamp="1599776824676" />
-    <state width="1379" height="186" key="GridCell.Tab.0.left/0.23.1440.816@0.23.1440.816" timestamp="1599831944839" />
+    <state width="1379" height="243" key="GridCell.Tab.0.left/0.23.1440.816/-268.-1057.1920.1057@0.23.1440.816" timestamp="1601149633277" />
+    <state width="1379" height="79" key="GridCell.Tab.0.left/0.23.1440.816/-271.-1057.1920.1057@0.23.1440.816" timestamp="1602413162962" />
+    <state width="1379" height="79" key="GridCell.Tab.0.left/0.23.1440.816@0.23.1440.816" timestamp="1602373864266" />
     <state width="1379" height="258" key="GridCell.Tab.0.left/0.23.1440.821@0.23.1440.821" timestamp="1598720694986" />
     <state width="1379" height="501" key="GridCell.Tab.0.left/0.23.1440.822@0.23.1440.822" timestamp="1596460741069" />
-    <state width="1419" height="361" key="GridCell.Tab.0.left/0.23.1440.823@0.23.1440.823" timestamp="1594304682497" />
-    <state width="1379" height="186" key="GridCell.Tab.0.right" timestamp="1599831944840">
-      <screen x="0" y="23" width="1440" height="816" />
+    <state width="1419" height="212" key="GridCell.Tab.0.right" timestamp="1603066011189">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1419" height="321" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1599766079744" />
+    <state width="1419" height="212" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1603066011189" />
     <state width="1403" height="56" key="GridCell.Tab.0.right/0.23.1440.812@0.23.1440.812" timestamp="1599505321569" />
     <state width="1379" height="155" key="GridCell.Tab.0.right/0.23.1440.813@0.23.1440.813" timestamp="1594936331874" />
     <state width="1379" height="101" key="GridCell.Tab.0.right/0.23.1440.814/-268.-1057.1920.1057@0.23.1440.814" timestamp="1599736570804" />
     <state width="1379" height="311" key="GridCell.Tab.0.right/0.23.1440.814@0.23.1440.814" timestamp="1599776824677" />
-    <state width="1379" height="186" key="GridCell.Tab.0.right/0.23.1440.816@0.23.1440.816" timestamp="1599831944840" />
+    <state width="1379" height="243" key="GridCell.Tab.0.right/0.23.1440.816/-268.-1057.1920.1057@0.23.1440.816" timestamp="1601149633279" />
+    <state width="1379" height="79" key="GridCell.Tab.0.right/0.23.1440.816/-271.-1057.1920.1057@0.23.1440.816" timestamp="1602413162963" />
+    <state width="1379" height="79" key="GridCell.Tab.0.right/0.23.1440.816@0.23.1440.816" timestamp="1602373864267" />
     <state width="1379" height="258" key="GridCell.Tab.0.right/0.23.1440.821@0.23.1440.821" timestamp="1598720694987" />
     <state width="1379" height="501" key="GridCell.Tab.0.right/0.23.1440.822@0.23.1440.822" timestamp="1596460741070" />
-    <state width="1419" height="361" key="GridCell.Tab.0.right/0.23.1440.823@0.23.1440.823" timestamp="1594304682498" />
-    <state x="320" y="169" key="Vcs.Push.Dialog.v2" timestamp="1599832319231">
+    <state x="320" y="169" key="Vcs.Push.Dialog.v2" timestamp="1602799671276">
       <screen x="0" y="23" width="1440" height="816" />
     </state>
     <state x="320" y="161" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1599765719732" />
     <state x="320" y="169" key="Vcs.Push.Dialog.v2/0.23.1440.814@0.23.1440.814" timestamp="1599521587033" />
-    <state x="320" y="169" key="Vcs.Push.Dialog.v2/0.23.1440.816@0.23.1440.816" timestamp="1599832319231" />
+    <state x="320" y="169" key="Vcs.Push.Dialog.v2/0.23.1440.816@0.23.1440.816" timestamp="1602799671276" />
+    <state x="320" y="170" key="Vcs.Push.Dialog.v2/0.23.1440.821/-271.-1057.1920.1057@0.23.1440.821" timestamp="1602366775633" />
     <state width="720" height="411" key="XDebugger.FullValuePopup" timestamp="1594470663901">
       <screen x="0" y="23" width="1440" height="822" />
     </state>
