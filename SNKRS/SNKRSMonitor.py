@@ -29,6 +29,7 @@ class SNKRSMonitor:
         Scrapes SNKRS site and adds items to array
         :return: None
         """
+
         no_of_pages = self.number_of_items//50
         anchor = 0
         while no_of_pages != 0:
@@ -49,6 +50,7 @@ class SNKRSMonitor:
         :param colour: Shoe colour
         :return: None
         """
+
         for item in self.instock_copy:
             if item == [product, colour]:
                 self.instock_copy.remove([product, colour])
