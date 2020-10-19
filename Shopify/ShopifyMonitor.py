@@ -2,6 +2,7 @@ import requests as rq
 import json
 import time
 import datetime
+import urllib3
 
 
 class ShopifyMonitor:
@@ -129,6 +130,7 @@ class ShopifyMonitor:
 
 
 if __name__ == '__main__':
+    urllib3.disable_warnings()
     webhook = ''
     url = 'https://www.hanon-shop.com/collections/whats-new/products.json'
     Monitor = ShopifyMonitor(url, webhook)
