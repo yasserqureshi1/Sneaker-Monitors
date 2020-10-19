@@ -3,7 +3,7 @@
 There are three scripts in this directory:
 1. ShopifyMonitor.py    - this monitors an entire page
 2. ShopifyMonitor_Specific.py - this monitors a specific product (still in-progress)
-3. PalaceMonitor.py - an example of a Shopify store set-up (outdated)
+3. PalaceMonitor.py - an example of a Shopify store set-up
 
 ### Using the Shopify Monitors
 
@@ -16,8 +16,3 @@ This gives us the following address: ```https://www.hanon-shop/collections/whats
 
 Change and add that as the url at the bottom of the script for any path on a Shopify store.
 
-### To Note...
-
-The Shopify monitors require some work.
-There are different types of ways that Shopify stores handle products so need to create solutions for those.
-This is currently being looked at and will be pushed to the repo, once complete. 
