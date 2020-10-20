@@ -1,5 +1,3 @@
-# Inputs: item id, colour and size
-
 import requests as rq
 import json
 import time
@@ -23,7 +21,6 @@ class SupremeMonitor:
             return output
         except:
             print('There was an Error')
-
 
     def checker(self, colour, size):
         # check if item is in list
@@ -55,8 +52,5 @@ class SupremeMonitor:
 
 
 if __name__ == '__main__':
-    t0 = time.time()
     test = SupremeMonitor(305180, 'Black', 'NA')
     test.monitor()
-    t1 = time.time()
-    print('Time Taken: ', t1 - t0)

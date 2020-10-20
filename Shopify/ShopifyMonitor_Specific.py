@@ -1,9 +1,7 @@
 # Problem:
 # - Most sites dont have stock inventory in their single product .json files (only on the dir before)
 # - Some sites use "inventory_quantity":1,"old_inventory_quantity":1 (e.g. https://stay-rooted.com/)
-
-# Next Steps:
-# - Find other way of scraping info (possibly backtracking through javascript, or using headless selenium)
+# TODO Find other way of scraping info (possibly backtracking through javascript, or using headless selenium)
 
 import requests as rq
 import json
@@ -49,6 +47,7 @@ class ShopifyMonitor:
     def item_stock_checker(self, list, item):
         try:
             # inventory_quantity and old_inventory_quantity
+
         except:
             try:
                 # Check previous directory

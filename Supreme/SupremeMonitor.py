@@ -3,6 +3,9 @@ import json
 import time
 import datetime
 import urllib3
+import logging
+
+logging.basicConfig(filename='suplog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
 
 
 class SupremeMonitor:
@@ -21,7 +24,6 @@ class SupremeMonitor:
         :param product_item: An array of the product's details
         :return: None
         """
-
         description = ''
         for i in range(len(product_item[4])):
             if i % 2 == 1:
@@ -43,7 +45,6 @@ class SupremeMonitor:
         embed["footer"] = {'text': 'Made by Yasser'}
         embed["timestamp"] = str(datetime.datetime.now())
         data["embeds"].append(embed)
-        print(data)
 
         result = rq.post(self.webhook, data=json.dumps(data), headers={"Content-Type": "application/json"})
 
@@ -51,15 +52,16 @@ class SupremeMonitor:
             result.raise_for_status()
         except rq.exceptions.HTTPError as err:
             print(err)
+            logging.error(msg=err)
         else:
             print("Payload delivered successfully, code {}.".format(result.status_code))
+            logging.info(msg="Payload delivered successfully, code {}.".format(result.status_code))
 
     def scrape_main_site(self):
         """
         Scrapes the Supreme webstore and adds the items to an array
         :return: None
         """
-
         self.pages.clear()
         s = rq.Session()
         try:
@@ -67,8 +69,10 @@ class SupremeMonitor:
                          timeout=3)
             output = json.loads(html.text)['products_and_categories']
             self.pages.append(output)
+            logging.info(msg='Successfully scraped Supreme site')
         except Exception as e:
             print('There was an Error - ', e)
+            logging.error(e)
 
     def scrape_item_site(self, name, id):
         """
@@ -78,12 +82,10 @@ class SupremeMonitor:
         :param id: Product ID
         :return: None
         """
-
         try:
             url = 'https://www.supremenewyork.com/shop/' + str(id) + '.json'
             html = rq.get(url, headers=self.headers, verify=False, timeout=3)
             output = json.loads(html.text)['styles']
-
             for colour in output:
                 instock = [name, colour['name'], 'https:' + colour['image_url'], url.split('.json')[0], []]
                 for size in colour['sizes']:
@@ -103,8 +105,10 @@ class SupremeMonitor:
                 else:
                     print('Sending new Notification')
                     self.discord_webhook(instock)
+                    logging.info(msg='Successfully sent Discord notification')
         except Exception as e:
             print('There was an Error - ', e)
+            logging.error(msg=e)
 
     def checker(self, product, colour, size):
         """
@@ -114,7 +118,6 @@ class SupremeMonitor:
         :param size: Product size
         :return: Boolean whether the status has changed or not
         """
-
         for item in self.instock_copy:
             if item == [product, colour, size]:
                 self.instock_copy.remove([product, colour, size])
@@ -126,7 +129,8 @@ class SupremeMonitor:
         Initiates the monitor
         :return: None
         """
-
+        print('STARTING MONITOR')
+        logging.info(msg='Successfully started monitor')
         while True:
             self.scrape_main_site()
             time.sleep(1)
@@ -137,6 +141,7 @@ class SupremeMonitor:
                         self.scrape_item_site(j['name'], j['id'])
                         time.sleep(1)
             self.first = 0
+            logging.info(msg='Successfully monitored site')
 
 
 if __name__ == '__main__':

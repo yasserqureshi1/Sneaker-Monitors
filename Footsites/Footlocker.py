@@ -3,7 +3,11 @@ import requests
 import datetime
 import json
 from bs4 import BeautifulSoup
+import urllib3
 import time
+import logging
+
+logging.basicConfig(filename='Footlockerlog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
 
 
 class FootlockerBot:
@@ -22,8 +26,6 @@ class FootlockerBot:
         data["embeds"] = []
         embed = {}
         embed["title"] = product_item[0]            # Item Name
-        # if description != '':
-        #     embed["description"] = '**SIZES:** \n' + description                     # Item Sizes
         embed['url'] = product_item[1]                                           # Item link
         embed["color"] = 12845619
         #embed["thumbnail"] = {'url': product_item[2]}                            # Item image
@@ -37,8 +39,10 @@ class FootlockerBot:
             result.raise_for_status()
         except requests.exceptions.HTTPError as err:
             print(err)
+            logging.error(msg=err)
         else:
             print("Payload delivered successfully, code {}.".format(result.status_code))
+            logging.info("Payload delivered successfully, code {}.".format(result.status_code))
 
     def checker(self, item):
         for product in self.instock_copy:
@@ -55,8 +59,10 @@ class FootlockerBot:
             array = soup.find_all('div', {'class': 'fl-category--productlist--item'})
             for i in array:
                 self.all_items.append([i.find('span', {'itemprop': 'name'}).text, i.find('a')['href']])
+            logging.info(msg='Successfully scraped site')
         except Exception as e:
             print('There was an Error - main site - ', e)
+            logging.error(msg=e)
         s.close()
 
     def remove_duplicates(self, mylist):
@@ -64,6 +70,7 @@ class FootlockerBot:
 
     def monitor(self):
         print('STARTING MONITOR')
+        logging.info(msg='Successfully started monitor')
         while True:
             self.scrape_main_site()
             self.all_items = self.remove_duplicates(self.all_items)
@@ -75,10 +82,11 @@ class FootlockerBot:
                     self.instock.append(item)
                     print(item)
                     self.discord_webhook(item)
+            time.sleep(0.1)
 
 
 if __name__ == '__main__':
-
+    urllib3.disable_warnings()
     webhook = ''
     bot = FootlockerBot(webhook)
     bot.monitor()

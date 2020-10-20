@@ -1,3 +1,7 @@
 # Project exclude paths
 /venv/
 config.py
+Supreme/suplog.log
+SNKRS/SNKRSlog.log
+Shopify/Shopifylog.log
+Footsites/Footlockerlog.log

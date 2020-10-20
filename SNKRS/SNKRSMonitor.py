@@ -3,6 +3,9 @@ import json
 import time
 import datetime
 import urllib3
+import logging
+
+logging.basicConfig(filename='SNKRSlog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
 
 
 class SNKRSMonitor:
@@ -29,7 +32,6 @@ class SNKRSMonitor:
         Scrapes SNKRS site and adds items to array
         :return: None
         """
-
         no_of_pages = self.number_of_items//50
         anchor = 0
         while no_of_pages != 0:
@@ -38,8 +40,10 @@ class SNKRSMonitor:
                 output = json.loads(html.text)
                 for item in output['objects']:
                     self.items.append(item)
+                    logging.info(msg='Successfully scraped SNKRS site')
             except Exception as e:
                 print('Error - ', e)
+                logging.error(msg=e)
             anchor += 50
             no_of_pages -= 1
 
@@ -50,7 +54,6 @@ class SNKRSMonitor:
         :param colour: Shoe colour
         :return: None
         """
-
         for item in self.instock_copy:
             if item == [product, colour]:
                 self.instock_copy.remove([product, colour])
@@ -66,7 +69,6 @@ class SNKRSMonitor:
         :param thumbnail: URL to shoe image
         :return: None
         """
-
         data = {}
         data["username"] = "Nike SNKRS EU Bot"
         data["avatar_url"] = 'http://logostories.com/wp-content/uploads/2015/10/image-nike-logo-4.png'
@@ -86,16 +88,18 @@ class SNKRSMonitor:
         try:
             result.raise_for_status()
         except rq.exceptions.HTTPError as err:
-            print(err)
+            logging.error(msg=err)
         else:
             print("Payload delivered successfully, code {}.".format(result.status_code))
+            logging.info(msg="Payload delivered successfully, code {}.".format(result.status_code))
 
     def monitor(self):
         """
         Initiates the monitor
         :return: None
         """
-
+        print('STARTING MONITOR')
+        logging.info(msg='Successfully started monitor')
         while True:
             self.scrape_site()
             self.instock_copy = self.instock.copy()
@@ -109,6 +113,7 @@ class SNKRSMonitor:
                                 self.instock.append([j['merchProduct']['labelName'], j['productContent']['colorDescription']])
                                 if self.first == 0:
                                     self.discord_webhook(j['merchProduct']['labelName'], j['productContent']['colorDescription'], j['productContent']['slug'], j['imageUrls']['productImageUrl'])
+                                    logging.info(msg='Sending new notification')
                                     time.sleep(1)
 
                         else:

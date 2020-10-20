@@ -3,6 +3,9 @@ import json
 import time
 import datetime
 import urllib3
+import logging
+
+logging.basicConfig(filename='Shopifylog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
 
 
 class ShopifyMonitor:
@@ -38,9 +41,10 @@ class ShopifyMonitor:
                     page = 0
                 else:
                     self.pages.append(output)
+                    logging.info(msg='Successfully scraped site')
                     page += 1
             except Exception as e:
-                print('Error - ', e)
+                logging.error(e)
                 page = 0
         s.close()
 
@@ -91,17 +95,21 @@ class ShopifyMonitor:
         try:
             result.raise_for_status()
         except rq.exceptions.HTTPError as err:
-            print(err)
+            logging.error(err)
         else:
             print("Payload delivered successfully, code {}.".format(result.status_code))
+            logging.info(msg="Payload delivered successfully, code {}.".format(result.status_code))
 
     def monitor(self):
         """
         Initiates the monitor
         :return: None
         """
+        print('STARTING MONITOR')
+        logging.info(msg='Successfully started monitor')
         if self.check_url() == False:
             print('Store URL not in correct format. Please ensure that it is a path pointing to a /products.json file')
+            logging.error(msg='Store URL formatting incorrect for: ' + str(self.url))
             return
 
         while True:
@@ -126,6 +134,7 @@ class ShopifyMonitor:
                     else:
                         print(product_item)
                         self.discord_webhook(product_item)
+                        logging.info(msg='Successfully sent Discord notification')
             time.sleep(3)
 
 
