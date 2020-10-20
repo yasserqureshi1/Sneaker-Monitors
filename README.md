@@ -11,6 +11,11 @@ json
 time
 datetime
 urllib3
+logging
+```
+For the Footsites monitor, you need:
+```
+bs4
 ```
 
 ## Introduction
