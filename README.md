@@ -3,6 +3,8 @@ A collection of web monitors that notify of restocks or updates on sneaker relat
 
 If you have any requests for sites, please let me know via Discord at @TheBrownPanther2#3801
 
+##### NOTE: Info on the Footsites monitor will be updated soon
+
 ## Installation
 The following modules are required:
 ```
@@ -13,7 +15,7 @@ datetime
 urllib3
 logging
 ```
-For the Footsites monitor, you need:
+For the Footsites monitor, you also need:
 ```
 bs4
 ```
