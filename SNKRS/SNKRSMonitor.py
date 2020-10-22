@@ -4,8 +4,10 @@ import time
 import datetime
 import urllib3
 import logging
+import dotenv
 
 logging.basicConfig(filename='SNKRSlog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
+CONFIG = dotenv.dotenv_values(dotenv_path='.env')
 
 
 class SNKRSMonitor:
@@ -70,15 +72,15 @@ class SNKRSMonitor:
         :return: None
         """
         data = {}
-        data["username"] = "Nike SNKRS EU Bot"
-        data["avatar_url"] = 'http://logostories.com/wp-content/uploads/2015/10/image-nike-logo-4.png'
+        data["username"] = CONFIG['USERNAME']
+        data["avatar_url"] = CONFIG['AVATAR_URL']
         data["embeds"] = []
         embed = {}
         embed["title"] = title
         embed["description"] = '*Item restock*\n Colour: ' + str(colour)
         embed["url"] = 'https://www.nike.com/gb/launch/t/' + slug
         embed["thumbnail"] = {'url': thumbnail}
-        embed["color"] = 16777215
+        embed["color"] = int(CONFIG['COLOUR'])
         embed["footer"] = {'text': 'Made by Yasser'}
         embed["timestamp"] = str(datetime.datetime.now())
         data["embeds"].append(embed)
@@ -128,6 +130,5 @@ class SNKRSMonitor:
 
 if __name__ == '__main__':
     urllib3.disable_warnings()
-    url = ''
-    test = SNKRSMonitor(url)
+    test = SNKRSMonitor(webhook=CONFIG['WEBHOOK'])
     test.monitor()

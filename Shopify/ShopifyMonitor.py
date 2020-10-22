@@ -4,8 +4,10 @@ import time
 import datetime
 import urllib3
 import logging
+import dotenv
 
 logging.basicConfig(filename='Shopifylog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
+CONFIG = dotenv.dotenv_values(dotenv_path='.env')
 
 
 class ShopifyMonitor:
@@ -77,14 +79,14 @@ class ShopifyMonitor:
         link = self.url.replace('.json', '/') + product_item[3]
 
         data = {}
-        data["username"] = "[insert name]"
-        #data["avatar_url"] = '[insert image url]'
+        data["username"] = CONFIG['USERNAME']
+        data["avatar_url"] = CONFIG['AVATAR_URL']
         data["embeds"] = []
         embed = {}
         embed["title"] = product_item[0]
         embed["description"] = "**SHOP: **" + self.url.split('.com/')[0] + '.com/ \n\n' + '**SIZES:** \n' + description
         embed['url'] = link
-        embed["color"] = 15258703
+        embed["color"] = int(CONFIG['COLOUR'])
         embed["thumbnail"] = {'url': product_item[2]}
         embed["footer"] = {'text': 'Made by Yasser Qureshi'}
         embed["timestamp"] = str(datetime.datetime.now())
@@ -140,7 +142,6 @@ class ShopifyMonitor:
 
 if __name__ == '__main__':
     urllib3.disable_warnings()
-    webhook = ''
     url = 'https://www.hanon-shop.com/collections/whats-new/products.json'
-    Monitor = ShopifyMonitor(url, webhook)
+    Monitor = ShopifyMonitor(CONFIG['URL'], webhook=CONFIG['WEBHOOK'])
     Monitor.monitor()

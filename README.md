@@ -26,39 +26,30 @@ This repo contains different monitors to various sites to notify if a restock or
 - All shopify sites (e.g. Palace Skateboards, Hanon Shop, OVO, shopnicekicks.com, BDGA Store, Noir Fonce, Travis Scott, etc.)
 - Supreme
 - Nike SNKRS
+- Footsites (currently only Footlocker)
 
 ## How to Use
 
-These scripts should be running continuously for the monitor to work. As such you will need to host it on a server. Personally, I use AWS, but nevertheless, there are tonnes out there. 
+These scripts should be running continuously for the monitor to work.
+As such you will need to host it on a server.
+Personally, I use AWS, but nevertheless, there are tonnes out there. 
 
-Below are details on how to use each of the monitors:
+Each monitor has an associated ```.env``` file. 
+This is where you put your webhook URL.
+There are also options to change the bot username, avatar and colour.
 
-### Shopify Monitor
-Take the following steps to work the monitor:
-1. Insert a name for your bot on line 64
-2. Insert an image url for your bots avatar on line 65 (optional)
-3. Insert the Discord Server's webhook url on line 119
-4. Inset the url of the website you want to scrape. Note that the url should point to a .json file in a given category (e.g. myshop.com/collections/whats-new/products.json)
+The Shopify monitors have specific requirements, please refer to the associated ```README.md``` file.
 
-### Supreme
-Take the following steps to work the monitor:
-1. Insert a name for your bot on line 25 (default is 'Supreme Monitor')
-2. Insert an image url for your bots avatar on line 26 (default is the Supreme logo)
-3. Insert the Discord Server's webhook url on line 107
-
-### Nike SNKRS (EU)
-Take the following steps to work the monitor:
-1. Insert a name for your bot on line 50 (default is 'Nike SNKRS EU Bot')
-2. Insert an image url for your bots avatar on line 51 (default is Nike Logo)
-3. Insert the Discord Server's webhook url on line 98
 
 ## Example Set-Up with AWS 
 
 https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstances.html
 
-This requires you to have an account with AWS. Navigate to the `Console`, and click on the `Services` menu.
+This requires you to have an account with AWS. 
+Navigate to the `Console`, and click on the `Services` menu.
 Under the `Compute` heading, select `EC2`.
 From here, we will create our instance. 
+
 Select the `Launch Instance` button. 
 You will be taken to a page with a list of instances to choose from.
 We will be focusing on the 'free Tier'. 
@@ -93,6 +84,7 @@ I use FileZilla.
 
 Upload your files to your instance using FileZilla. 
 Then using PuTTY, type the following command to install Python:
+
 ```
 $ sudo apt install python3-pip
 ```
@@ -105,11 +97,13 @@ $ pip3 install [package name]
 Once everything is done, we can run our code. 
 Firstly, we want it to run continuously. 
 As such, we type in the command, where we can have multiple sessions on a single screen instance:
+
 ```
 $ screen
 ``` 
 
 Then run the code:
+
 ```
 $ python3 [name of script].py
 ```

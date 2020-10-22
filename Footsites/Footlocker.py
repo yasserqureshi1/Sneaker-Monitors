@@ -6,8 +6,10 @@ from bs4 import BeautifulSoup
 import urllib3
 import time
 import logging
+import dotenv
 
 logging.basicConfig(filename='Footlockerlog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
+CONFIG = dotenv.dotenv_values(dotenv_path='.env')
 
 
 class FootlockerBot:
@@ -26,13 +28,13 @@ class FootlockerBot:
         :return: None
         """
         data = {}
-        data["username"] = "Footlocker Monitor"
-        data["avatar_url"] = 'https://therockbury.com/wp-content/uploads/2014/03/footlocker-logo.jpg'
+        data["username"] = CONFIG['USERNAME']
+        data["avatar_url"] = CONFIG['AVATAR_URL']
         data["embeds"] = []
         embed = {}
         embed["title"] = product_item[0]            # Item Name
         embed['url'] = product_item[1]                                           # Item link
-        embed["color"] = 12845619
+        embed["color"] = int(CONFIG['COLOUR'])
         #embed["thumbnail"] = {'url': product_item[2]}                            # Item image
         embed["footer"] = {'text': 'Made by Yasser'}
         embed["timestamp"] = str(datetime.datetime.now())
@@ -110,6 +112,5 @@ class FootlockerBot:
 
 if __name__ == '__main__':
     urllib3.disable_warnings()
-    webhook = ''
-    bot = FootlockerBot(webhook)
+    bot = FootlockerBot(webhook=CONFIG['WEBHOOK'])
     bot.monitor()

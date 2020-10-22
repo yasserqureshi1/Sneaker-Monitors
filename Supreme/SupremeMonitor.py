@@ -4,8 +4,10 @@ import time
 import datetime
 import urllib3
 import logging
+import dotenv
 
 logging.basicConfig(filename='suplog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
+CONFIG = dotenv.dotenv_values(dotenv_path='.env')
 
 
 class SupremeMonitor:
@@ -32,15 +34,15 @@ class SupremeMonitor:
                 description = description + str(product_item[4][i].replace(' : ', '/')) + '\t\t'
 
         data = {}
-        data["username"] = "Supreme Monitor"
-        data["avatar_url"] = 'https://lh3.googleusercontent.com/lPUZwKE_VV6_UxQOE_MlXVSYi77LssHVK0T9zZFFERORHI7ZhQXD-WvsMKXu5822NQ'
+        data["username"] = CONFIG['USERNAME']
+        data["avatar_url"] = CONFIG['AVATAR_URL']
         data["embeds"] = []
         embed = {}
         embed["title"] = product_item[0] + ' - ' + product_item[1]               # Item Name
         if description != '':
             embed["description"] = '**SIZES:** \n' + description                     # Item Sizes
         embed['url'] = product_item[3]                                           # Item link
-        embed["color"] = 12845619
+        embed["color"] = CONFIG['COLOUR']
         embed["thumbnail"] = {'url': product_item[2]}                            # Item image
         embed["footer"] = {'text': 'Made by Yasser'}
         embed["timestamp"] = str(datetime.datetime.now())
@@ -146,6 +148,5 @@ class SupremeMonitor:
 
 if __name__ == '__main__':
     urllib3.disable_warnings()
-    discord_webhook_url = ''
-    test = SupremeMonitor(webhook=discord_webhook_url)
+    test = SupremeMonitor(webhook=CONFIG['WEBHOOK'])
     test.monitor()
