@@ -20,6 +20,11 @@ class FootlockerBot:
         self.webhook = webhook
 
     def discord_webhook(self, product_item):
+        """
+        Sends a Discord webhook notification to the specified webhook URL
+        :param product_item: An array of the product's details
+        :return: None
+        """
         data = {}
         data["username"] = "Footlocker Monitor"
         data["avatar_url"] = 'https://therockbury.com/wp-content/uploads/2014/03/footlocker-logo.jpg'
@@ -45,6 +50,11 @@ class FootlockerBot:
             logging.info("Payload delivered successfully, code {}.".format(result.status_code))
 
     def checker(self, item):
+        """
+        Determines whether the product status has changed
+        :param item: list of item details
+        :return: Boolean whether the status has changed or not
+        """
         for product in self.instock_copy:
             if product == item:
                 self.instock_copy.remove(product)
@@ -52,6 +62,10 @@ class FootlockerBot:
         return False
 
     def scrape_main_site(self):
+        """
+        Scrape the Footlocker site and adds each item to an array
+        :return: None
+        """
         s = requests.Session()
         try:
             html = s.get('https://www.footlocker.co.uk/en/men/shoes/', headers=self.headers, verify=False, timeout=3)
@@ -66,9 +80,18 @@ class FootlockerBot:
         s.close()
 
     def remove_duplicates(self, mylist):
+        """
+        Removes duplicate values from a list
+        :param mylist: list
+        :return: list
+        """
         return [list(t) for t in set(tuple(element) for element in mylist)]
 
     def monitor(self):
+        """
+        Initiates monitor
+        :return: None
+        """
         print('STARTING MONITOR')
         logging.info(msg='Successfully started monitor')
         while True:
