@@ -43,6 +43,9 @@ The Shopify monitors have specific requirements, please refer to the associated 
 
 ## Example Set-Up with AWS 
 
+This is a very good tutorial that will go through everything written here and more:
+https://youtu.be/BYvKv3kM9pk
+
 https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstances.html
 
 This requires you to have an account with AWS. 
