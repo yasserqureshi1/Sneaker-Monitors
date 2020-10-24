@@ -25,13 +25,10 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="32582f0a-a14d-4961-85a7-1609705c1344" name="Default Changelist" comment="Updating docstrings">
+    <list default="true" id="32582f0a-a14d-4961-85a7-1609705c1344" name="Default Changelist" comment="Updating .env files">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Footsites/Footlocker.py" beforeDir="false" afterPath="$PROJECT_DIR$/Footsites/Footlocker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Footsites/Footlocker.py" beforeDir="false" afterPath="$PROJECT_DIR$/Footsites/FootlockerMonitors.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SNKRS/SNKRSMonitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/SNKRS/SNKRSMonitor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Shopify/ShopifyMonitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/Shopify/ShopifyMonitor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Supreme/SupremeMonitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/Supreme/SupremeMonitor.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +63,7 @@
     </key>
   </component>
   <component name="RunManager" selected="Python.SupremeMonitor">
-    <configuration name="Footlocker" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="FootlockerMonitors" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="WebsiteMonitors" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -78,7 +75,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Footsites/Footlocker.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Footsites/FootlockerMonitors.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -174,7 +171,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.SupremeMonitor" />
-        <item itemvalue="Python.Footlocker" />
+        <item itemvalue="Python.FootlockerMonitors" />
         <item itemvalue="Python.ShopifyMonitor (1)" />
         <item itemvalue="Python.SNKRSMonitor (1)" />
         <item itemvalue="Python.ShopifyMonitor" />
@@ -424,7 +421,14 @@
       <option name="project" value="LOCAL" />
       <updated>1603326342814</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="Updating .env files">
+      <created>1603329880302</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1603329880302</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -479,7 +483,8 @@
     <MESSAGE value="Added Logs and other updates" />
     <MESSAGE value="Update README.md" />
     <MESSAGE value="Updating docstrings" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updating docstrings" />
+    <MESSAGE value="Updating .env files" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updating .env files" />
   </component>
   <component name="WindowStateProjectService">
     <state x="455" y="259" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1603119266736">
@@ -499,11 +504,11 @@
       <screen x="0" y="23" width="1440" height="812" />
     </state>
     <state x="462" y="145" key="Github.UntrackedFilesDialog/0.23.1440.812@0.23.1440.812" timestamp="1599490553760" />
-    <state width="1419" height="124" key="GridCell.Tab.0.bottom" timestamp="1603329021391">
+    <state width="1419" height="115" key="GridCell.Tab.0.bottom" timestamp="1603330370127">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1419" height="238" key="GridCell.Tab.0.bottom/0.0.1440.900/-271.-1080.1920.1080@0.0.1440.900" timestamp="1603185512463" />
-    <state width="1419" height="124" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1603329021391" />
+    <state width="1419" height="115" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1603330370127" />
     <state width="1403" height="56" key="GridCell.Tab.0.bottom/0.23.1440.812@0.23.1440.812" timestamp="1599505321569" />
     <state width="1379" height="155" key="GridCell.Tab.0.bottom/0.23.1440.813@0.23.1440.813" timestamp="1594936331874" />
     <state width="1379" height="101" key="GridCell.Tab.0.bottom/0.23.1440.814/-268.-1057.1920.1057@0.23.1440.814" timestamp="1599736570805" />
@@ -514,11 +519,11 @@
     <state width="1419" height="122" key="GridCell.Tab.0.bottom/0.23.1440.821/-271.-1057.1920.1057@0.23.1440.821" timestamp="1603205108384" />
     <state width="1419" height="122" key="GridCell.Tab.0.bottom/0.23.1440.821@0.23.1440.821" timestamp="1603199888722" />
     <state width="1379" height="501" key="GridCell.Tab.0.bottom/0.23.1440.822@0.23.1440.822" timestamp="1596460741071" />
-    <state width="1419" height="124" key="GridCell.Tab.0.center" timestamp="1603329021389">
+    <state width="1419" height="115" key="GridCell.Tab.0.center" timestamp="1603330370126">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1419" height="238" key="GridCell.Tab.0.center/0.0.1440.900/-271.-1080.1920.1080@0.0.1440.900" timestamp="1603185512461" />
-    <state width="1419" height="124" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1603329021389" />
+    <state width="1419" height="115" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1603330370126" />
     <state width="1403" height="56" key="GridCell.Tab.0.center/0.23.1440.812@0.23.1440.812" timestamp="1599505321569" />
     <state width="1379" height="155" key="GridCell.Tab.0.center/0.23.1440.813@0.23.1440.813" timestamp="1594936331874" />
     <state width="1379" height="101" key="GridCell.Tab.0.center/0.23.1440.814/-268.-1057.1920.1057@0.23.1440.814" timestamp="1599736570804" />
@@ -529,11 +534,11 @@
     <state width="1419" height="122" key="GridCell.Tab.0.center/0.23.1440.821/-271.-1057.1920.1057@0.23.1440.821" timestamp="1603205108383" />
     <state width="1419" height="122" key="GridCell.Tab.0.center/0.23.1440.821@0.23.1440.821" timestamp="1603199888722" />
     <state width="1379" height="501" key="GridCell.Tab.0.center/0.23.1440.822@0.23.1440.822" timestamp="1596460741069" />
-    <state width="1419" height="124" key="GridCell.Tab.0.left" timestamp="1603329021389">
+    <state width="1419" height="115" key="GridCell.Tab.0.left" timestamp="1603330370126">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1419" height="238" key="GridCell.Tab.0.left/0.0.1440.900/-271.-1080.1920.1080@0.0.1440.900" timestamp="1603185512460" />
-    <state width="1419" height="124" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1603329021389" />
+    <state width="1419" height="115" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1603330370126" />
     <state width="1403" height="56" key="GridCell.Tab.0.left/0.23.1440.812@0.23.1440.812" timestamp="1599505321568" />
     <state width="1379" height="155" key="GridCell.Tab.0.left/0.23.1440.813@0.23.1440.813" timestamp="1594936331873" />
     <state width="1379" height="101" key="GridCell.Tab.0.left/0.23.1440.814/-268.-1057.1920.1057@0.23.1440.814" timestamp="1599736570803" />
@@ -544,11 +549,11 @@
     <state width="1419" height="122" key="GridCell.Tab.0.left/0.23.1440.821/-271.-1057.1920.1057@0.23.1440.821" timestamp="1603205108382" />
     <state width="1419" height="122" key="GridCell.Tab.0.left/0.23.1440.821@0.23.1440.821" timestamp="1603199888721" />
     <state width="1379" height="501" key="GridCell.Tab.0.left/0.23.1440.822@0.23.1440.822" timestamp="1596460741069" />
-    <state width="1419" height="124" key="GridCell.Tab.0.right" timestamp="1603329021390">
+    <state width="1419" height="115" key="GridCell.Tab.0.right" timestamp="1603330370126">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1419" height="238" key="GridCell.Tab.0.right/0.0.1440.900/-271.-1080.1920.1080@0.0.1440.900" timestamp="1603185512462" />
-    <state width="1419" height="124" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1603329021390" />
+    <state width="1419" height="115" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1603330370126" />
     <state width="1403" height="56" key="GridCell.Tab.0.right/0.23.1440.812@0.23.1440.812" timestamp="1599505321569" />
     <state width="1379" height="155" key="GridCell.Tab.0.right/0.23.1440.813@0.23.1440.813" timestamp="1594936331874" />
     <state width="1379" height="101" key="GridCell.Tab.0.right/0.23.1440.814/-268.-1057.1920.1057@0.23.1440.814" timestamp="1599736570804" />
@@ -559,10 +564,10 @@
     <state width="1419" height="122" key="GridCell.Tab.0.right/0.23.1440.821/-271.-1057.1920.1057@0.23.1440.821" timestamp="1603205108384" />
     <state width="1419" height="122" key="GridCell.Tab.0.right/0.23.1440.821@0.23.1440.821" timestamp="1603199888722" />
     <state width="1379" height="501" key="GridCell.Tab.0.right/0.23.1440.822@0.23.1440.822" timestamp="1596460741070" />
-    <state x="320" y="161" key="Vcs.Push.Dialog.v2" timestamp="1603326399276">
+    <state x="320" y="161" key="Vcs.Push.Dialog.v2" timestamp="1603329894357">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="320" y="161" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1603326399276" />
+    <state x="320" y="161" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1603329894357" />
     <state x="320" y="169" key="Vcs.Push.Dialog.v2/0.23.1440.814@0.23.1440.814" timestamp="1599521587033" />
     <state x="320" y="169" key="Vcs.Push.Dialog.v2/0.23.1440.816@0.23.1440.816" timestamp="1602799671276" />
     <state x="320" y="170" key="Vcs.Push.Dialog.v2/0.23.1440.821/-271.-1057.1920.1057@0.23.1440.821" timestamp="1603205028860" />
