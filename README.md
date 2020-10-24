@@ -3,6 +3,8 @@ A collection of web monitors that notify of restocks or updates on sneaker relat
 
 If you have any requests for sites, please let me know via Discord at @TheBrownPanther2#3801
 
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/paypalme/YasserQureshi1)
+
 ##### NOTE: Info on the Footsites monitor will be updated soon
 
 ## Installation
@@ -40,6 +42,11 @@ There are also options to change the bot username, avatar and colour.
 
 The Shopify monitors have specific requirements, please refer to the associated ```README.md``` file.
 
+## Issues
+
+If you come across any issues, please feel free to reach out.
+The monitors will automatically produce a log file - This contains logs of the monitor in action with no personal data being stored.
+Please send this log file to me as well as a description of the issues for me to fix.
 
 ## Example Set-Up with AWS 
 
