@@ -7,7 +7,7 @@ import logging
 import dotenv
 
 logging.basicConfig(filename='Shopifylog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
-CONFIG = dotenv.dotenv_values(dotenv_path='.env')
+CONFIG = dotenv.dotenv_values()
 
 
 class ShopifyMonitor:
