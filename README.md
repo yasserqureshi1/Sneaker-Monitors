@@ -3,8 +3,6 @@ A collection of web monitors that notify of restocks or updates on sneaker relat
 
 If you have any requests for sites, please let me know via Discord at @TheBrownPanther2#3801
 
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/paypalme/YasserQureshi1)
-
 ##### NOTE: Info on the Footsites monitor will be updated soon
 
 ## Installation
