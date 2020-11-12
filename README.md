@@ -42,6 +42,19 @@ There are also options to change the bot username, avatar and colour.
 
 The Shopify monitors have specific requirements, please refer to the associated ```README.md``` file.
 
+
+### Proxy Support
+
+Currently, we have proxy support for:
+- Supreme
+
+You can enable this by setting the proxy flag:
+```
+python Supreme/SupremeMonitor.py --proxy <proxy>:<port>
+OR WITH CREDENTIALS
+python Supreme/SupremeMonitor.py --proxy <proxy_username>:<proxy_password>@<proxy_domain>:<port>
+```
+
 ## Issues
 
 If you come across any issues, please feel free to reach out.
