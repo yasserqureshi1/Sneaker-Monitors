@@ -5,10 +5,20 @@ import datetime
 import urllib3
 import logging
 import dotenv
+import argparse
 
 logging.basicConfig(filename='suplog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
 CONFIG = dotenv.dotenv_values()
 
+parser = argparse.ArgumentParser(description='Supreme Monitoring Script')
+
+# Add the arguments
+parser.add_argument('--proxy',
+                       type=str,
+                       help='proxy:port of your proxy',
+                       required=False)
+
+args = parser.parse_args()
 
 class SupremeMonitor:
     def __init__(self, webhook):
@@ -25,7 +35,13 @@ class SupremeMonitor:
 
         url = "https://www.supremenewyork.com/mobile_stock.json"
 
-        stock = rq.get(url, headers=self.headers).json()['products_and_categories']
+        if not args.proxy:
+            stock = rq.get(url, headers=self.headers).json()['products_and_categories']  
+        else:
+            proxies = {
+                "http": f"http://{args.proxy}",
+            }
+            stock = rq.get(url, headers=self.headers, proxies=proxies).json()['products_and_categories']
 
         return stock
 
@@ -37,7 +53,13 @@ class SupremeMonitor:
 
         item_url = f"https://www.supremenewyork.com/shop/{item_id}.json" 
 
-        item_variants = rq.get(item_url, headers=self.headers).json()
+        if not args.proxy:
+            item_variants = rq.get(item_url, headers=self.headers).json()
+        else:
+            proxies = {
+                "http": f"http://{args.proxy}",
+            }
+            item_variants = rq.get(item_url, headers=self.headers, proxies=proxies).json()
 
         for stylename in item_variants["styles"]:
             for itemsize in stylename["sizes"]:
