@@ -5,27 +5,22 @@ import datetime
 import urllib3
 import logging
 import dotenv
-import argparse
+
 
 logging.basicConfig(filename='suplog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
 CONFIG = dotenv.dotenv_values()
 
-parser = argparse.ArgumentParser(description='Supreme Monitoring Script')
-
-# Add the arguments
-parser.add_argument('--proxy',
-                       type=str,
-                       help='proxy:port of your proxy',
-                       required=False)
-
-args = parser.parse_args()
 
 class SupremeMonitor:
-    def __init__(self, webhook):
+    def __init__(self, webhook, proxy):
         self.headers = {'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 '
                                       '(KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1'}
         self.instock = []
         self.webhook = webhook
+        if proxy is None:
+            self.proxy = {}
+        else:
+            self.proxy = {"http": f"http://{proxy}"}
 
     def get_stock(self):
         """
@@ -34,14 +29,7 @@ class SupremeMonitor:
         """
 
         url = "https://www.supremenewyork.com/mobile_stock.json"
-
-        if not args.proxy:
-            stock = rq.get(url, headers=self.headers).json()['products_and_categories']  
-        else:
-            proxies = {
-                "http": f"http://{args.proxy}",
-            }
-            stock = rq.get(url, headers=self.headers, proxies=proxies).json()['products_and_categories']
+        stock = rq.get(url, headers=self.headers, proxies=self.proxy).json()['products_and_categories']
 
         return stock
 
@@ -53,13 +41,7 @@ class SupremeMonitor:
 
         item_url = f"https://www.supremenewyork.com/shop/{item_id}.json" 
 
-        if not args.proxy:
-            item_variants = rq.get(item_url, headers=self.headers).json()
-        else:
-            proxies = {
-                "http": f"http://{args.proxy}",
-            }
-            item_variants = rq.get(item_url, headers=self.headers, proxies=proxies).json()
+        item_variants = rq.get(item_url, headers=self.headers, proxies=self.proxy).json()
 
         for stylename in item_variants["styles"]:
             for itemsize in stylename["sizes"]:
@@ -153,5 +135,5 @@ class SupremeMonitor:
 
 if __name__ == '__main__':
     urllib3.disable_warnings()
-    supremeMonitor = SupremeMonitor(webhook=CONFIG['WEBHOOK'])
+    supremeMonitor = SupremeMonitor(webhook=CONFIG['WEBHOOK'], proxy=CONFIG['PROXY'])
     supremeMonitor.monitor()

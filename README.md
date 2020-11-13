@@ -46,7 +46,7 @@ The Shopify monitors have specific requirements, please refer to the associated 
 Currently, we have proxy support for:
 - Supreme
 
-You can enable this by setting the proxy flag:
+You can enable this by setting the proxy flag in the ```.env file```
 ```
 python Supreme/SupremeMonitor.py --proxy <proxy>:<port>
 OR WITH CREDENTIALS
