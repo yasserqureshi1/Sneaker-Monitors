@@ -10,7 +10,7 @@ import datetime
 
 
 class ShopifyMonitor:
-    def __init__(self, list_of_urls, webhook):
+    def __init__(self, list_of_urls, webhook, proxy):
         self.list_of_urls = list_of_urls
         self.headers = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, '
                                       'like Gecko) Chrome/83.0.4103.116 Safari/537.36'}
@@ -18,13 +18,14 @@ class ShopifyMonitor:
         self.instock_products = []
         self.instock_products_copy = []
         self.webhook = webhook
+        self.proxy = proxy
 
     def scrape_site(self, url):
         self.pages.clear()
         s = rq.Session()
         try:
             # html = s.get(self.url + str(num) + '&limit=250', headers=self.headers, verify=False, timeout=1)
-            html = s.get(url, headers=self.headers, verify=False, timeout=1)
+            html = s.get(url, headers=self.headers, proxies=self.proxy, verify=False, timeout=1)
             output = json.loads(html.text)['product']
             if output == []:
                 pass
@@ -119,9 +120,11 @@ class ShopifyMonitor:
 
 if __name__ == '__main__':
     webhook = ''
+    # proxy = {"http": f"http://{proxy}"}
+    proxy = {}
     urls = ['https://www.hanon-shop.com/collections/whats-new/products/nike-air-max-iii-cj6779100.json',
             'https://www.hanon-shop.com/collections/whats-new/products/nike-jordan-zoom-92-ck9183103.json']
-    test = ShopifyMonitor(urls, webhook)
+    test = ShopifyMonitor(urls, webhook, proxy)
     # test.check_url()
     test.monitor()
 

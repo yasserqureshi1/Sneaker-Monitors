@@ -3,10 +3,11 @@ import requests as rq
 import json
 import time
 import datetime
+import urllib3
 
 
 class PalaceMonitor:
-    def __init__(self, webhook):
+    def __init__(self, webhook, proxy):
         self.url = 'https://shop.palaceskateboards.com/collections/all/products.json'
         self.headers = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, '
                                       'like Gecko) Chrome/83.0.4103.116 Safari/537.36'}
@@ -14,6 +15,7 @@ class PalaceMonitor:
         self.instock_products = []
         self.instock_products_copy = []
         self.webhook = webhook
+        self.proxy = proxy
 
     def check_url(self):
         """
@@ -32,7 +34,7 @@ class PalaceMonitor:
         page = 1
         while page > 0:
             try:
-                html = s.get(self.url + '?page=' + str(page) + '&limit=250', headers=self.headers, verify=False, timeout=5)
+                html = s.get(self.url + '?page=' + str(page) + '&limit=250', headers=self.headers, proxies=self.proxy, verify=False, timeout=5)
                 output = json.loads(html.text)['products']
                 if output == []:
                     page = 0
@@ -104,6 +106,8 @@ class PalaceMonitor:
             print('Store URL not in correct format. Please ensure that it is a path pointing to a /products.json file')
             return
 
+        print('STARTING MONITOR')
+        start = 1
         while True:
             self.scrape_site()
             self.instock_products_copy = self.instock_products.copy()
@@ -124,13 +128,18 @@ class PalaceMonitor:
                     if product_item[1] == []:
                         pass
                     else:
-                        print(product_item)
-                        self.discord_webhook(product_item)
+                        if start == 0:
+                            print(product_item)
+                            self.discord_webhook(product_item)
+            start = 0
             time.sleep(3)
 
 
 if __name__ == '__main__':
+    urllib3.disable_warnings()
     webhook = ''
-    Monitor = PalaceMonitor(webhook)
+    # proxy = {"http": f"http://{proxy}"}
+    proxy = {}
+    Monitor = PalaceMonitor(webhook, proxy)
     Monitor.monitor()
 
