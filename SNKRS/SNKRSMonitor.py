@@ -20,7 +20,6 @@ class SNKRSMonitor:
         self.instock = []
         self.instock_copy = []
         self.webhook = webhook
-        self.first = 1
         if proxy is None:
             self.proxy = {}
         else:
@@ -35,7 +34,7 @@ class SNKRSMonitor:
         anchor = 0
         while no_of_pages != 0:
             try:
-                html = rq.get(url=self.url[0] + str(anchor) + self.url[1], timeout=5, verify=False, headers=self.headers, proxy=self.proxy)
+                html = rq.get(url=self.url[0] + str(anchor) + self.url[1], timeout=5, verify=False, headers=self.headers, proxies=self.proxy)
                 output = json.loads(html.text)
                 for item in output['objects']:
                     self.items.append(item)
@@ -99,6 +98,7 @@ class SNKRSMonitor:
         """
         print('STARTING MONITOR')
         logging.info(msg='Successfully started monitor')
+        start = 1
         while True:
             self.scrape_site()
             self.instock_copy = self.instock.copy()
@@ -110,7 +110,7 @@ class SNKRSMonitor:
                                 pass
                             else:
                                 self.instock.append([j['merchProduct']['labelName'], j['productContent']['colorDescription']])
-                                if self.first == 0:
+                                if start == 0:
                                     self.discord_webhook(j['merchProduct']['labelName'], j['productContent']['colorDescription'], j['productContent']['slug'], j['imageUrls']['productImageUrl'])
                                     logging.info(msg='Sending new notification')
                                     time.sleep(1)
@@ -121,7 +121,7 @@ class SNKRSMonitor:
                 except:
                     pass
                 self.items.remove(item)
-            self.first = 1
+            start = 0
             time.sleep(1)
 
 
