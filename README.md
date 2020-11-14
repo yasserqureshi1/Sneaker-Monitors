@@ -68,3 +68,10 @@ If you come across any issues, please feel free to reach out.
 The monitors will automatically produce a log file - This contains logs of the monitor in action with no personal data being stored.
 Please send this log file to me as well as a description of the issues for me to fix.
 
+## To Do
+ - [ ] More items to monitor with SNKRS (currently monitors the 50 recent posts)
+ - [ ] Tidy Shopify monitor
+ - [ ] Support for Footlocker in EU, CA, AU and US
+ - [ ] Add more Footsites (Eastbay, Champsports, Footaction)
+ - [ ] Add Demandware sites (Adidas and YeezySupply)
+ - [ ] Add other requested sites (Price reduction monitors for Nike; monitors for Ssense and Zalando)
