@@ -25,7 +25,7 @@ bs4
 This repo contains different monitors to various sites to notify if a restock or update occurs via Discord Webhook. A list of all the sites are detailed below:
 - All shopify sites (e.g. Palace Skateboards, Hanon Shop, OVO, shopnicekicks.com, BDGA Store, Noir Fonce, Travis Scott, etc.)
 - Supreme
-- Nike SNKRS
+- Nike SNKRS (Supports 42 countries - see the associated README file)
 - Footsites (currently only Footlocker)
 
 ## How to Use
@@ -46,11 +46,11 @@ The Shopify monitors have specific requirements, please refer to the associated 
 Currently, we have proxy support for:
 - Supreme
 
-You can enable this by setting the proxy flag in the ```.env file```
+You can enable this by setting the proxy in the ```.env file```
 ```
-python Supreme/SupremeMonitor.py --proxy <proxy>:<port>
+<proxy>:<port>
 OR WITH CREDENTIALS
-python Supreme/SupremeMonitor.py --proxy <proxy_username>:<proxy_password>@<proxy_domain>:<port>
+<proxy_username>:<proxy_password>@<proxy_domain>:<port>
 ```
 
 ## Issues

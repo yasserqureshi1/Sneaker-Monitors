@@ -25,13 +25,12 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="32582f0a-a14d-4961-85a7-1609705c1344" name="Default Changelist" comment="Update">
-      <change beforePath="$PROJECT_DIR$/.idea/WebsiteMonitors.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/WebsiteMonitors.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="32582f0a-a14d-4961-85a7-1609705c1344" name="Default Changelist" comment="Proxy support in .env files">
+      <change afterPath="$PROJECT_DIR$/SNKRS/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Supreme/.env" beforeDir="false" afterPath="$PROJECT_DIR$/Supreme/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Supreme/SupremeMonitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/Supreme/SupremeMonitor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SNKRS/.env" beforeDir="false" afterPath="$PROJECT_DIR$/SNKRS/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SNKRS/SNKRSMonitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/SNKRS/SNKRSMonitor.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -424,7 +423,14 @@
       <option name="project" value="LOCAL" />
       <updated>1603326342814</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="Proxy support in .env files">
+      <created>1605307703255</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1605307703255</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -479,7 +485,8 @@
     <MESSAGE value="Update README.md" />
     <MESSAGE value="Updating docstrings" />
     <MESSAGE value="Update" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update" />
+    <MESSAGE value="Proxy support in .env files" />
+    <option name="LAST_COMMIT_MESSAGE" value="Proxy support in .env files" />
   </component>
   <component name="WindowStateProjectService">
     <state x="455" y="259" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1603119266736">
