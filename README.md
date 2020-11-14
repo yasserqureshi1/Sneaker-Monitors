@@ -20,6 +20,11 @@ For the Footsites monitor, you also need:
 bs4
 ```
 
+To install the modules, use the command:
+```
+pip install -r requirements.txt
+```
+
 ## Introduction
 
 This repo contains different monitors to various sites to notify if a restock or update occurs via Discord Webhook. A list of all the sites are detailed below:
