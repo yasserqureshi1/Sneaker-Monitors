@@ -33,19 +33,19 @@ class SupremeMonitor:
 
         return stock
 
-    def get_item_variants(self, item_id, item_name):
+    def get_item_variants(self, item_id, item_name, start):
         """
         Scrapes each item on the webstore and checks whether the product is in-stock or not. If in-stock
         it will send a Discord notification
         """
 
-        item_url = f"https://www.supremenewyork.com/shop/{item_id}.json" 
+        item_url = f"https://www.supremenewyork.com/shop/{item_id}.json"
 
         item_variants = rq.get(item_url, headers=self.headers, proxies=self.proxy).json()
 
         for stylename in item_variants["styles"]:
             for itemsize in stylename["sizes"]:
-                item = [item_name, stylename["name"], item_variants["description"], 'https:' + stylename["image_url"], item_url.split('.json')[0]]
+                item = [item_name, stylename["name"], itemsize['name'], item_variants["description"], 'https:' + stylename["image_url"], item_url.split('.json')[0]]
                 if itemsize["stock_level"] != 0:
                     # Checks if it already exists in our instock
                     if self.checker(item):
@@ -55,9 +55,10 @@ class SupremeMonitor:
                         self.instock.append(item)
                         
                         # Send a notification to the discord webhook with the in-stock product
-                        print('Sending new Notification')
-                        self.discord_webhook(item)
-                        logging.info(msg='Successfully sent Discord notification')
+                        if start == 0:
+                            print('Sending new Notification')
+                            self.discord_webhook(item)
+                            logging.info(msg='Successfully sent Discord notification')
 
                 else:
                     if self.checker(item):
@@ -78,19 +79,19 @@ class SupremeMonitor:
         embed = {}
         
         # Item Name and Style Name
-        embed["title"] = product_item[0] + ' - ' + product_item[1]
+        embed["title"] = product_item[0] + ' - ' + product_item[1] + ' - ' + product_item[2]
 
         # Product Description
-        if product_item[2]:
-            embed["description"] = product_item[2]
+        if product_item[3]:
+            embed["description"] = product_item[3]
 
         # Product Link
-        embed['url'] = product_item[4]
+        embed['url'] = product_item[5]
 
         embed["color"] = CONFIG['COLOUR']
 
         # Product Image
-        embed["thumbnail"] = {'url': product_item[3]}
+        embed["thumbnail"] = {'url': product_item[4]}
 
         embed["footer"] = {'text': 'Made by Yasser & Bogdan'}
         embed["timestamp"] = str(datetime.datetime.now())
@@ -110,6 +111,7 @@ class SupremeMonitor:
     def checker(self, product):
         """
         Determines whether the product status has changed
+        :return: Boolean whether the status has changed or not
         """
         for item in self.instock:
             if item == product:
@@ -123,13 +125,15 @@ class SupremeMonitor:
         """
         print('STARTING MONITOR')
         logging.info(msg='Successfully started monitor')
+        start = 1
         while True:
             stock = self.get_stock()
             time.sleep(1)
             for cat in stock:
                 for product_item in stock[cat]:
-                    self.get_item_variants(product_item['id'], product_item['name'])
+                    self.get_item_variants(product_item['id'], product_item['name'], start)
                     time.sleep(1)
+            start = 0
             logging.info(msg='Successfully monitored site')
 
 

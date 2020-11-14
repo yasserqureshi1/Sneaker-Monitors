@@ -11,7 +11,7 @@ CONFIG = dotenv.dotenv_values()
 
 
 class ShopifyMonitor:
-    def __init__(self, url, webhook):
+    def __init__(self, url, webhook, proxy):
         self.url = url
         self.headers = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, '
                                       'like Gecko) Chrome/83.0.4103.116 Safari/537.36'}
@@ -19,6 +19,10 @@ class ShopifyMonitor:
         self.instock_products = []
         self.instock_products_copy = []
         self.webhook = webhook
+        if proxy is None:
+            self.proxy = {}
+        else:
+            self.proxy = {"http": f"http://{proxy}"}
 
     def check_url(self):
         """
@@ -37,7 +41,7 @@ class ShopifyMonitor:
         page = 1
         while page > 0:
             try:
-                html = s.get(self.url + '?page=' + str(page) + '&limit=250', headers=self.headers, verify=False, timeout=5)
+                html = s.get(self.url + '?page=' + str(page) + '&limit=250', headers=self.headers, proxies=self.proxy, verify=False, timeout=5)
                 output = json.loads(html.text)['products']
                 if output == []:
                     page = 0
@@ -114,6 +118,7 @@ class ShopifyMonitor:
             logging.error(msg='Store URL formatting incorrect for: ' + str(self.url))
             return
 
+        start = 1
         while True:
             self.scrape_site()
             self.instock_products_copy = self.instock_products.copy()
@@ -134,14 +139,16 @@ class ShopifyMonitor:
                     if product_item[1] == []:
                         pass
                     else:
-                        print(product_item)
-                        self.discord_webhook(product_item)
-                        logging.info(msg='Successfully sent Discord notification')
+                        if start == 0:
+                            print(product_item)
+                            self.discord_webhook(product_item)
+                            logging.info(msg='Successfully sent Discord notification')
+            start = 0
             time.sleep(3)
 
 
 if __name__ == '__main__':
     urllib3.disable_warnings()
     url = 'https://www.hanon-shop.com/collections/whats-new/products.json'
-    Monitor = ShopifyMonitor(CONFIG['URL'], webhook=CONFIG['WEBHOOK'])
+    Monitor = ShopifyMonitor(CONFIG['URL'], webhook=CONFIG['WEBHOOK'], proxy=CONFIG['PROXY'])
     Monitor.monitor()

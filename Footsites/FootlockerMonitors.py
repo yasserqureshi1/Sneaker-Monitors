@@ -13,13 +13,17 @@ CONFIG = dotenv.dotenv_values()
 
 
 class FootlockerBot:
-    def __init__(self, webhook):
+    def __init__(self, webhook, proxy):
         self.headers = {'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 '
                                       '(KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1'}
         self.all_items = []
         self.instock = []
         self.instock_copy = []
         self.webhook = webhook
+        if proxy is None:
+            self.proxy = {}
+        else:
+            self.proxy = {"http": f"http://{proxy}"}
 
     def discord_webhook(self, product_item):
         """
@@ -70,7 +74,7 @@ class FootlockerBot:
         """
         s = requests.Session()
         try:
-            html = s.get('https://www.footlocker.co.uk/en/men/shoes/', headers=self.headers, verify=False, timeout=3)
+            html = s.get('https://www.footlocker.co.uk/en/men/shoes/', headers=self.headers, proxies=self.proxy, verify=False, timeout=3)
             soup = BeautifulSoup(html.text, 'html.parser')
             array = soup.find_all('div', {'class': 'fl-category--productlist--item'})
             for i in array:
@@ -96,6 +100,7 @@ class FootlockerBot:
         """
         print('STARTING MONITOR')
         logging.info(msg='Successfully started monitor')
+        start = 1
         while True:
             self.scrape_main_site()
             self.all_items = self.remove_duplicates(self.all_items)
@@ -105,12 +110,14 @@ class FootlockerBot:
                     pass
                 else:
                     self.instock.append(item)
-                    print(item)
-                    self.discord_webhook(item)
-            time.sleep(0.1)
+                    if start == 0:
+                        print(item)
+                        self.discord_webhook(item)
+            start = 0
+            time.sleep(1)
 
 
 if __name__ == '__main__':
     urllib3.disable_warnings()
-    bot = FootlockerBot(webhook=CONFIG['WEBHOOK'])
+    bot = FootlockerBot(webhook=CONFIG['WEBHOOK'], proxy=CONFIG['PROXY'])
     bot.monitor()
