@@ -50,6 +50,10 @@ The Shopify monitors have specific requirements, please refer to the associated 
 
 Currently, we have proxy support for:
 - Supreme
+- SNKRS
+- Shopify
+- Palace
+- Footlocker
 
 You can enable this by setting the proxy in the ```.env file```
 ```
