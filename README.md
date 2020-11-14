@@ -74,4 +74,5 @@ Please send this log file to me as well as a description of the issues for me to
  - [ ] Support for Footlocker in EU, CA, AU and US
  - [ ] Add more Footsites (Eastbay, Champsports, Footaction)
  - [ ] Add Demandware sites (Adidas and YeezySupply)
- - [ ] Add other requested sites (Price reduction monitors for Nike; monitors for Ssense and Zalando)
+ - [ ] Create price reduction monitors
+ - [ ] Add other requested sites (Ssense, Off-White, Solebox, Footpatrol, JD, BSTN, Size?, SNS, Naked, Net-a-porter and Zalando)
