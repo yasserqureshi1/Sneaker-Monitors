@@ -55,7 +55,7 @@ class ShopifyMonitor:
             time.sleep(0.5)
         s.close()
 
-    def checker(self, product, size):
+    def checker(self, handle):
         """
         Determines whether the product status has changed
         :param product: Product name
@@ -63,8 +63,8 @@ class ShopifyMonitor:
         :return:
         """
         for item in self.instock_products_copy:
-            if item == [product, size]:
-                self.instock_products_copy.remove([product, size])
+            if item == handle:
+                self.instock_products_copy.remove(handle)
                 return True
         return
 
@@ -128,14 +128,14 @@ class ShopifyMonitor:
                     product_item = [product['title'], [], product['images'][0]['src'], product['handle']]
                     for size in product['variants']:
                         if size['available'] == True:
-                            if self.checker(product['title'], size['title']):
+                            if self.checker(product['handle']):
                                 pass
                             else:
-                                self.instock_products.append([product['title'], size['title']])
+                                self.instock_products.append(product['handle'])
                                 product_item[1].append(size['title'])
                         else:
-                            if self.checker(product['title'], size['title']):
-                                self.instock_products.remove([product['title'], size['title']])
+                            if self.checker(product['handle']):
+                                self.instock_products.remove(product['handle'])
                     if product_item[1] == []:
                         pass
                     else:
