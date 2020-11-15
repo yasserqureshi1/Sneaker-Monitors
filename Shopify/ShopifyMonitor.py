@@ -52,6 +52,7 @@ class ShopifyMonitor:
             except Exception as e:
                 logging.error(e)
                 page = 0
+            time.sleep(0.5)
         s.close()
 
     def checker(self, product, size):
@@ -132,16 +133,16 @@ class ShopifyMonitor:
                             else:
                                 self.instock_products.append([product['title'], size['title']])
                                 product_item[1].append(size['title'])
-                                if product_item[1] == []:
-                                    pass
-                                else:
-                                    if start == 0:
-                                        print(product_item)
-                                        self.discord_webhook(product_item)
-                                        logging.info(msg='Successfully sent Discord notification')
                         else:
                             if self.checker(product['title'], size['title']):
                                 self.instock_products.remove([product['title'], size['title']])
+                    if product_item[1] == []:
+                        pass
+                    else:
+                        if start == 0:
+                            print(product_item)
+                            # self.discord_webhook(product_item)
+                            logging.info(msg='Successfully sent Discord notification')
                 self.pages.remove(page)
             start = 0
             time.sleep(3)
@@ -149,6 +150,5 @@ class ShopifyMonitor:
 
 if __name__ == '__main__':
     urllib3.disable_warnings()
-    url = 'https://www.hanon-shop.com/collections/whats-new/products.json'
-    Monitor = ShopifyMonitor(url, webhook=CONFIG['WEBHOOK'], proxy=CONFIG['PROXY'])
+    Monitor = ShopifyMonitor(url=CONFIG['URL'], webhook=CONFIG['WEBHOOK'], proxy=CONFIG['PROXY'])
     Monitor.monitor()
