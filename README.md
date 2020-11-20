@@ -75,4 +75,4 @@ Please send this log file to me as well as a description of the issues for me to
  - [ ] Add more Footsites (Eastbay, Champsports, Footaction)
  - [ ] Add Demandware sites (Adidas and YeezySupply)
  - [ ] Create price reduction monitors
- - [ ] Add other requested sites (Ssense, Off-White, Solebox, Footpatrol, JD, BSTN, Size?, SNS, Naked, Net-a-porter and Zalando)
+ - [ ] Add other requested sites (Ssense, Off-White, Solebox, Footpatrol, JD, BSTN, Size?, SNS, Naked, Net-a-porter, Zalando, Footdistrict, oneblockdown, noirfonce, Sivasdescalzo and Off-Spring)

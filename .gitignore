@@ -4,5 +4,5 @@ config.py
 Supreme/suplog.log
 SNKRS/SNKRSlog.log
 Shopify/Shopifylog.log
-Footsites/Footlockerlog.log
+Footsites/Footlocker/Footlockerlog.log
 .idea
