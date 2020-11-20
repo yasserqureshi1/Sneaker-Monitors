@@ -22,6 +22,7 @@ A list of the current sites can be found [here](#monitors)
 * [Set Up](#set-up)
 * [Issues](#issues)
 * [To Do](#to-do)
+* [License](#license)
 * [Contact](#contact)
 
 ## Monitors 
@@ -95,6 +96,10 @@ If you are struggling to set up the monitor you can reach out to me via Discord 
  - [ ] Create price reduction monitors
  - [ ] Add other requested site (Off-White, Solebox, Footpatrol, JD, BSTN, Size?, SNS, Naked, Net-a-porter, Zalando, Footdistrict, oneblockdown, noirfonce, Sivasdescalzo and Off-Spring)
 
+
+## License
+
+Distributed under the MIT License. See ```LICENSE``` for more information.
 
 ## Contact
 
