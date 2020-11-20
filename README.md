@@ -1,6 +1,8 @@
 # Sneaker Monitors
 *A collection of web monitors that notify of restocks or updates on sneaker related sites through Discord Webhook*
 
+<a href="https://www.buymeacoffee.com/yasserqureshi" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+
 ## About the Project
 This project is aimed to provide different monitors to various sites to the sneaker community for free. 
 The monitors currently notify if a restock or update occurs via Discord Webhook.
@@ -33,6 +35,7 @@ Currently the sites that have monitors are:
 - Nike SNKRS (Supports 42 countries - see the associated README file)
 - Footsites (currently only Footlocker)
 - Ssense
+- Zalando UK
 
 ## Installation
 To install the modules, use the command:
@@ -51,7 +54,7 @@ bs4
 
 ## Set Up
 
-Ensure you have all the dependencies installed. See [#Installation](#installation) for details.
+Ensure you have Python as well as all the dependencies installed. See [#Installation](#installation) for details.
 
 To start, download the Python file and the ```.env``` file associated with it.
 You will only be interacting with the ```.env``` file.
@@ -94,7 +97,7 @@ If you are struggling to set up the monitor you can reach out to me via Discord 
  - [ ] Add more Footsites (Eastbay, Champsports, Footaction)
  - [ ] Add Demandware sites (Adidas and YeezySupply)
  - [ ] Create price reduction monitors
- - [ ] Add other requested site (Off-White, Solebox, Footpatrol, JD, BSTN, Size?, SNS, Naked, Net-a-porter, Zalando, Footdistrict, oneblockdown, noirfonce, Sivasdescalzo and Off-Spring)
+ - [ ] Add other requested site (Off-White, Solebox, Footpatrol, JD, BSTN, Size?, SNS, Naked, Net-a-porter, Footdistrict, oneblockdown, noirfonce, Sivasdescalzo and Off-Spring)
 
 
 ## License
