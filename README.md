@@ -35,7 +35,8 @@ Currently the sites that have monitors are:
 - Nike SNKRS (Supports 42 countries - see the associated README file)
 - Footsites (currently only Footlocker)
 - Ssense
-- Zalando UK
+- Zalando (UK)
+- Off-Spring (UK)
 
 ## Installation
 To install the modules, use the command:
@@ -97,7 +98,7 @@ If you are struggling to set up the monitor you can reach out to me via Discord 
  - [ ] Add more Footsites (Eastbay, Champsports, Footaction)
  - [ ] Add Demandware sites (Adidas and YeezySupply)
  - [ ] Create price reduction monitors
- - [ ] Add other requested site (Off-White, Solebox, Footpatrol, JD, BSTN, Size?, SNS, Naked, Net-a-porter, Footdistrict, oneblockdown, noirfonce, Sivasdescalzo and Off-Spring)
+ - [ ] Add other requested site (Off-White, Solebox, Footpatrol, JD, BSTN, Size?, SNS, Naked, Net-a-porter, Footdistrict, oneblockdown, noirfonce and Sivasdescalzo)
 
 
 ## License
