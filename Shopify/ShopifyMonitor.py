@@ -52,7 +52,7 @@ class ShopifyMonitor:
             except Exception as e:
                 logging.error(e)
                 page = 0
-            time.sleep(0.5)
+            time.sleep(0.2)
         s.close()
 
     def checker(self, handle):
@@ -141,11 +141,11 @@ class ShopifyMonitor:
                     else:
                         if start == 0:
                             print(product_item)
-                            # self.discord_webhook(product_item)
+                            self.discord_webhook(product_item)
                             logging.info(msg='Successfully sent Discord notification')
                 self.pages.remove(page)
             start = 0
-            time.sleep(3)
+            time.sleep(0.5)
 
 
 if __name__ == '__main__':
