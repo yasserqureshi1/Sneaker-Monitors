@@ -18,7 +18,7 @@ class ZalandoMonitor:
             self.proxy = {}
         else:
             self.proxy = {'https': f'https://{proxy}'}
-        self.headers = {'user-agent': 'ozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 ('
+        self.headers = {'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 ('
                                       'KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
                         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,'
                                   'image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
@@ -112,7 +112,7 @@ class ZalandoMonitor:
                 if not self.checker(item):
                     self.instock.append(item)
                     if start == 0:
-                        self.discord_webhook(item)
+                        #self.discord_webhook(item)
                         print(item)
             time.sleep(1)
             start = 0
