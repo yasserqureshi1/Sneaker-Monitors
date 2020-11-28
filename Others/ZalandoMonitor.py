@@ -112,7 +112,7 @@ class ZalandoMonitor:
                 if not self.checker(item):
                     self.instock.append(item)
                     if start == 0:
-                        #self.discord_webhook(item)
+                        self.discord_webhook(item)
                         print(item)
             time.sleep(1)
             start = 0
