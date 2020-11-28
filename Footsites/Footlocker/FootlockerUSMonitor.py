@@ -1,10 +1,5 @@
 # No restocks, only releases
 
-# ===================================
-# ========== indevelopment ==========
-# ===================================
-
-
 import requests
 import datetime
 import json
@@ -44,9 +39,10 @@ class FootlockerBot:
         data["embeds"] = []
         embed = {}
         embed["title"] = product_item[0]  # Item Name
-        embed['url'] = product_item[1]  # Item link
+        embed["description"] = f'*Colour:* {product_item[1]} \n*Price:* {product_item[2]}'
+        embed['url'] = f'https://www.footlocker.com{product_item[3]}'  # Item link
         embed["color"] = int(CONFIG['COLOUR'])
-        # embed["thumbnail"] = {'url': product_item[2]}                            # Item image
+        embed["thumbnail"] = {'url': product_item[4]}                            # Item image
         embed["footer"] = {'text': 'Made by Yasser'}
         embed["timestamp"] = str(datetime.datetime.now())
         data["embeds"].append(embed)
@@ -91,7 +87,6 @@ class FootlockerBot:
                         i.find('div', {'class': 'ProductPrice'}).text,
                         i.find('a', {'class': 'ProductCard-link ProductCard-content'})['href'], i.find('img')['src']]
                 self.all_items.append(list)
-                # print(list)
 
             logging.info(msg='Successfully scraped site')
         except Exception as e:
@@ -115,22 +110,21 @@ class FootlockerBot:
         """
         print('STARTING MONITOR')
         logging.info(msg='Successfully started monitor')
-        start = 0
+        start = 1
         while True:
             self.scrape_main_site()
+            self.all_items = self.remove_duplicates(self.all_items)
             self.instock_copy = self.instock.copy()
             for item in self.all_items:
                 if self.checker(item) == False:
                     self.instock.append(item)
                     if start == 0:
+                        self.discord_webhook(item)
                         print(item)
-                        # self.discord_webhook(item)
-            print('-----')
             start = 0
-            time.sleep(1)
+            time.sleep(0.1)
 
 
 if __name__ == '__main__':
     urllib3.disable_warnings()
-    bot = FootlockerBot(webhook=CONFIG['WEBHOOK'], proxy='208.86.120.136:3128')
-    bot.monitor()
+    FootlockerBot(webhook=CONFIG['WEBHOOK'], proxy=CONFIG['PROXY']).monitor()
