@@ -159,5 +159,4 @@ class ShopifyMonitor:
 
 if __name__ == '__main__':
     urllib3.disable_warnings()
-    Monitor = ShopifyMonitor(url=CONFIG['URL'], webhook=CONFIG['WEBHOOK'], proxy=CONFIG['PROXY'])
-    Monitor.monitor()
+    ShopifyMonitor(url=CONFIG['URL'], webhook=CONFIG['WEBHOOK'], proxy=CONFIG['PROXY']).monitor()
