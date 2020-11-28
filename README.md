@@ -33,10 +33,11 @@ Currently the sites that have monitors are:
 - All shopify sites (e.g. Palace Skateboards, Hanon Shop, OVO, shopnicekicks.com, BDGA Store, Noir Fonce, Travis Scott, etc.)
 - Supreme
 - Nike SNKRS (Supports 42 countries - see the associated README file)
-- Footsites (currently only Footlocker)
+- Footsites (currently only Footlocker US and UK)
 - Ssense
 - Zalando (UK)
 - Off-Spring (UK)
+- Solebox
 
 ## Installation
 To install the modules, use the command:
@@ -98,7 +99,8 @@ If you are struggling to set up the monitor you can reach out to me via Discord 
  - [ ] Add more Footsites (Eastbay, Champsports, Footaction)
  - [ ] Add Demandware sites (Adidas and YeezySupply)
  - [ ] Create price reduction monitors
- - [ ] Add other requested site (Off-White, Solebox, Footpatrol, JD, BSTN, Size?, SNS, Naked, Net-a-porter, Footdistrict, oneblockdown, noirfonce and Sivasdescalzo)
+ - [ ] Add other requested site (Off-White, Footpatrol, JD, BSTN, Size?, SNS, Naked, Net-a-porter, Footdistrict, oneblockdown, noirfonce and Sivasdescalzo)
+ - [ ] Increase number of countries catered for
 
 
 ## License
