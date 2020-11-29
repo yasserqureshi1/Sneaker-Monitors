@@ -5,6 +5,7 @@ import dotenv
 import datetime
 import json
 import time
+import urllib3
 
 logging.basicConfig(filename='Zalandolog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s',
                     level=logging.DEBUG)
@@ -119,4 +120,5 @@ class ZalandoMonitor:
 
 
 if __name__ == '__main__':
+    urllib3.disable_warnings()
     ZalandoMonitor(CONFIG['WEBHOOK'], CONFIG['PROXY']).monitor()
