@@ -128,7 +128,7 @@ class SupremeMonitor:
         start = 1
         while True:
             stock = self.get_stock()
-            time.sleep(0.1)
+            time.sleep(1)
             for cat in stock:
                 for product_item in stock[cat]:
                     self.get_item_variants(product_item['id'], product_item['name'], start)
