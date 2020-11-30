@@ -28,8 +28,7 @@ class FootlockerBot:
     def discord_webhook(self, product_item):
         """
         Sends a Discord webhook notification to the specified webhook URL
-        :param product_item: An array of the product's details
-        :return: None
+ 
         """
         data = {}
         data["username"] = CONFIG['USERNAME']
@@ -39,7 +38,7 @@ class FootlockerBot:
         embed["title"] = product_item[0]            # Item Name
         embed['url'] = product_item[1]                                           # Item link
         embed["color"] = int(CONFIG['COLOUR'])
-        #embed["thumbnail"] = {'url': product_item[2]}                            # Item image
+        embed["thumbnail"] = {'url': product_item[2]}                            # Item image
         embed["footer"] = {'text': 'Made by Yasser'}
         embed["timestamp"] = str(datetime.datetime.now())
         data["embeds"].append(embed)
@@ -74,11 +73,16 @@ class FootlockerBot:
         """
         s = requests.Session()
         try:
-            html = s.get('https://www.footlocker.co.uk/en/men/shoes/', headers=self.headers, proxies=self.proxy, verify=False, timeout=3)
+            html = s.get('https://www.footlocker.co.uk/en/men/shoes/', headers=self.headers, proxies=self.proxy, verify=False, timeout=10)
             soup = BeautifulSoup(html.text, 'html.parser')
             array = soup.find_all('div', {'class': 'fl-category--productlist--item'})
             for i in array:
-                self.all_items.append([i.find('span', {'itemprop': 'name'}).text, i.find('a')['href']])
+                item = [i.find('span', {'itemprop': 'name'}).text,
+                        i.find('a')['href'],
+                        f'https://images.footlocker.com/is/image/FLEU/{i.find("a")["href"].split("=")[1]}?wid=280&hei=280']
+                print(item)
+                self.all_items.append(item)
+
             logging.info(msg='Successfully scraped site')
         except Exception as e:
             print('There was an Error - main site - ', e)
@@ -119,5 +123,4 @@ class FootlockerBot:
 
 if __name__ == '__main__':
     urllib3.disable_warnings()
-    bot = FootlockerBot(webhook=CONFIG['WEBHOOK'], proxy=CONFIG['PROXY'])
-    bot.monitor()
+    FootlockerBot(webhook=CONFIG['WEBHOOK'], proxy=CONFIG['PROXY']).scrape_main_site()
