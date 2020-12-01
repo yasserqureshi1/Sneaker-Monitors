@@ -33,19 +33,19 @@ Currently the sites that have monitors are:
 - All shopify sites (e.g. Palace Skateboards, Hanon Shop, OVO, shopnicekicks.com, BDGA Store, Noir Fonce, Travis Scott, etc.)
 - Supreme
 - Nike SNKRS (Supports 42 countries - see the associated README file)
-- Footsites (currently only Footlocker US and UK)
+- Footsites (Footlocker UK, US, CA and AU)
 - Ssense
 - Zalando (UK)
 - Off-Spring (UK)
 - Solebox
 
 ## Installation
-To install the modules, use the command:
+To install the modules, use the command in terminal (Mac or Linux) or command prompt (Windows):
 ```
 pip install -r requirements.txt
 ```
 
-The dependencies that will be installed are:
+This will install the following dependencies that are needed for the monitors:
 ```
 requests
 urllib3
@@ -56,10 +56,13 @@ bs4
 
 ## Set Up
 
-Ensure you have Python as well as all the dependencies installed. See [#Installation](#installation) for details.
+Ensure you have Python as well as all the dependencies installed.
+If you don't have Python, you can download it at this [link](https://www.python.org/downloads/).
+To install the dependencies, see [#Installation](#installation) for details.
 
 To start, download the Python file and the ```.env``` file associated with it.
-You will only be interacting with the ```.env``` file.
+Ensure that both the Python file and ```.env``` file are in the same directory at all times.
+You will only need to interact with the ```.env``` file.
 
 In the ```.env``` file, set the ```WEBHOOK``` variable to your Discord webhook URL and your proxy in the ```PROXY``` variable.
 Other details can also be edited such as the bot username, avatar and colour.
@@ -69,19 +72,20 @@ WEBHOOK = "https://discord.com/api/webhooks/..."
 ```
 
 Some monitors have proxy support. You can enable this by setting the proxy in the ```.env file```.
-Below is the structure:
-```
-<proxy>:<port>
-OR WITH CREDENTIALS
-<proxy_username>:<proxy_password>@<proxy_domain>:<port>
-```
+Below are two different structures:
+1. ```PROXY = "<proxy>:<port>"```
+2. ```PROXY = "<proxy_username>:<proxy_password>@<proxy_domain>:<port>"```
+
+Other monitors may have other details in their ```.env``` files.
+Please refer to that specific README.md file for details on setting up.
 
 These scripts should be running continuously for the monitor to work.
 As such you will need to host it on a server.
-Personally, I use AWS, but nevertheless, there are tonnes out there. 
+To set one up yourself, a good article that explains all the hosting methods can be found [here](https://www.writebots.com/discord-bot-hosting/).
 
-Note that the Shopify monitors have specific requirements and you should refer to the specific README file.
-
+I will shortly be releasing a paid (but competitively priced) set of hosted monitors.
+This would require only you sending me your webhook url and I will ensure that the monitoring service runs smoothly.
+If you are interested in this scheme, let me know [here](#contact) and I can contact you once it is ready.
 
 ## Issues
 
@@ -93,15 +97,10 @@ It contains no personal data but may help me diagnose where the issue arises.
 If you are struggling to set up the monitor you can reach out to me via Discord [here](#contact)
 
 ## To Do
- - [ ] More items to monitor with SNKRS (currently monitors the 50 recent posts)
- - [ ] Tidy Shopify monitor
- - [ ] Support for Footlocker in CA, AU and US
- - [ ] Add more Footsites (Eastbay, Champsports, Footaction)
- - [ ] Add Demandware sites (Adidas and YeezySupply)
+ - [ ] Start cheap paid service using personal VPS and proxy 
  - [ ] Create price reduction monitors
  - [ ] Add other requested site (Off-White, Footpatrol, JD, BSTN, Size?, SNS, Naked, Net-a-porter, Footdistrict, oneblockdown, noirfonce and Sivasdescalzo)
  - [ ] Increase number of countries catered for
-
 
 ## License
 
