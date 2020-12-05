@@ -130,7 +130,6 @@ class ShopifyMonitor:
         start = 1
         while True:
             self.scrape_site()
-            self.all_items = self.remove_duplicates(self.all_items)
             self.instock_products_copy = self.instock_products.copy()
             for page in self.pages:
                 for product in page:
@@ -154,7 +153,7 @@ class ShopifyMonitor:
                             logging.info(msg='Successfully sent Discord notification')
                 self.pages.remove(page)
             start = 0
-            time.sleep(0.1)
+            time.sleep(1)
 
 
 if __name__ == '__main__':
