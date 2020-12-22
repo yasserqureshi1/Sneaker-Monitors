@@ -17,6 +17,8 @@ When contributing please fork the project and open a Pull Request.
 
 A list of the current sites can be found [here](#monitors)
 
+*Below is a screenshot of the SNKRS monitor in action...*
+
 <p align="center">
   <img width="300" src="https://github.com/yasserqureshi1/Sneaker-Monitors/blob/master/static/SNKRS_example.png?raw=true">
 </p>
