@@ -1,5 +1,4 @@
 # No restocks, only releases
-
 import requests
 import datetime
 import json
@@ -9,8 +8,7 @@ import time
 import logging
 import dotenv
 
-logging.basicConfig(filename='Footlockerlog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s',
-                    level=logging.DEBUG)
+logging.basicConfig(filename='Footlockerlog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
 CONFIG = dotenv.dotenv_values()
 
 
@@ -25,7 +23,7 @@ class FootlockerBot:
         if proxy is None:
             self.proxy = {}
         else:
-            self.proxy = {"https": f"https://{proxy}"}
+            self.proxy = {"http": f"http://{proxy}"}
 
     def discord_webhook(self, product_item):
         """
@@ -38,11 +36,11 @@ class FootlockerBot:
         data["avatar_url"] = CONFIG['AVATAR_URL']
         data["embeds"] = []
         embed = {}
-        embed["title"] = product_item[0]  # Item Name
-        embed["description"] = f'*Colour:* {product_item[1]} \n*Price:* {product_item[2]}'
-        embed['url'] = f'https://www.footlocker.com{product_item[3]}'  # Item link
+        embed["title"] = product_item[0]
+        embed["description"] = f'{product_item[1]} \n*Colour:* {product_item[2]}'
+        embed['url'] = f'https://www.footlocker.ca{product_item[4]}'
         embed["color"] = int(CONFIG['COLOUR'])
-        embed["thumbnail"] = {'url': product_item[4]}                            # Item image
+        embed["thumbnail"] = {'url': product_item[3]}
         embed["footer"] = {'text': 'Made by Yasser'}
         embed["timestamp"] = str(datetime.datetime.now())
         data["embeds"].append(embed)
@@ -77,22 +75,22 @@ class FootlockerBot:
         """
         s = requests.Session()
         try:
-            html = s.get('https://www.footlocker.com/category/mens/shoes.html', headers=self.headers,
-                         proxies=self.proxy, verify=False, timeout=20)
+            url = 'https://www.footlocker.com.au/en/men/'
+            html = s.get(url=url, headers=self.headers, proxies=self.proxy, verify=False, timeout=10)
             soup = BeautifulSoup(html.text, 'html.parser')
-            array = soup.find_all('li', {'class': 'product-container col'})
+            array = soup.find_all('div', {'class': 'fl-category--productlist--item'})
             for i in array:
-                list = [i.find('span', {'class': 'ProductName-primary'}).text,
-                        i.find('span', {'class': 'ProductName-alt'}).text.replace("Men's•", ''),
-                        i.find('div', {'class': 'ProductPrice'}).text,
-                        i.find('a', {'class': 'ProductCard-link ProductCard-content'})['href'], i.find('img')['src']]
-                self.all_items.append(list)
+                item = [i.find('span', {'class': 'ProductName-primary'}).text,
+                        i.find('span', {'class': 'ProductName-alt'}).text.split(chr(8226))[0],
+                        i.find('span', {'class': 'ProductName-alt'}).text.split(chr(8226))[1],
+                        i.find('img')['src'],
+                        i.find('a', {'class': 'ProductCard-link ProductCard-content'})['href']]
+                self.all_items.append(item)
 
             logging.info(msg='Successfully scraped site')
         except Exception as e:
             print('There was an Error - main site - ', e)
             logging.error(msg=e)
-
         s.close()
 
     def remove_duplicates(self, mylist):
@@ -116,15 +114,18 @@ class FootlockerBot:
             self.all_items = self.remove_duplicates(self.all_items)
             self.instock_copy = self.instock.copy()
             for item in self.all_items:
-                if self.checker(item) == False:
+                if self.checker(item):
+                    pass
+                else:
                     self.instock.append(item)
                     if start == 0:
-                        self.discord_webhook(item)
                         print(item)
+                        self.discord_webhook(item)
             start = 0
-            time.sleep(0.1)
+            time.sleep(1)
 
 
 if __name__ == '__main__':
     urllib3.disable_warnings()
-    FootlockerBot(webhook=CONFIG['WEBHOOK'], proxy=CONFIG['PROXY']).monitor()
+    bot = FootlockerBot(webhook=CONFIG['WEBHOOK'], proxy=CONFIG['PROXY'])
+    bot.monitor()

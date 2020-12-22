@@ -109,6 +109,7 @@ class SsenseBot:
         """
         print('STARTING MONITOR')
         logging.info(msg='Successfully started monitor')
+        start = 1
         while True:
             self.scrape_main_site()
             self.all_items = self.remove_duplicates(self.all_items)
@@ -116,9 +117,11 @@ class SsenseBot:
             for item in self.all_items:
                 if not self.checker(item):
                     self.instock.append(item)
-                    self.discord_webhook(item)
-                    print(item)
-            time.sleep(1)
+                    if start == 0:
+                        self.discord_webhook(item)
+                        print(item)
+            start = 0
+            time.sleep(0.1)
 
 
 if __name__ == '__main__':
