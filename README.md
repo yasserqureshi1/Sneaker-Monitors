@@ -17,6 +17,10 @@ When contributing please fork the project and open a Pull Request.
 
 A list of the current sites can be found [here](#monitors)
 
+<p align="center">
+  <img width="300" src="https://github.com/yasserqureshi1/Sneaker-Monitors/blob/master/static/SNKRS_example.png?raw=true">
+</p>
+
 ## Contents
 * [About the Project](#about-the-project)
 * [Monitors](#monitors)
@@ -30,7 +34,7 @@ A list of the current sites can be found [here](#monitors)
 ## Monitors 
 
 Currently the sites that have monitors are:
-- All shopify sites (e.g. Palace Skateboards, Hanon Shop, OVO, shopnicekicks.com, BDGA Store, Noir Fonce, Travis Scott, etc.)
+- All Shopify sites (e.g. Palace Skateboards, Hanon Shop, OVO, shopnicekicks.com, BDGA Store, Noir Fonce, Travis Scott, etc.)
 - Supreme
 - Nike SNKRS (Supports 42 countries - see the associated README file)
 - Footsites (Footlocker UK, US, CA and AU)
