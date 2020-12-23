@@ -96,7 +96,6 @@ class SoleboxMonitor:
             self.scrape_main_site()
             self.all_items = self.remove_duplicates(self.all_items)
             self.instock_copy = self.instock.copy()
-            print(self.all_items)
             for product in self.all_items:
                 if not self.checker(product):
                     self.instock.append(product)
