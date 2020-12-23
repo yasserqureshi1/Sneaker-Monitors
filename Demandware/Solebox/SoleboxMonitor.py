@@ -6,7 +6,7 @@ import datetime
 import time
 import json
 
-logging.basicConfig(filename='OffSpringlog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
+logging.basicConfig(filename='Solebox.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
 CONFIG = dotenv.dotenv_values()
 
 
@@ -96,6 +96,7 @@ class SoleboxMonitor:
             self.scrape_main_site()
             self.all_items = self.remove_duplicates(self.all_items)
             self.instock_copy = self.instock.copy()
+            print(self.all_items)
             for product in self.all_items:
                 if not self.checker(product):
                     self.instock.append(product)
