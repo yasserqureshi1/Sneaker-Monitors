@@ -14,7 +14,7 @@ de_<location code>
 
 For example, to reach the Afghanistan site in English, the code would be:
 ```
-LOC = "en-AF"
+LOC = "en_AF"
 ```
 
 Country | Location code
