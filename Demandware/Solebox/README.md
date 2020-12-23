@@ -8,8 +8,8 @@ Below is a list of the countries that the monitor supports.
 Please put the language code along with ```de``` or ```en``` (for German and English respectively) as the location code in the ```.env``` file.
 Use the following format:
 ```
-en-<location code>
-de-<location code>
+en_<location code>
+de_<location code>
 ```
 
 For example, to reach the Afghanistan site in English, the code would be:
