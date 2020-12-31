@@ -1,7 +1,7 @@
 import requests as rq
 import json
 import time
-import datetime
+from datetime import datetime
 import urllib3
 import logging
 import dotenv
@@ -29,7 +29,7 @@ class SupremeMonitor:
         """
 
         url = "https://www.supremenewyork.com/mobile_stock.json"
-        stock = rq.get(url, headers=self.headers, proxies=self.proxy).json()['products_and_categories']
+        stock = rq.get(url, headers=self.headers, proxies=self.proxy, timeout=10).json()['products_and_categories']
 
         return stock
 
@@ -79,22 +79,25 @@ class SupremeMonitor:
         embed = {}
         
         # Item Name and Style Name
-        embed["title"] = product_item[0] + ' - ' + product_item[1] + ' - ' + product_item[2]
+        if product_item[0]:
+            embed["title"] = product_item[0] + ' - ' + product_item[1] + ' - ' + product_item[2]
 
         # Product Description
         if product_item[3]:
             embed["description"] = product_item[3]
 
         # Product Link
-        embed['url'] = product_item[5]
+        if product_item[5]:
+            embed['url'] = product_item[5]
 
         embed["color"] = CONFIG['COLOUR']
 
         # Product Image
-        embed["thumbnail"] = {'url': product_item[4]}
+        if product_item[4]:
+            embed["thumbnail"] = {'url': product_item[4]}
 
         embed["footer"] = {'text': 'Made by Yasser & Bogdan'}
-        embed["timestamp"] = str(datetime.datetime.now())
+        embed["timestamp"] = str(datetime.utcnow())
         data["embeds"].append(embed)
 
         result = rq.post(self.webhook, data=json.dumps(data), headers={"Content-Type": "application/json"})
@@ -125,16 +128,23 @@ class SupremeMonitor:
         """
         print('STARTING MONITOR')
         logging.info(msg='Successfully started monitor')
+        initial = ['','','',"Thank you for using Yasser's Sneaker Monitors. This message is to let you know that "
+                            "everything is working fine! You can find more monitoring solutions at "
+                            "https://github.com/yasserqureshi1/Sneaker-Monitors",'','']
+        self.discord_webhook(initial)
         start = 1
         while True:
-            stock = self.get_stock()
-            time.sleep(1)
-            for cat in stock:
-                for product_item in stock[cat]:
-                    self.get_item_variants(product_item['id'], product_item['name'], start)
-                    time.sleep(0.3)
-            start = 0
-            logging.info(msg='Successfully monitored site')
+            try:
+                stock = self.get_stock()
+                time.sleep(0.5)
+                for cat in stock:
+                    for product_item in stock[cat]:
+                        self.get_item_variants(product_item['id'], product_item['name'], start)
+                        time.sleep(0.5)
+                start = 0
+                logging.info(msg='Successfully monitored site')
+            except:
+                pass
 
 
 if __name__ == '__main__':
