@@ -17,7 +17,7 @@ When contributing please fork the project and open a Pull Request.
 If you'd like a feature to be added, you can either open an issue [here](https://github.com/yasserqureshi1/Sneaker-Monitors/issues/new)
 or get in contact with me [here](#contact)
 
-A list of the current sites can be found [here](#monitors)
+A list of the current sites can be found [here](#monitors) along with the current status.
 
 *Below is a screenshot of the SNKRS monitor in action...*
 
@@ -46,6 +46,19 @@ Currently the sites that have monitors are:
 - Zalando (UK)
 - Off-Spring (UK)
 - Solebox
+
+Below is a table outlining the status on each monitor:
+
+Monitor | Status
+--------|--------
+Solebox | ![solebox](https://img.shields.io/badge/Solebox-good-brightgreen)
+Footlocker | ![footlocker](https://img.shields.io/badge/Footlocker-good-brightgreen)
+OffSpring | ![offspring](https://img.shields.io/badge/OffSpring-good-brightgreen)
+Ssense | ![ssense](https://img.shields.io/badge/Ssense-good-brightgreen)
+Zalando | ![zalando](https://img.shields.io/badge/Zalando-good-brightgreen)
+SNKRS | ![snkrs](https://img.shields.io/badge/SNKRS-good-brightgreen)
+Shopify | ![shopify](https://img.shields.io/badge/Shopify-good-brightgreen)
+Supreme | ![supreme](https://img.shields.io/badge/Supreme-good-brightgreen)
 
 ## Installation
 To install the modules, use the command in terminal (Mac or Linux) or command prompt (Windows):
