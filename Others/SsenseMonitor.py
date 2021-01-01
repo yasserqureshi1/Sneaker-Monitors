@@ -27,7 +27,8 @@ class SsenseBot:
         if proxy is None:
             self.proxy = {}
         else:
-            self.proxy = {"https": f"https://{proxy}"}
+            self.proxy = {"http": f"http://{proxy}"}
+
 
     def discord_webhook(self, product_item):
         """
@@ -40,13 +41,18 @@ class SsenseBot:
         data["avatar_url"] = CONFIG['AVATAR_URL']
         data["embeds"] = []
         embed = {}
-        embed["title"] = product_item[0]  # Item Name
-        embed["description"] = product_item[1]
-        embed['url'] = f'https://www.ssense.com{product_item[2]}'  # Item link
+        if product_item == 'initial':
+            embed["description"] = "Thank you for using Yasser's Sneaker Monitors. This message is to let you know " \
+                                   "that everything is working fine! You can find more monitoring solutions at " \
+                                   "https://github.com/yasserqureshi1/Sneaker-Monitors "
+        else:
+            embed["title"] = product_item[0]  # Item Name
+            embed["description"] = product_item[1]
+            embed['url'] = f'https://www.ssense.com{product_item[2]}'  # Item link
+            embed["thumbnail"] = {'url': product_item[3]}  # Item image
         embed["color"] = int(CONFIG['COLOUR'])
-        embed["thumbnail"] = {'url': product_item[3]}  # Item image
         embed["footer"] = {'text': 'Made by Yasser'}
-        embed["timestamp"] = str(datetime.datetime.now())
+        embed["timestamp"] = str(datetime.datetime.utcnow())
         data["embeds"].append(embed)
 
         result = requests.post(self.webhook, data=json.dumps(data), headers={"Content-Type": "application/json"})
@@ -109,6 +115,7 @@ class SsenseBot:
         """
         print('STARTING MONITOR')
         logging.info(msg='Successfully started monitor')
+        self.discord_webhook('initial')
         start = 1
         while True:
             self.scrape_main_site()
