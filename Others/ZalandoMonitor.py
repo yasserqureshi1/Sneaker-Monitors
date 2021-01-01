@@ -18,7 +18,7 @@ class ZalandoMonitor:
         if proxy is None:
             self.proxy = {}
         else:
-            self.proxy = {'https': f'https://{proxy}'}
+            self.proxy = {"http": f"http://{proxy}"}
         self.headers = {'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 ('
                                       'KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
                         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,'
@@ -57,13 +57,19 @@ class ZalandoMonitor:
         data["avatar_url"] = CONFIG['AVATAR_URL']
         data["embeds"] = []
         embed = {}
-        embed["title"] = product_item[0]  # Item Name
-        embed["description"] = product_item[1]
-        embed['url'] = f'https://m.zalando.co.uk{product_item[2]}'  # Item link
+        if product_item == 'initial':
+            embed["description"] = "Thank you for using Yasser's Sneaker Monitors. This message is to let you know " \
+                                   "that everything is working fine! You can find more monitoring solutions at " \
+                                   "https://github.com/yasserqureshi1/Sneaker-Monitors "
+        else:
+            embed["title"] = product_item[0]  # Item Name
+            embed["description"] = product_item[1]
+            embed['url'] = f'https://m.zalando.co.uk{product_item[2]}'  # Item link
+            embed["thumbnail"] = {'url': product_item[3]}  # Item image
+
         embed["color"] = int(CONFIG['COLOUR'])
-        embed["thumbnail"] = {'url': product_item[3]}  # Item image
         embed["footer"] = {'text': 'Made by Yasser'}
-        embed["timestamp"] = str(datetime.datetime.now())
+        embed["timestamp"] = str(datetime.datetime.utcnow())
         data["embeds"].append(embed)
 
         result = requests.post(self.webhook, data=json.dumps(data), headers={"Content-Type": "application/json"})
@@ -104,6 +110,7 @@ class ZalandoMonitor:
         """
         print('STARTING MONITOR')
         logging.info(msg='Successfully started monitor')
+        self.discord_webhook('initial')
         start = 1
         while True:
             self.scrape_main_site()
@@ -114,7 +121,6 @@ class ZalandoMonitor:
                     self.instock.append(item)
                     if start == 0:
                         self.discord_webhook(item)
-                        print(item)
             time.sleep(1)
             start = 0
 
