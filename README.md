@@ -3,6 +3,9 @@
 
 <a href="https://www.buymeacoffee.com/yasserqureshi" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
+To be notified of changes, please **star** or **watch** this repository.
+This will also increase the awareness of the project for others to use or add to. 
+
 ## About the Project
 This project is aimed to provide different monitors to various sites to the sneaker community for free. 
 The monitors currently notify if a restock or update occurs via Discord Webhook.
