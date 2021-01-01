@@ -15,7 +15,7 @@ class OffSpringMonitor:
         if proxy is None:
             self.proxy = {}
         else:
-            self.proxy = {'http': f'http://{proxy}'}
+            self.proxy = {"http": f"http://{proxy}"}
         self.all_items = []
         self.instock = []
         self.instock_copy = []
@@ -55,13 +55,18 @@ class OffSpringMonitor:
         data["avatar_url"] = CONFIG['AVATAR_URL']
         data["embeds"] = []
         embed = {}
-        embed["title"] = f'{product_item[0]} {product_item[1]}'
-        embed["description"] = f'*Colour:* {product_item[4]}'
-        embed['url'] = f'https://www.offspring.co.uk{product_item[3]}'
+        if product_item == 'initial':
+            embed["description"] = "Thank you for using Yasser's Sneaker Monitors. This message is to let you know " \
+                                   "that everything is working fine! You can find more monitoring solutions at " \
+                                   "https://github.com/yasserqureshi1/Sneaker-Monitors "
+        else:
+            embed["title"] = f'{product_item[0]} {product_item[1]}'
+            embed["thumbnail"] = {'url': product_item[2]}
+            embed['url'] = f'https://www.offspring.co.uk{product_item[3]}'
+            embed["description"] = f'*Colour:* {product_item[4]}'
         embed["color"] = int(CONFIG['COLOUR'])
-        embed["thumbnail"] = {'url': product_item[2]}
         embed["footer"] = {'text': 'Made by Yasser Qureshi'}
-        embed["timestamp"] = str(datetime.datetime.now())
+        embed["timestamp"] = str(datetime.datetime.utcnow())
         data["embeds"].append(embed)
 
         result = requests.post(self.webhook, data=json.dumps(data), headers={"Content-Type": "application/json"})
@@ -87,7 +92,7 @@ class OffSpringMonitor:
 
         print('STARTING MONITOR')
         logging.info(msg='Successfully started monitor')
-
+        self.discord_webhook('initial')
         start = 1
         while True:
             self.scrape_main_site()
