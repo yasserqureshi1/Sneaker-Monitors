@@ -30,11 +30,12 @@ class SNKRSMonitor:
         Scrapes SNKRS site and adds items to array
         :return: None
         """
+        self.items = []
         no_of_pages = self.number_of_items//50
         anchor = 0
-        while no_of_pages != 0:
+        while no_of_pages > 0:
             try:
-                html = rq.get(url=self.url[0] + str(anchor) + self.url[1], timeout=5, verify=False, headers=self.headers, proxies=self.proxy)
+                html = rq.get(url=self.url[0] + str(anchor) + self.url[1], timeout=20, verify=False, headers=self.headers, proxies=self.proxy)
                 output = json.loads(html.text)
                 for item in output['objects']:
                     self.items.append(item)
@@ -56,7 +57,7 @@ class SNKRSMonitor:
             if item == [product, colour]:
                 self.instock_copy.remove([product, colour])
                 return True
-        return
+        return False
 
     def discord_webhook(self, title, colour, slug, thumbnail):
         """
@@ -72,13 +73,18 @@ class SNKRSMonitor:
         data["avatar_url"] = CONFIG['AVATAR_URL']
         data["embeds"] = []
         embed = {}
-        embed["title"] = title
-        embed["description"] = '*Item restock*\n Colour: ' + str(colour)
-        embed["url"] = 'https://www.nike.com/gb/launch/t/' + slug
-        embed["thumbnail"] = {'url': thumbnail}
+        if title != '' and colour != '' and slug != '':
+            embed["title"] = title
+            embed["description"] = '*Item restock*\n Colour: ' + str(colour)
+            embed["url"] = 'https://www.nike.com/gb/launch/t/' + slug
+            embed["thumbnail"] = {'url': thumbnail}
+        else:
+            embed["description"] = "Thank you for using Yasser's Sneaker Monitors. This message is to let you know " \
+                                   "that everything is working fine! You can find more monitoring solutions at " \
+                                   "https://github.com/yasserqureshi1/Sneaker-Monitors "
         embed["color"] = int(CONFIG['COLOUR'])
         embed["footer"] = {'text': 'Made by Yasser'}
-        embed["timestamp"] = str(datetime.datetime.now())
+        embed["timestamp"] = str(datetime.datetime.utcnow())
         data["embeds"].append(embed)
 
         result = rq.post(self.webhook, data=json.dumps(data), headers={"Content-Type": "application/json"})
@@ -91,6 +97,14 @@ class SNKRSMonitor:
             print("Payload delivered successfully, code {}.".format(result.status_code))
             logging.info(msg="Payload delivered successfully, code {}.".format(result.status_code))
 
+    def remove_duplicates(self, mylist):
+        """
+        Removes duplicate values from a list
+        :param mylist: list
+        :return: list
+        """
+        return [list(t) for t in set(tuple(element) for element in mylist)]
+
     def monitor(self):
         """
         Initiates the monitor
@@ -98,6 +112,7 @@ class SNKRSMonitor:
         """
         print('STARTING MONITOR')
         logging.info(msg='Successfully started monitor')
+        self.discord_webhook(title='', slug='', colour='', thumbnail='')
         start = 1
         while True:
             self.scrape_site()
@@ -120,7 +135,6 @@ class SNKRSMonitor:
                                 self.instock.remove([j['merchProduct']['labelName'], j['productContent']['colorDescription']])
                 except:
                     pass
-                self.items.remove(item)
             start = 0
             time.sleep(1)
 
