@@ -36,13 +36,18 @@ class FootlockerBot:
         data["avatar_url"] = CONFIG['AVATAR_URL']
         data["embeds"] = []
         embed = {}
-        embed["title"] = product_item[0]
-        embed["description"] = f'{product_item[1]} \n*Colour:* {product_item[2]}'
-        embed['url'] = f'https://www.footlocker.ca{product_item[4]}'
+        if product_item == 'initial':
+            embed["description"] = "Thank you for using Yasser's Sneaker Monitors. This message is to let you know " \
+                                   "that everything is working fine! You can find more monitoring solutions at " \
+                                   "https://github.com/yasserqureshi1/Sneaker-Monitors "
+        else:
+            embed["title"] = product_item[0]
+            embed["description"] = f'{product_item[1]} \n*Colour:* {product_item[2]}'
+            embed["thumbnail"] = {'url': product_item[3]}
+            embed['url'] = f'https://www.footlocker.ca{product_item[4]}'
         embed["color"] = int(CONFIG['COLOUR'])
-        embed["thumbnail"] = {'url': product_item[3]}
         embed["footer"] = {'text': 'Made by Yasser'}
-        embed["timestamp"] = str(datetime.datetime.now())
+        embed["timestamp"] = str(datetime.datetime.utcnow())
         data["embeds"].append(embed)
 
         result = requests.post(self.webhook, data=json.dumps(data), headers={"Content-Type": "application/json"})
@@ -108,6 +113,7 @@ class FootlockerBot:
         """
         print('STARTING MONITOR')
         logging.info(msg='Successfully started monitor')
+        self.discord_webhook('initial')
         start = 1
         while True:
             self.scrape_main_site()
@@ -127,5 +133,4 @@ class FootlockerBot:
 
 if __name__ == '__main__':
     urllib3.disable_warnings()
-    bot = FootlockerBot(webhook=CONFIG['WEBHOOK'], proxy=CONFIG['PROXY'])
-    bot.monitor()
+    bot = FootlockerBot(webhook=CONFIG['WEBHOOK'], proxy=CONFIG['PROXY']).monitor()

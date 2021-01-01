@@ -38,13 +38,18 @@ class FootlockerBot:
         data["avatar_url"] = CONFIG['AVATAR_URL']
         data["embeds"] = []
         embed = {}
-        embed["title"] = product_item[0]  # Item Name
-        embed["description"] = f'*Colour:* {product_item[1]} \n*Price:* {product_item[2]}'
-        embed['url'] = f'https://www.footlocker.com{product_item[3]}'  # Item link
+        if product_item == 'initial':
+            embed["description"] = "Thank you for using Yasser's Sneaker Monitors. This message is to let you know " \
+                                   "that everything is working fine! You can find more monitoring solutions at " \
+                                   "https://github.com/yasserqureshi1/Sneaker-Monitors "
+        else:
+            embed["title"] = product_item[0]  # Item Name
+            embed["description"] = f'*Colour:* {product_item[1]} \n*Price:* {product_item[2]}'
+            embed['url'] = f'https://www.footlocker.com{product_item[3]}'  # Item link
+            embed["thumbnail"] = {'url': product_item[4]}  # Item image
         embed["color"] = int(CONFIG['COLOUR'])
-        embed["thumbnail"] = {'url': product_item[4]}                            # Item image
         embed["footer"] = {'text': 'Made by Yasser'}
-        embed["timestamp"] = str(datetime.datetime.now())
+        embed["timestamp"] = str(datetime.datetime.utcnow())
         data["embeds"].append(embed)
 
         result = requests.post(self.webhook, data=json.dumps(data), headers={"Content-Type": "application/json"})
@@ -110,6 +115,7 @@ class FootlockerBot:
         """
         print('STARTING MONITOR')
         logging.info(msg='Successfully started monitor')
+        self.discord_webhook('initial')
         start = 1
         while True:
             self.scrape_main_site()
@@ -122,7 +128,7 @@ class FootlockerBot:
                         self.discord_webhook(item)
                         print(item)
             start = 0
-            time.sleep(0.1)
+            time.sleep(0.5)
 
 
 if __name__ == '__main__':
