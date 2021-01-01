@@ -1,7 +1,7 @@
 import requests as rq
 import json
 import time
-import datetime
+from datetime import datetime
 import urllib3
 import logging
 import dotenv
@@ -15,7 +15,7 @@ class ShopifyMonitor:
         self.url = url
         self.headers = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, '
                                       'like Gecko) Chrome/83.0.4103.116 Safari/537.36'}
-        self.pages = []
+        self.items = []
         self.instock_products = []
         self.instock_products_copy = []
         self.webhook = webhook
@@ -36,23 +36,25 @@ class ShopifyMonitor:
         Scrapes the specified Shopify site and adds items to array
         :return: None
         """
-        self.pages.clear()
+        self.items = []
         s = rq.Session()
         page = 1
         while page > 0:
             try:
-                html = s.get(self.url + '?page=' + str(page) + '&limit=250', headers=self.headers, proxies=self.proxy, verify=False, timeout=5)
+                html = s.get(self.url + '?page=' + str(page) + '&limit=250', headers=self.headers, proxies=self.proxy, verify=False, timeout=20)
                 output = json.loads(html.text)['products']
                 if output == []:
                     page = 0
                 else:
-                    self.pages.append(output)
+                    for product in output:
+                        product_item = [{'title': product['title'], 'image': product['images'][0]['src'], 'handle': product['handle'], 'variants':product['variants']}]
+                        self.items.append(product_item)
                     logging.info(msg='Successfully scraped site')
                     page += 1
             except Exception as e:
                 logging.error(e)
                 page = 0
-            time.sleep(0.2)
+            time.sleep(0.5)
         s.close()
 
     def checker(self, handle):
@@ -66,7 +68,7 @@ class ShopifyMonitor:
             if item == handle:
                 self.instock_products_copy.remove(handle)
                 return True
-        return
+        return False
 
     def discord_webhook(self, product_item):
         """
@@ -75,26 +77,34 @@ class ShopifyMonitor:
         :return: None
         """
         description = ''
-        for i in range(len(product_item[1])):
-            if i % 2 == 1:
-                description = description + str(product_item[1][i].replace(' : ', '/')) + '\n'
-            else:
-                description = description + str(product_item[1][i].replace(' : ', '/')) + '\t\t'
+        if product_item[0] == 'initial':
+            description = "Thank you for using Yasser's Sneaker Monitors. This message is to let you know that " \
+                          "everything is working fine! You can find more monitoring solutions at " \
+                          "https://github.com/yasserqureshi1/Sneaker-Monitors "
+        else:
+            for i in range(len(product_item[1])):
+                if i % 2 == 1:
+                    description = description + str(product_item[1][i].replace(' : ', '/')) + '\n'
+                else:
+                    description = description + str(product_item[1][i].replace(' : ', '/')) + '\t\t'
 
-        link = self.url.replace('.json', '/') + product_item[3]
+            link = self.url.replace('.json', '/') + product_item[3]
 
         data = {}
         data["username"] = CONFIG['USERNAME']
         data["avatar_url"] = CONFIG['AVATAR_URL']
         data["embeds"] = []
         embed = {}
-        embed["title"] = product_item[0]
-        embed["description"] = "**SHOP: **" + self.url.split('.com/')[0] + '.com/ \n\n' + '**SIZES:** \n' + description
-        embed['url'] = link
+        if product_item[0] != 'initial':
+            embed["title"] = product_item[0]
+            embed['url'] = link
+            embed["thumbnail"] = {'url': product_item[2]}
+            embed["description"] = "**SHOP: **" + self.url.split('.com/')[0] + '.com/ \n\n' + '**SIZES:** \n' + description
+        else:
+            embed["description"] = description
         embed["color"] = int(CONFIG['COLOUR'])
-        embed["thumbnail"] = {'url': product_item[2]}
         embed["footer"] = {'text': 'Made by Yasser Qureshi'}
-        embed["timestamp"] = str(datetime.datetime.now())
+        embed["timestamp"] = str(datetime.utcnow())
         data["embeds"].append(embed)
 
         result = rq.post(self.webhook, data=json.dumps(data), headers={"Content-Type": "application/json"})
@@ -113,7 +123,7 @@ class ShopifyMonitor:
         :param mylist: list
         :return: list
         """
-        return [list(t) for t in set(tuple(element) for element in mylist)]
+        return list(set(mylist))
 
     def monitor(self):
         """
@@ -127,31 +137,34 @@ class ShopifyMonitor:
             logging.error(msg='Store URL formatting incorrect for: ' + str(self.url))
             return
 
+        self.discord_webhook(['initial'])
         start = 1
         while True:
             self.scrape_site()
             self.instock_products_copy = self.instock_products.copy()
-            for page in self.pages:
-                for product in page:
-                    product_item = [product['title'], [], product['images'][0]['src'], product['handle']]
-                    for size in product['variants']:
-                        if size['available'] == True:
-                            if self.checker(product['handle']):
-                                pass
-                            else:
-                                self.instock_products.append(product['handle'])
-                                product_item[1].append(size['title'])
-                        else:
-                            if self.checker(product['handle']):
-                                self.instock_products.remove(product['handle'])
-                    if product_item[1] == []:
+            for product in self.items:
+                product_item = [product[0]['title'], [], product[0]['image'], product[0]['handle']]
+                available_sizes = []
+                for size in product[0]['variants']:
+                    if size['available'] == True:
+                        available_sizes.append(size['title'])
+
+                if available_sizes:
+                    if self.checker(product[0]['handle']):
                         pass
                     else:
-                        if start == 0:
-                            print(product_item)
-                            self.discord_webhook(product_item)
-                            logging.info(msg='Successfully sent Discord notification')
-                self.pages.remove(page)
+                        self.instock_products.append(product[0]['handle'])
+                        product_item[1].append(available_sizes)
+                else:
+                    if self.checker(product[0]['handle']):
+                        self.instock_products.remove(product[0]['handle'])
+                if not product_item[1]:
+                    pass
+                else:
+                    if start == 0:
+                        print(product_item)
+                        self.discord_webhook(product_item)
+                        logging.info(msg='Successfully sent Discord notification')
             start = 0
             time.sleep(1)
 
