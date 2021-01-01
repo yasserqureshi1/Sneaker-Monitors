@@ -14,6 +14,8 @@ The installation instructions can be found [here](#installation).
 
 This project is continually expanding, and I would greatly appreciate any contributions. 
 When contributing please fork the project and open a Pull Request.
+If you'd like a feature to be added, you can either open an issue [here](https://github.com/yasserqureshi1/Sneaker-Monitors/issues/new)
+or get in contact with me [here](#contact)
 
 A list of the current sites can be found [here](#monitors)
 
@@ -100,10 +102,7 @@ I will respond fairly quickly and try to come up with solution.
 I may ask you to provide the log file that is produced by the monitor.
 It contains no personal data but may help me diagnose where the issue arises.
 
-If you are struggling to set up the monitor you can reach out to me via Discord [here](#contact)
-
 ## To Do
- - [ ] Start cheap paid service using personal VPS and proxy 
  - [ ] Create price reduction monitors
  - [ ] Add other requested site (Off-White, Footpatrol, JD, BSTN, Size?, SNS, Naked, Net-a-porter, Footdistrict, oneblockdown, noirfonce and Sivasdescalzo)
  - [ ] Increase number of countries catered for
