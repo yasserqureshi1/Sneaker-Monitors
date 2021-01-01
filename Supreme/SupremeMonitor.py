@@ -78,24 +78,17 @@ class SupremeMonitor:
 
         embed = {}
         
-        # Item Name and Style Name
-        if product_item[0]:
+        if product_item == 'initial':
+            embed["description"] = "Thank you for using Yasser's Sneaker Monitors. This message is to let you know " \
+                                   "that everything is working fine! You can find more monitoring solutions at " \
+                                   "https://github.com/yasserqureshi1/Sneaker-Monitors "
+        else:
             embed["title"] = product_item[0] + ' - ' + product_item[1] + ' - ' + product_item[2]
-
-        # Product Description
-        if product_item[3]:
             embed["description"] = product_item[3]
-
-        # Product Link
-        if product_item[5]:
+            embed["thumbnail"] = {'url': product_item[4]}
             embed['url'] = product_item[5]
 
         embed["color"] = CONFIG['COLOUR']
-
-        # Product Image
-        if product_item[4]:
-            embed["thumbnail"] = {'url': product_item[4]}
-
         embed["footer"] = {'text': 'Made by Yasser & Bogdan'}
         embed["timestamp"] = str(datetime.utcnow())
         data["embeds"].append(embed)
