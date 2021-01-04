@@ -63,7 +63,7 @@ OffSpring | ![offspring](https://img.shields.io/badge/OffSpring-good-brightgreen
 Ssense | ![ssense](https://img.shields.io/badge/Ssense-good-brightgreen)
 Zalando | ![zalando](https://img.shields.io/badge/Zalando-good-brightgreen)
 SNKRS | ![snkrs](https://img.shields.io/badge/SNKRS-good-brightgreen)
-Shopify | ![shopify](https://img.shields.io/badge/Shopify-good-brightgreen)
+Shopify | ![shopify](https://img.shields.io/badge/Shopify-issues-red)
 Supreme | ![supreme](https://img.shields.io/badge/Supreme-good-brightgreen)
 
 ## Installation
