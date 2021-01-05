@@ -7,7 +7,7 @@ To be notified of changes, please **star** or **watch** this repository.
 This will also increase the awareness of the project for others to use or add to. 
 
 I have recently created a Discord server where you can can be learn to use, get notified of updates and ask questions on the monitors on this repo.
-You can join [here](https://discord.gg/m6b5QFNC) 
+You can join [here](https://discord.gg/jjbtWcBczb) 
 
 ## About the Project
 This project is aimed to provide different monitors to various sites to the sneaker community for free. 
@@ -132,5 +132,5 @@ Distributed under the MIT License. See ```LICENSE``` for more information.
 
 ## Contact
 
-For help join my Discord server [here](https://discord.gg/m6b5QFNC) and post a question in the #questions channel
+For help join my Discord server [here](https://discord.gg/jjbtWcBczb) and post a question in the #questions channel
 
