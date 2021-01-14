@@ -124,12 +124,12 @@ def monitor():
     initial = ['','','',"Thank you for using Yasser's Sneaker Monitors. This message is to let you know that "
                         "everything is working fine! You can find more monitoring solutions at "
                         "https://github.com/yasserqureshi1/Sneaker-Monitors",'','']
-    #discord_webhook(initial)
-    start = 0
+    discord_webhook(initial)
+    start = 1
     proxy_no = 0
 
     proxy_list = CONFIG['PROXY'].split('%')
-    proxy = {} if proxy_list[0] == "" else proxy_list[proxy_no]
+    proxy = {} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
     headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
     keywords = CONFIG['KEYWORDS'].split('%')
     while True:
@@ -157,7 +157,7 @@ def monitor():
             headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
             if proxy != {}:
                 proxy_no = 0 if proxy_no == (len(proxy_list)-1) else proxy_no + 1
-                proxy = proxy_list[proxy_no]
+                proxy = {"http": f"http://{proxy_list[proxy_no]}"}
 
 
 if __name__ == '__main__':
