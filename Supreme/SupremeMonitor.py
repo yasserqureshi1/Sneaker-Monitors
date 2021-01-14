@@ -54,7 +54,7 @@ def get_item_variants(item_id, item_name, start, proxy, headers):
                     if start == 0:
                         print('Sending new Notification')
                         print(item)
-                        discord_webhook(item)
+                        #discord_webhook(item)
                         logging.info(msg='Successfully sent Discord notification')
 
             else:
@@ -124,20 +124,30 @@ def monitor():
     initial = ['','','',"Thank you for using Yasser's Sneaker Monitors. This message is to let you know that "
                         "everything is working fine! You can find more monitoring solutions at "
                         "https://github.com/yasserqureshi1/Sneaker-Monitors",'','']
-    discord_webhook(initial)
-    start = 1
+    #discord_webhook(initial)
+    start = 0
     proxy_no = 0
 
     proxy_list = CONFIG['PROXY'].split('%')
     proxy = {} if proxy_list[0] == "" else proxy_list[proxy_no]
     headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
+    keywords = CONFIG['KEYWORDS'].split('%')
     while True:
         try:
             stock = get_stock(proxy, headers)
             time.sleep(float(CONFIG["DELAY"]))
             for cat in stock:
                 for product_item in stock[cat]:
-                    get_item_variants(product_item['id'], product_item['name'], start, proxy, headers)
+                    check = False
+                    if keywords == "":
+                        get_item_variants(product_item['id'], product_item['name'], start, proxy, headers)
+                    else:
+                        for key in keywords:
+                            if key.lower() in product_item['name'].lower():
+                                check = True
+                                break
+                        if check:
+                            get_item_variants(product_item['id'], product_item['name'], start, proxy, headers)
                     time.sleep(0.5)
             start = 0
             logging.info(msg='Successfully monitored site')
