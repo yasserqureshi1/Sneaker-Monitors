@@ -1,9 +1,7 @@
 # Project exclude paths
 /venv/
-config.py
 Supreme/suplog.log
 SNKRS/SNKRSlog.log
 Shopify/Shopifylog.log
 Footsites/Footlocker/Footlockerlog.log
 .idea
-test.py
