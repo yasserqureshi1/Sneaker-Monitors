@@ -70,7 +70,7 @@ def discord_webhook(title, colour, slug, thumbnail):
     embed = {}
     if title != '' and colour != '' and slug != '':
         embed["title"] = title
-        embed["description"] = '*Item restock*\n Colour: ' + str(colour)
+        embed["fields"] = [{'name': 'Colour', 'value': colour}]
         embed["url"] = 'https://www.nike.com/gb/launch/t/' + slug
         embed["thumbnail"] = {'url': thumbnail}
     else:
