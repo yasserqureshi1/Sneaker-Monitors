@@ -6,7 +6,7 @@
 To be notified of changes, please **star** or **watch** this repository.
 This will also increase the awareness of the project for others to use or add to. 
 
-I have recently created a Discord server where you can can be learn to use, get notified of updates and ask questions on the monitors on this repo.
+I have recently created a Discord server where you can learn to use, get notified of updates and ask questions on the monitors on this repo.
 You can join [here](https://discord.gg/jjbtWcBczb) 
 
 ## About the Project
