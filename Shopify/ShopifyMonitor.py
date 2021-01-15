@@ -19,21 +19,6 @@ CONFIG = dotenv.dotenv_values()
 INSTOCK = []
 
 
-class ShopifyMonitor:
-    def __init__(self, url, webhook, proxy):
-        self.url = url
-        self.headers = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, '
-                                      'like Gecko) Chrome/83.0.4103.116 Safari/537.36'}
-        self.items = []
-        self.instock_products = []
-        self.instock_products_copy = []
-        self.webhook = webhook
-        if proxy is None:
-            self.proxy = {}
-        else:
-            self.proxy = {"http": f"http://{proxy}"}
-
-
 def check_url(url):
     """
     Checks whether the supplied URL is valid
@@ -94,13 +79,11 @@ def discord_webhook(product_item):
                       "everything is working fine! You can find more monitoring solutions at " \
                       "https://github.com/yasserqureshi1/Sneaker-Monitors "
     else:
-        for i in range(len(product_item[1])):
-            if i % 2 == 1:
-                description = description + str(product_item[1][i].replace(' : ', '/')) + '\n'
-            else:
-                description = description + str(product_item[1][i].replace(' : ', '/')) + '\t\t'
+        fields = []
+        for size in product_item[1][0]:
+            fields.append({'name': size, 'value': 'Available', 'inline': True})
 
-        link = surl.replace('.json', '/') + product_item[3]
+        link = CONFIG['URL'].replace('.json', '/') + product_item[3]
 
     data = {}
     data["username"] = CONFIG['USERNAME']
@@ -111,14 +94,13 @@ def discord_webhook(product_item):
         embed["title"] = product_item[0]
         embed['url'] = link
         embed["thumbnail"] = {'url': product_item[2]}
-        embed["description"] = "**SHOP: **" + self.url.split('.com/')[0] + '.com/ \n\n' + '**SIZES:** \n' + description
+        embed["fields"] = fields
     else:
         embed["description"] = description
     embed["color"] = int(CONFIG['COLOUR'])
     embed["footer"] = {'text': 'Made by Yasser Qureshi'}
     embed["timestamp"] = str(datetime.utcnow())
     data["embeds"].append(embed)
-
     result = rq.post(CONFIG['WEBHOOK'], data=json.dumps(data), headers={"Content-Type": "application/json"})
 
     try:
@@ -138,7 +120,8 @@ def remove_duplicates(mylist):
     """
     return list(set(mylist))
 
-def comparitor(product, start)
+
+def comparitor(product, start):
     product_item = [product[0]['title'], [], product[0]['image'], product[0]['handle']]
     available_sizes = []
     for size in product[0]['variants']:
@@ -161,6 +144,7 @@ def comparitor(product, start)
             print(product_item)
             discord_webhook(product_item)
             logging.info(msg='Successfully sent Discord notification')
+
 
 def monitor():
     """
