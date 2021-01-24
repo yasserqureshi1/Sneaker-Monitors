@@ -54,7 +54,7 @@ def get_item_variants(item_id, item_name, start, proxy, headers):
                     if start == 0:
                         print('Sending new Notification')
                         print(item)
-                        #discord_webhook(item)
+                        discord_webhook(item)
                         logging.info(msg='Successfully sent Discord notification')
 
             else:
