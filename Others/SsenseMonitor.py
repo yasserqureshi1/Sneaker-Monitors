@@ -9,6 +9,7 @@ import logging
 import dotenv
 from random_user_agent.user_agent import UserAgent
 from random_user_agent.params import SoftwareName, HardwareType
+from fp.fp import FreeProxy
 
 logging.basicConfig(filename='Ssenselog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s',
                     level=logging.DEBUG)
@@ -17,6 +18,8 @@ software_names = [SoftwareName.CHROME.value]
 hardware_type = [HardwareType.MOBILE__PHONE]
 user_agent_rotator = UserAgent(software_names=software_names, hardware_type=hardware_type)
 CONFIG = dotenv.dotenv_values()
+
+proxyObject = FreeProxy(country_id=['GB'], rand=True)
 
 INSTOCK = []
 
@@ -125,7 +128,7 @@ def monitor():
     proxy_no = 0
 
     proxy_list = CONFIG['PROXY'].split('%')
-    proxy = {} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
+    proxy = {"http": f"http://{proxyObject.get()}"} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
     headers = {'User-Agent': user_agent_rotator.get_random_user_agent(),
                'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,'
                          'image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
@@ -155,7 +158,9 @@ def monitor():
                        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,'
                                  'image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
                        'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8'}
-            if proxy != {}:
+            if CONFIG['PROXY'] == "":
+                proxy = {"http": f"http://{proxyObject.get()}"}
+            else:
                 proxy_no = 0 if proxy_no == (len(proxy_list) - 1) else proxy_no + 1
                 proxy = {"http": f"http://{proxy_list[proxy_no]}"}
 

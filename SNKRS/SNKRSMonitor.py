@@ -7,6 +7,7 @@ import logging
 import dotenv
 from random_user_agent.user_agent import UserAgent
 from random_user_agent.params import SoftwareName, HardwareType
+from fp.fp import FreeProxy
 
 logging.basicConfig(filename='SNKRSlog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
 
@@ -14,6 +15,8 @@ software_names = [SoftwareName.CHROME.value]
 hardware_type = [HardwareType.MOBILE__PHONE]
 user_agent_rotator = UserAgent(software_names=software_names, hardware_type=hardware_type)
 CONFIG = dotenv.dotenv_values()
+
+proxyObject = FreeProxy(country_id=['GB'], rand=True)
 
 INSTOCK = []
 
@@ -37,7 +40,7 @@ def scrape_site(headers, proxy):
             print('Error - ', e)
             logging.error(msg=e)
         anchor += 60
-        time.sleep(float(CONFIG['DLEAY']))
+        time.sleep(float(CONFIG['DELAY']))
     return items
 
 
@@ -126,7 +129,7 @@ def monitor():
     proxy_no = 0
 
     proxy_list = CONFIG['PROXY'].split('%')
-    proxy = {} if proxy_list[0] == "" else proxy_list[proxy_no]
+    proxy = {"http": f"http://{proxyObject.get()}"} if proxy_list[0] == "" else proxy_list[proxy_no]
     headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
     keywords = CONFIG['KEYWORDS'].split('%')
     while True:
@@ -151,7 +154,9 @@ def monitor():
             except rq.exceptions.HTTPError as e:
                 logging.error(e)
                 headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
-                if proxy != {}:
+                if CONFIG['PROXY'] == "":
+                    proxy = {"http": f"http://{proxyObject.get()}"}
+                else:
                     proxy_no = 0 if proxy_no == (len(proxy_list) - 1) else proxy_no + 1
                     proxy = proxy_list[proxy_no]
             except Exception as e:
