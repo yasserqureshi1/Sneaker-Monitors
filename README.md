@@ -57,13 +57,13 @@ Below is a table outlining the status on each monitor:
 
 Monitor | Status
 --------|--------
-Solebox | ![solebox](https://img.shields.io/badge/Solebox-good-brightgreen)
-Footlocker | ![footlocker](https://img.shields.io/badge/Footlocker-good-brightgreen)
-OffSpring | ![offspring](https://img.shields.io/badge/OffSpring-good-brightgreen)
-Ssense | ![ssense](https://img.shields.io/badge/Ssense-good-brightgreen)
-Zalando | ![zalando](https://img.shields.io/badge/Zalando-good-brightgreen)
+Solebox | ![solebox](https://img.shields.io/badge/Solebox-okay-yellow)
+Footlocker | ![footlocker](https://img.shields.io/badge/Footlocker-okay-yellow)
+OffSpring | ![offspring](https://img.shields.io/badge/OffSpring-okay-yellow)
+Ssense | ![ssense](https://img.shields.io/badge/Ssense-okay-yellow)
+Zalando | ![zalando](https://img.shields.io/badge/Zalando-okay-yellow)
 SNKRS | ![snkrs](https://img.shields.io/badge/SNKRS-good-brightgreen)
-Shopify | ![shopify](https://img.shields.io/badge/Shopify-issues-red)
+Shopify | ![shopify](https://img.shields.io/badge/Shopify-good-brightgreen)
 Supreme | ![supreme](https://img.shields.io/badge/Supreme-good-brightgreen)
 
 ## Installation
@@ -79,6 +79,7 @@ urllib3
 logging
 python-dotenv
 bs4
+free-proxy
 ```
 
 ## Set Up
