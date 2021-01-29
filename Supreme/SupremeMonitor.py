@@ -80,15 +80,16 @@ def discord_webhook(product_item):
 
     embed = {}
 
-    if product_item == 'initial':
-        embed["description"] = "Thank you for using Yasser's Sneaker Monitors. This message is to let you know " \
-                               "that everything is working fine! You can find more monitoring solutions at " \
-                               "https://github.com/yasserqureshi1/Sneaker-Monitors "
-    else:
+    if product_item != 'initial':
         embed["title"] = product_item[0] + ' - ' + product_item[1] + ' - ' + product_item[2]
         embed["description"] = product_item[3]
         embed["thumbnail"] = {'url': product_item[4]}
         embed['url'] = product_item[5]
+    else:
+        embed["title"] = ''
+        embed["description"] = "Thank you for using Yasser's Sneaker Monitors. This message is to let you know " \
+                               "that everything is working fine! You can find more monitoring solutions at " \
+                               "https://github.com/yasserqureshi1/Sneaker-Monitors "
 
     embed["color"] = CONFIG['COLOUR']
     embed["footer"] = {'text': 'Made by Yasser & Bogdan'}
@@ -125,10 +126,7 @@ def monitor():
     """
     print('STARTING MONITOR')
     logging.info(msg='Successfully started monitor')
-    initial = ['','','',"Thank you for using Yasser's Sneaker Monitors. This message is to let you know that "
-                        "everything is working fine! You can find more monitoring solutions at "
-                        "https://github.com/yasserqureshi1/Sneaker-Monitors",'','']
-    discord_webhook(initial)
+    discord_webhook('initial')
     start = 1
     proxy_no = 0
 
