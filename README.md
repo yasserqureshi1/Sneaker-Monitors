@@ -84,6 +84,10 @@ free-proxy
 
 ## Set Up
 
+[![Watch the video](https://img.youtube.com/vi/mUTGCzWIDQk/maxresdefault.jpg)](https://youtu.be/mUTGCzWIDQk)
+
+[![Watch the video](https://img.youtube.com/vi/nmUSSlt4JKk/maxresdefault.jpg)](https://youtu.be/nmUSSlt4JKk)
+
 Ensure you have Python as well as all the dependencies installed.
 If you don't have Python, you can download it at this [link](https://www.python.org/downloads/).
 To install the dependencies, see [#Installation](#installation) for details.
@@ -93,6 +97,7 @@ Ensure that both the Python file and ```.env``` file are in the same directory a
 You will only need to interact with the ```.env``` file.
 
 In the ```.env``` file, set the ```WEBHOOK``` variable to your Discord webhook URL and your proxy in the ```PROXY``` variable.
+There is a free proxy service already implemented if you do not have your own proxy.
 Other details can also be edited such as the bot username, avatar and colour.
 Below is an example of what the webhook URL should look like:
 ```
