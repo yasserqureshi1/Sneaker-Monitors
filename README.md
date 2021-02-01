@@ -84,18 +84,13 @@ free-proxy
 
 ## Set Up
 
+Click on the image below to watch a YouTube tutorial on setting the monitor up locally...
 [![Watch the video](https://img.youtube.com/vi/mUTGCzWIDQk/maxresdefault.jpg)](https://youtu.be/mUTGCzWIDQk)
 
+Click on the image below to watch a YouTube tutorial on setting the monitor up on a server...
 [![Watch the video](https://img.youtube.com/vi/nmUSSlt4JKk/maxresdefault.jpg)](https://youtu.be/nmUSSlt4JKk)
 
-Ensure you have Python as well as all the dependencies installed.
-If you don't have Python, you can download it at this [link](https://www.python.org/downloads/).
-To install the dependencies, see [#Installation](#installation) for details.
-
-To start, download the Python file and the ```.env``` file associated with it.
-Ensure that both the Python file and ```.env``` file are in the same directory at all times.
 You will only need to interact with the ```.env``` file.
-
 In the ```.env``` file, set the ```WEBHOOK``` variable to your Discord webhook URL and your proxy in the ```PROXY``` variable.
 There is a free proxy service already implemented if you do not have your own proxy.
 Other details can also be edited such as the bot username, avatar and colour.
@@ -104,17 +99,13 @@ Below is an example of what the webhook URL should look like:
 WEBHOOK = "https://discord.com/api/webhooks/..."
 ```
 
-Some monitors have proxy support. You can enable this by setting the proxy in the ```.env file```.
+Some monitors have proxy support. You can enable this by setting the proxy in the ```.env``` file.
 Below are two different structures:
 1. ```PROXY = "<proxy>:<port>"```
 2. ```PROXY = "<proxy_username>:<proxy_password>@<proxy_domain>:<port>"```
 
 Other monitors may have other details in their ```.env``` files.
 Please refer to that specific README.md file for details on setting up.
-
-These scripts should be running continuously for the monitor to work.
-As such you will need to host it on a server.
-To set one up yourself, a good article that explains all the hosting methods can be found [here](https://www.writebots.com/discord-bot-hosting/).
 
 I will shortly be releasing a paid (but competitively priced) set of hosted monitors.
 This would require only you sending me your webhook url and I will ensure that the monitoring service runs smoothly.
