@@ -84,26 +84,30 @@ free-proxy
 
 ## Set Up
 
+
 Click on the image below to watch a YouTube tutorial on setting the monitor up locally...
-[![Watch the video](https://img.youtube.com/vi/mUTGCzWIDQk/maxresdefault.jpg)](https://youtu.be/mUTGCzWIDQk)
+[![Watch the video](https://img.youtube.com/vi/mUTGCzWIDQk/mqdefault.jpg)](https://youtu.be/mUTGCzWIDQk)
 
 Click on the image below to watch a YouTube tutorial on setting the monitor up on a server...
-[![Watch the video](https://img.youtube.com/vi/nmUSSlt4JKk/maxresdefault.jpg)](https://youtu.be/nmUSSlt4JKk)
+[![Watch the video](https://img.youtube.com/vi/nmUSSlt4JKk/mqdefault.jpg)](https://youtu.be/nmUSSlt4JKk)
 
 You will only need to interact with the ```.env``` file.
-In the ```.env``` file, set the ```WEBHOOK``` variable to your Discord webhook URL and your proxy in the ```PROXY``` variable.
-There is a free proxy service already implemented if you do not have your own proxy.
-Other details can also be edited such as the bot username, avatar and colour.
+In the ```.env``` file, set the  ```WEBHOOK``` variable to your Discord webhook URL.
 Below is an example of what the webhook URL should look like:
 ```
 WEBHOOK = "https://discord.com/api/webhooks/..."
 ```
 
-Some monitors have proxy support. You can enable this by setting the proxy in the ```.env``` file.
-Below are two different structures:
+
+There is an optional ```PROXY``` variable for your own proxies.
+There is a free proxy service already implemented if you do not have your own proxy. 
+Please set the ```LOCATION_CODE``` variable to your location (or closest location) according to the list found [here](Location-Code-List.md) for the proxy. 
+These proxies are scraped from [SSL Proxies](https://www.sslproxies.org/).
+Below are two different structures if you are using your own proxy:
 1. ```PROXY = "<proxy>:<port>"```
 2. ```PROXY = "<proxy_username>:<proxy_password>@<proxy_domain>:<port>"```
 
+Other details can also be edited such as the bot username, avatar and colour.
 Other monitors may have other details in their ```.env``` files.
 Please refer to that specific README.md file for details on setting up.
 
