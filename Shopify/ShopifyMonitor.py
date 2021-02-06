@@ -17,7 +17,7 @@ hardware_type = [HardwareType.MOBILE__PHONE]
 user_agent_rotator = UserAgent(software_names=software_names, hardware_type=hardware_type)
 CONFIG = dotenv.dotenv_values()
 
-proxyObject = FreeProxy(country_id=['GB'], rand=True)
+proxyObject = FreeProxy(country_id=[CONFIG['LOCATION']], rand=True)
 
 INSTOCK = []
 
