@@ -79,23 +79,19 @@ def scrape_main_site(headers, proxy):
     """
     items = []
     s = requests.Session()
-    try:
-        url = 'https://www.footlocker.com.au/en/men/'
-        html = s.get(url=url, headers=headers, proxies=proxy, verify=False, timeout=10)
-        soup = BeautifulSoup(html.text, 'html.parser')
-        array = soup.find_all('div', {'class': 'fl-category--productlist--item'})
-        for i in array:
-            item = [i.find('span', {'class': 'ProductName-primary'}).text,
-                    i.find('span', {'class': 'ProductName-alt'}).text.split(chr(8226))[0],
-                    i.find('span', {'class': 'ProductName-alt'}).text.split(chr(8226))[1],
-                    i.find('img')['src'],
-                    i.find('a', {'class': 'ProductCard-link ProductCard-content'})['href']]
-            items.append(item)
+    url = 'https://www.footlocker.com.au/en/men/'
+    html = s.get(url=url, headers=headers, proxies=proxy, verify=False, timeout=10)
+    soup = BeautifulSoup(html.text, 'html.parser')
+    array = soup.find_all('div', {'class': 'fl-category--productlist--item'})
+    for i in array:
+        item = [i.find('span', {'class': 'ProductName-primary'}).text,
+                i.find('span', {'class': 'ProductName-alt'}).text.split(chr(8226))[0],
+                i.find('span', {'class': 'ProductName-alt'}).text.split(chr(8226))[1],
+                i.find('img')['src'],
+                i.find('a', {'class': 'ProductCard-link ProductCard-content'})['href']]
+        items.append(item)
 
-        logging.info(msg='Successfully scraped site')
-    except Exception as e:
-        print('There was an Error - main site - ', e)
-        logging.error(msg=e)
+    logging.info(msg='Successfully scraped site')
     s.close()
     return items
 
@@ -151,7 +147,7 @@ def monitor():
             start = 0
             time.sleep(float(CONFIG['WEBHOOK']))
         except Exception as e:
-            print(e)
+            print(f"Exception found '{e}' - Rotating proxy and user-agent")
             logging.error(e)
             headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
             if CONFIG['PROXY'] == "":

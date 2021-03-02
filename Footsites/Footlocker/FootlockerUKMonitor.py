@@ -10,6 +10,7 @@ import dotenv
 from random_user_agent.user_agent import UserAgent
 from random_user_agent.params import SoftwareName, HardwareType
 from fp.fp import FreeProxy
+from apscheduler.schedulers.blocking import BlockingScheduler
 
 logging.basicConfig(filename='Footlockerlog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
 
@@ -21,6 +22,10 @@ CONFIG = dotenv.dotenv_values()
 proxyObject = FreeProxy(country_id=['GB'], rand=True)
 
 INSTOCK = []
+
+def clear_log():
+    with open('yourlog.log', 'w'):
+        pass
 
 
 def discord_webhook(product_item):
@@ -77,20 +82,17 @@ def scrape_main_site(headers, proxy):
     """
     s = requests.Session()
     items = []
-    try:
-        html = s.get('https://www.footlocker.co.uk/en/men/shoes/', headers=headers, proxies=proxy, verify=False, timeout=10)
-        soup = BeautifulSoup(html.text, 'html.parser')
-        array = soup.find_all('div', {'class': 'fl-category--productlist--item'})
-        for i in array:
-            item = [i.find('span', {'itemprop': 'name'}).text,
-                    i.find('a')['href'],
-                    f'https://images.footlocker.com/is/image/FLEU/{i.find("a")["href"].split("=")[1]}?wid=280&hei=280']
-            items.append(item)
 
-        logging.info(msg='Successfully scraped site')
-    except Exception as e:
-        print('There was an Error - main site - ', e)
-        logging.error(msg=e)
+    html = s.get('https://www.footlocker.co.uk/en/men/shoes/', headers=headers, proxies=proxy, verify=False, timeout=10)
+    soup = BeautifulSoup(html.text, 'html.parser')
+    array = soup.find_all('div', {'class': 'fl-category--productlist--item'})
+    for i in array:
+        item = [i.find('span', {'itemprop': 'name'}).text,
+                i.find('a')['href'],
+                f'https://images.footlocker.com/is/image/FLEU/{i.find("a")["href"].split("=")[1]}?wid=280&hei=280']
+        items.append(item)
+    logging.info(msg='Successfully scraped site')
+
     s.close()
     return items
 
@@ -126,7 +128,7 @@ def monitor():
     proxy_no = 0
 
     proxy_list = CONFIG['PROXY'].split('%')
-    proxy = {"http": f"http://{proxyObject.get()}"} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
+    proxy = {"http": f"https://{proxyObject.get()}"} if proxy_list[0] == "" else {"http": f"https://{proxy_list[proxy_no]}"}
     headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
     keywords = CONFIG['KEYWORDS'].split('%')
     while True:
@@ -146,14 +148,14 @@ def monitor():
             start = 0
             time.sleep(0.5)
         except Exception as e:
-            print(e)
+            print(f"Exception found '{e}' - Rotating proxy and user-agent")
             logging.error(e)
             headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
             if CONFIG['PROXY'] == "":
-                proxy = {"http": f"http://{proxyObject.get()}"}
+                proxy = {"http": f"https://{proxyObject.get()}"}
             else:
                 proxy_no = 0 if proxy_no == (len(proxy_list) - 1) else proxy_no + 1
-                proxy = {"http": f"http://{proxy_list[proxy_no]}"}
+                proxy = {"http": f"https://{proxy_list[proxy_no]}"}
 
 
 if __name__ == '__main__':

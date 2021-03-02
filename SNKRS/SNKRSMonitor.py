@@ -30,15 +30,13 @@ def scrape_site(headers, proxy):
     anchor = 0
     while anchor < 180:
         url = f'https://api.nike.com/product_feed/threads/v2/?anchor={anchor}&count=60&filter=marketplace%28{CONFIG["LOC"]}%29&filter=language%28{CONFIG["LAN"]}%29&filter=channelId%28010794e5-35fe-4e32-aaff-cd2c74f89d61%29&filter=exclusiveAccess%28true%2Cfalse%29&fields=active%2Cid%2ClastFetchTime%2CproductInfo%2CpublishedContent.nodes%2CpublishedContent.subType%2CpublishedContent.properties.coverCard%2CpublishedContent.properties.productCard%2CpublishedContent.properties.products%2CpublishedContent.properties.publish.collections%2CpublishedContent.properties.relatedThreads%2CpublishedContent.properties.seo%2CpublishedContent.properties.threadType%2CpublishedContent.properties.custom%2CpublishedContent.properties.title'
-        try:
-            html = rq.get(url=url, timeout=20, verify=False, headers=headers, proxies=proxy)
-            output = json.loads(html.text)
-            for item in output['objects']:
-                items.append(item)
-                logging.info(msg='Successfully scraped SNKRS site')
-        except Exception as e:
-            print('Error - ', e)
-            logging.error(msg=e)
+
+        html = rq.get(url=url, timeout=20, verify=False, headers=headers, proxies=proxy)
+        output = json.loads(html.text)
+        for item in output['objects']:
+            items.append(item)
+            logging.info(msg='Successfully scraped SNKRS site')
+
         anchor += 60
         time.sleep(float(CONFIG['DELAY']))
     return items
@@ -74,7 +72,7 @@ def discord_webhook(title, colour, slug, thumbnail):
     if title != '' and colour != '' and slug != '':
         embed["title"] = title
         embed["fields"] = [{'name': 'Colour', 'value': colour}]
-        embed["url"] = 'https://www.nike.com/gb/launch/t/' + slug
+        embed["url"] = f'https://www.nike.com/{CONFIG["LOC"]}/launch/t/' + slug
         embed["thumbnail"] = {'url': thumbnail}
     else:
         embed["description"] = "Thank you for using Yasser's Sneaker Monitors. This message is to let you know " \
@@ -152,6 +150,7 @@ def monitor():
                         if checker(j['merchProduct']['labelName'], j['productContent']['colorDescription']):
                             INSTOCK.remove([j['merchProduct']['labelName'], j['productContent']['colorDescription']])
             except rq.exceptions.HTTPError as e:
+                print(f"Exception found '{e}' - Rotating proxy and user-agent")
                 logging.error(e)
                 headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
                 if CONFIG['PROXY'] == "":

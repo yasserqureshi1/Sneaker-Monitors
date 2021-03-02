@@ -80,21 +80,17 @@ def scrape_main_site(headers, proxy):
     """
     items = []
     s = requests.Session()
-    try:
-        html = s.get('https://www.footlocker.com/category/mens/shoes.html', headers=headers,
-                     proxies=proxy, verify=False, timeout=20)
-        soup = BeautifulSoup(html.text, 'html.parser')
-        array = soup.find_all('li', {'class': 'product-container col'})
-        for i in array:
-            list = [i.find('span', {'class': 'ProductName-primary'}).text,
-                    i.find('span', {'class': 'ProductName-alt'}).text.replace("Men's•", ''),
-                    i.find('div', {'class': 'ProductPrice'}).text,
-                    i.find('a', {'class': 'ProductCard-link ProductCard-content'})['href'], i.find('img')['src']]
-            items.append(list)
+
+    html = s.get('https://www.footlocker.com/category/mens/shoes.html', headers=headers, proxies=proxy, verify=False, timeout=20)
+    soup = BeautifulSoup(html.text, 'html.parser')
+    array = soup.find_all('li', {'class': 'product-container col'})
+    for i in array:
+        item = [i.find('span', {'class': 'ProductName-primary'}).text,
+                i.find('span', {'class': 'ProductName-alt'}).text.replace("Men's•", ''),
+                i.find('div', {'class': 'ProductPrice'}).text,
+                i.find('a', {'class': 'ProductCard-link ProductCard-content'})['href'], i.find('img')['src']]
+        items.append(item)
         logging.info(msg='Successfully scraped site')
-    except Exception as e:
-        print('There was an Error - main site - ', e)
-        logging.error(msg=e)
     s.close()
     return items
 
@@ -148,7 +144,7 @@ def monitor():
             start = 0
             time.sleep(float(CONFIG['DELAY']))
         except Exception as e:
-            print(e)
+            print(f"Exception found '{e}' - Rotating proxy and user-agent")
             logging.error(e)
             headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
             if CONFIG['PROXY'] == "":

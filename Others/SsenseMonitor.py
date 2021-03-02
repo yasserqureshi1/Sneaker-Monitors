@@ -80,21 +80,18 @@ def scrape_main_site(headers, proxy):
     """
     s = requests.Session()
     items = []
-    try:
-        url = 'https://www.ssense.com/en-gb/men/shoes/'
-        html = s.get(url=url, headers=headers, verify=False, timeout=15, proxies=proxy)
-        soup = BeautifulSoup(html.text, 'html.parser')
-        array = soup.find_all('div', {'class': 'plp-products__column'})
-        for i in array:
-            item = [i.find('span', {'class': 's-text s-text--uppercase'}).text,
-                    i.find('div', {'class': 'product-tile__description'}).text.replace(
-                        i.find('span', {'class': 's-text'}).text, '').split('£')[0], i.find('a')['href'],
-                    i.find('img')['data-srcset']]
-            items.append(item)
-        logging.info(msg='Successfully scraped site')
-    except Exception as e:
-        print('There was an Error - main site - ', e)
-        logging.error(msg=e)
+    url = 'https://www.ssense.com/en-gb/men/shoes/'
+    html = s.get(url=url, headers=headers, verify=False, timeout=15, proxies=proxy)
+    soup = BeautifulSoup(html.text, 'html.parser')
+    array = soup.find_all('div', {'class': 'plp-products__column'})
+    for i in array:
+        item = [i.find('span', {'class': 's-text s-text--uppercase'}).text,
+                i.find('div', {'class': 'product-tile__description'}).text.replace(
+                    i.find('span', {'class': 's-text'}).text, '').split('£')[0], i.find('a')['href'],
+                i.find('img')['data-srcset']]
+        items.append(item)
+    logging.info(msg='Successfully scraped site')
+
     s.close()
     return items
 
@@ -152,7 +149,7 @@ def monitor():
             start = 0
             time.sleep(float(CONFIG['DELAY']))
         except Exception as e:
-            print(e)
+            print(f"Exception found '{e}' - Rotating proxy and user-agent")
             logging.error(e)
             headers = {'User-Agent': user_agent_rotator.get_random_user_agent(),
                        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,'

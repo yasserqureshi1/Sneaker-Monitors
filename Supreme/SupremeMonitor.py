@@ -154,7 +154,7 @@ def monitor():
             start = 0
             logging.info(msg='Successfully monitored site')
         except Exception as e:
-            print(e)
+            print(f"Exception found '{e}' - Rotating proxy and user-agent")
             logging.error(e)
             headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
             if CONFIG['PROXY'] == "":

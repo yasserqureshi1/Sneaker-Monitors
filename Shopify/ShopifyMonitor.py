@@ -39,23 +39,20 @@ def scrape_site(url, headers, proxy):
     s = rq.Session()
     page = 1
     while True:
-        try:
-            html = s.get(url + f'?page={page}&limit=250', headers=headers, proxies=proxy, verify=False, timeout=20)
-            output = json.loads(html.text)['products']
-            if output == []:
-                break
-            else:
-                for product in output:
-                    product_item = [
-                        {'title': product['title'], 'image': product['images'][0]['src'], 'handle': product['handle'],
-                         'variants': product['variants']}]
-                    items.append(product_item)
-                logging.info(msg='Successfully scraped site')
-                page += 1
-        except Exception as e:
-            logging.error(e)
+        html = s.get(url + f'?page={page}&limit=250', headers=headers, proxies=proxy, verify=False, timeout=20)
+        output = json.loads(html.text)['products']
+        if output == []:
             break
-        time.sleep(float(CONFIG['DELAY']))
+        else:
+            for product in output:
+                product_item = [
+                    {'title': product['title'], 'image': product['images'][0]['src'], 'handle': product['handle'],
+                     'variants': product['variants']}]
+                items.append(product_item)
+            logging.info(msg='Successfully scraped site')
+            page += 1
+    
+    time.sleep(float(CONFIG['DELAY']))
     s.close()
     return items
 
@@ -184,7 +181,7 @@ def monitor():
                     if check:
                         comparitor(product, start)
         except Exception as e:
-            print(e)
+            print(f"Exception found '{e}' - Rotating proxy and user-agent")
             logging.error(e)
             headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
             if CONFIG['PROXY'] == "":
