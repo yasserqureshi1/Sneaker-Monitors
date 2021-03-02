@@ -10,7 +10,6 @@ import dotenv
 from random_user_agent.user_agent import UserAgent
 from random_user_agent.params import SoftwareName, HardwareType
 from fp.fp import FreeProxy
-from apscheduler.schedulers.blocking import BlockingScheduler
 
 logging.basicConfig(filename='Footlockerlog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
 
@@ -91,8 +90,8 @@ def scrape_main_site(headers, proxy):
                 i.find('a')['href'],
                 f'https://images.footlocker.com/is/image/FLEU/{i.find("a")["href"].split("=")[1]}?wid=280&hei=280']
         items.append(item)
-    logging.info(msg='Successfully scraped site')
 
+    logging.info(msg='Successfully scraped site')
     s.close()
     return items
 
