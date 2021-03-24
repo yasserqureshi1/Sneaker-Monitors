@@ -127,7 +127,7 @@ def monitor():
     proxy_no = 0
 
     proxy_list = CONFIG['PROXY'].split('%')
-    proxy = {"http": f"http://{proxyObject.get()}"} if proxy_list[0] == "" else proxy_list[proxy_no]
+    proxy = {"http": proxyObject.get()} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
     headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
     keywords = CONFIG['KEYWORDS'].split('%')
     while True:
@@ -154,10 +154,10 @@ def monitor():
                 logging.error(e)
                 headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
                 if CONFIG['PROXY'] == "":
-                    proxy = {"http": f"http://{proxyObject.get()}"}
+                    proxy = {"http": proxyObject.get()}
                 else:
                     proxy_no = 0 if proxy_no == (len(proxy_list) - 1) else proxy_no + 1
-                    proxy = proxy_list[proxy_no]
+                    proxy = {"http": f"http://{proxy_list[proxy_no]}"}
             except Exception as e:
                 logging.error(e)
         start = 0
