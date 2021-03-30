@@ -44,7 +44,7 @@ def discord_webhook(product_item):
         embed['url'] = product_item[1]  # Item link
         embed["description"] = product_item[2].split(':',1)[1].split(',',1)[0]
     embed["color"] = int(CONFIG['COLOUR'])
-    embed["footer"] = {'text': 'Made by Yasser'}
+    embed["footer"] = {'text': 'Made by Chafik#8639'}
     embed["timestamp"] = str(datetime.datetime.utcnow())
     data["embeds"].append(embed)
 
