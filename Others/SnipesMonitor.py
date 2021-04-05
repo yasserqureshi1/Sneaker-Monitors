@@ -11,7 +11,7 @@ from random_user_agent.user_agent import UserAgent
 from random_user_agent.params import SoftwareName, HardwareType
 from fp.fp import FreeProxy
 
-logging.basicConfig(filename='Ssenselog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s',
+logging.basicConfig(filename='Snipeslog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s',
                     level=logging.DEBUG)
 
 software_names = [SoftwareName.CHROME.value]
