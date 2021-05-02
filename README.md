@@ -34,6 +34,8 @@ As such, I have and will continue to develop monitors that will help those membe
 This project is continually expanding, and I would greatly appreciate any contributions. 
 When contributing please fork the project and open a Pull Request.
 
+However, due to popular demand, I am developing a paid (but competitively priced) set of hosted monitors. These will be released on my Discord Server that you can join in [#Contact](#Contact).
+
 *Below is a screenshot of the SNKRS monitor in action...*
 
 <p align="center">
@@ -103,8 +105,13 @@ Click on the image below to watch a YouTube tutorial on setting the monitor up o
         2. ```PROXY = "<proxy_username>:<proxy_password>@<proxy_domain>:<port>"```
     - You can also edit other details within the `.env` file as you see fit
 
+4. Run the Python file. You can use the following command:
+  ```
+  python [file name].py
+  ```
 
-I am developing a paid (but competitively priced) set of hosted monitors as this was a popular request. These will be released on my Discord Server that you can join in [#Contact](#Contact)
+**NOTE:** The script needs to be running continuously for it to keep monitoring websites. As such, you should host it on a server. I have a YouTube tutorial on this [here](https://youtu.be/nmUSSlt4JKk). However, I suggest testing this out on your PC before using a server.
+
 
 ## Issues
 
