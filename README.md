@@ -1,29 +1,34 @@
-# Sneaker Monitors
-*A collection of web monitors that notify of restocks or updates on sneaker related sites through Discord Webhook*
+<a href="https://www.buymeacoffee.com/yasserqureshi" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="20" width="100"></a>
+<br />
+<p align="center">
+  <a href="https://github.com/yasserqureshi1/Sneaker-Monitors/">
+    <img src="static/logo.jpg" alt="Logo" width="128" height="128" style="border-radius: 50%;">
+  </a>
+  
+  <h3 align="center">Sneaker Monitors</h3>
 
-<a href="https://www.buymeacoffee.com/yasserqureshi" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+  <p align="center">
+    A collection of web monitors that notify of restocks or updates on sneaker related sites through Discord Webhook
+    <br />
+    <a href="https://github.com/yasserqureshi1/Sneaker-Monitors/">Report Bug</a>
+    ·
+    <a href="https://github.com/yasserqureshi1/Sneaker-Monitors/">Request Feature</a>
+  </p>
+</p>
+<br />
 
 To be notified of changes, please **star** or **watch** this repository.
 This will also increase the awareness of the project for others to use or add to. 
 
-I have recently created a Discord server where you can learn to use, get notified of updates and ask questions on the monitors on this repo.
-You can join [here](https://discord.gg/jjbtWcBczb) 
 
 ## About the Project
-This project is aimed to provide different monitors to various sites to the sneaker community for free. 
-The monitors currently notify if a restock or update occurs via Discord Webhook.
+This project is aimed at providing web-monitors for various sites to the sneaker community for free. 
+The monitors currently notify if a restock or release occurs via Discord Webhook.
 Today, competition to purchase sneakers is getting increasingly difficult with resellers using paid automated tools to give them a massive advantage over everyone else.
-As such, I have and will continue to develop monitors that will help those members to finally get the sneakers they want.
-
-The monitors are developed in a user friendly way for those members that may lack coding experience.
-The installation instructions can be found [here](#installation). 
+As such, I have and will continue to develop monitors that will help those members that struggle to finally get the sneakers they want.
 
 This project is continually expanding, and I would greatly appreciate any contributions. 
 When contributing please fork the project and open a Pull Request.
-If you'd like a feature to be added, you can either open an issue [here](https://github.com/yasserqureshi1/Sneaker-Monitors/issues/new)
-or get in contact with me [here](#contact)
-
-A list of the current sites can be found [here](#monitors) along with the current status.
 
 *Below is a screenshot of the SNKRS monitor in action...*
 
@@ -52,19 +57,8 @@ Currently the sites that have monitors are:
 - Zalando (UK)
 - Off-Spring (UK)
 - Solebox
+- Snipes
 
-Below is a table outlining the status on each monitor:
-
-Monitor | Status
---------|--------
-Solebox | ![solebox](https://img.shields.io/badge/Solebox-okay-yellow)
-Footlocker | ![footlocker](https://img.shields.io/badge/Footlocker-okay-yellow)
-OffSpring | ![offspring](https://img.shields.io/badge/OffSpring-okay-yellow)
-Ssense | ![ssense](https://img.shields.io/badge/Ssense-okay-yellow)
-Zalando | ![zalando](https://img.shields.io/badge/Zalando-okay-yellow)
-SNKRS | ![snkrs](https://img.shields.io/badge/SNKRS-good-brightgreen)
-Shopify | ![shopify](https://img.shields.io/badge/Shopify-good-brightgreen)
-Supreme | ![supreme](https://img.shields.io/badge/Supreme-good-brightgreen)
 
 ## Installation
 To install the modules, use the command in terminal (Mac or Linux) or command prompt (Windows):
