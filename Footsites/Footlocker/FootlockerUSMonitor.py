@@ -84,13 +84,15 @@ def scrape_main_site(headers, proxy):
     html = s.get('https://www.footlocker.com/category/mens/shoes.html', headers=headers, proxies=proxy, verify=False, timeout=20)
     soup = BeautifulSoup(html.text, 'html.parser')
     array = soup.find_all('li', {'class': 'product-container col'})
+    
     for i in array:
         item = [i.find('span', {'class': 'ProductName-primary'}).text,
                 i.find('span', {'class': 'ProductName-alt'}).text.replace("Men's•", ''),
                 i.find('div', {'class': 'ProductPrice'}).text,
-                i.find('a', {'class': 'ProductCard-link ProductCard-content'})['href'], i.find('img')['src']]
+                i.find('a', {'class': 'ProductCard-link ProductCard-content'})['href'], 
+                i.find('img')['data-src']]
         items.append(item)
-        logging.info(msg='Successfully scraped site')
+    logging.info(msg='Successfully scraped site')
     s.close()
     return items
 
@@ -124,7 +126,7 @@ def monitor():
     proxy_no = 0
 
     proxy_list = CONFIG['PROXY'].split('%')
-    proxy = {"http": f"http://{proxyObject.get()}"} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
+    proxy = {"http": f"https://{proxyObject.get()}"} if proxy_list[0] == "" else {"http": f"https://{proxy_list[proxy_no]}"}
     headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
     keywords = CONFIG['KEYWORDS'].split('%')
     while True:
@@ -148,10 +150,10 @@ def monitor():
             logging.error(e)
             headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
             if CONFIG['PROXY'] == "":
-                proxy = {"http": f"http://{proxyObject.get()}"}
+                proxy = {"http": f"https://{proxyObject.get()}"}
             else:
                 proxy_no = 0 if proxy_no == (len(proxy_list) - 1) else proxy_no + 1
-                proxy = {"http": f"http://{proxy_list[proxy_no]}"}
+                proxy = {"http": f"https://{proxy_list[proxy_no]}"}
 
 
 if __name__ == '__main__':
