@@ -1,8 +1,6 @@
-<a href="https://www.buymeacoffee.com/yasserqureshi" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="20" width="100"></a>
-<br />
 <p align="center">
-  <a href="https://github.com/yasserqureshi1/Sneaker-Monitors/">
-    <img src="static/logo.jpg" alt="Logo" width="128" height="128" style="border-radius: 50%;">
+  <a  href="https://github.com/yasserqureshi1/Sneaker-Monitors/">
+    <img src="static/logo.png" alt="Logo" width="auto" height="128">
   </a>
   
   <h3 align="center">Sneaker Monitors</h3>
@@ -14,6 +12,12 @@
     ·
     <a href="https://github.com/yasserqureshi1/Sneaker-Monitors/">Request Feature</a>
   </p>
+
+  <p align="center">
+    <a href="https://www.paypal.com/donate?hosted_button_id=SKRAD2YFGZC5C">
+    <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" alt="Logo" width="auto" height="50" >
+  </a>
+  </p> 
 </p>
 <br />
 
