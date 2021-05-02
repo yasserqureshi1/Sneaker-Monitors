@@ -11,14 +11,15 @@ from random_user_agent.user_agent import UserAgent
 from random_user_agent.params import SoftwareName, HardwareType
 from fp.fp import FreeProxy
 
-logging.basicConfig(filename='Footlockerlog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
+logging.basicConfig(filename='Snipeslog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s',
+                    level=logging.DEBUG)
 
 software_names = [SoftwareName.CHROME.value]
 hardware_type = [HardwareType.MOBILE__PHONE]
 user_agent_rotator = UserAgent(software_names=software_names, hardware_type=hardware_type)
 CONFIG = dotenv.dotenv_values()
 
-proxyObject = FreeProxy(country_id=['AU'], rand=True)
+proxyObject = FreeProxy(country_id=[CONFIG['LOCATION']], rand=True)
 
 INSTOCK = []
 
@@ -39,12 +40,11 @@ def discord_webhook(product_item):
                                "that everything is working fine! You can find more monitoring solutions at " \
                                "https://github.com/yasserqureshi1/Sneaker-Monitors "
     else:
-        embed["title"] = product_item[0]
-        embed["fields"] = [{'name': 'Colour', 'value': product_item[1]}, {'name': 'Price', 'value': product_item[2]}]
-        embed["thumbnail"] = {'url': product_item[3]}
-        embed['url'] = f'https://www.footlocker.ca{product_item[4]}'
+        embed["title"] = product_item[0]  # Item Name
+        embed['url'] = product_item[1]  # Item link
+        embed["description"] = product_item[2].split(':',1)[1].split(',',1)[0]
     embed["color"] = int(CONFIG['COLOUR'])
-    embed["footer"] = {'text': 'Made by Yasser'}
+    embed["footer"] = {'text': 'Made by Chafik#8639'}
     embed["timestamp"] = str(datetime.datetime.utcnow())
     data["embeds"].append(embed)
 
@@ -74,26 +74,24 @@ def checker(item):
 
 def scrape_main_site(headers, proxy):
     """
-    Scrape the Footlocker site and adds each item to an array
+    Scrape the Snipes site and adds each item to an array
     :return: None
     """
-    items = []
     s = requests.Session()
-    url = 'https://www.footlocker.com.au/en/men/'
-    html = s.get(url=url, headers=headers, proxies=proxy, verify=False, timeout=10)
-    soup = BeautifulSoup(html.text, 'html.parser')
-    array = soup.find_all('div', {'class': 'fl-category--productlist--item'})
-    for i in array:
-        item = [i.find('span', {'class': 'ProductName-primary'}).text,
-                i.find('span', {'class': 'ProductName-alt'}).text.split(chr(8226))[0],
-                i.find('span', {'class': 'ProductName-alt'}).text.split(chr(8226))[1],
-                i.find('img')['src'],
-                i.find('a', {'class': 'ProductCard-link ProductCard-content'})['href']]
-        items.append(item)
+    items = []
 
-    logging.info(msg='Successfully scraped site')
+    html = s.get('https://www.snipes.com/c/shoes?srule=New&sz=48', headers=headers, proxies=proxy, verify=False, timeout=50)
+    soup = BeautifulSoup(html.text, 'html.parser')
+    array = soup.find_all('div', {'class': 'b-product-grid-tile'})
+    for i in array:
+        item = [i.find('span', {'class': 'b-product-tile-brand b-product-tile-text js-product-tile-link'}).text,
+                'https://www.snipes.com/' + i.find('a', {'class': 'b-product-tile-body-link'})['href'],
+                i.find('div', {'class': 'b-product-tile js-product-tile'})['data-gtm']
+                ]
+        items.append(item)
     s.close()
     return items
+    
 
 
 def remove_duplicates(mylist):
@@ -106,13 +104,11 @@ def remove_duplicates(mylist):
 
 
 def comparitor(item, start):
-    if checker(item):
-        pass
-    else:
+    if not checker(item):
         INSTOCK.append(item)
         if start == 0:
-            print(item)
             discord_webhook(item)
+            print(item)
 
 
 def monitor():
@@ -144,8 +140,9 @@ def monitor():
                             break
                     if check:
                         comparitor(item, start)
+
             start = 0
-            time.sleep(float(CONFIG['WEBHOOK']))
+            time.sleep(float(CONFIG['DELAY']))
         except Exception as e:
             print(f"Exception found '{e}' - Rotating proxy and user-agent")
             logging.error(e)
