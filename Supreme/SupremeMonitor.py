@@ -136,16 +136,18 @@ def monitor():
     keywords = CONFIG['KEYWORDS'].split('%')
     while True:
         try:
-            stock = get_stock(proxy, headers)
+            stock_all = get_stock(proxy, headers)
             time.sleep(float(CONFIG["DELAY"]))
-            for cat in stock:
-                for product_item in stock[cat]:
+            for product_category in stock_all:
+                for product_item in product_category:
                     check = False
                     if keywords == "":
                         get_item_variants(product_item['id'], product_item['name'], start, proxy, headers)
                     else:
                         for key in keywords:
-                            if key.lower() in product_item['name'].lower():
+                            if key.startswith('-') and key[1:].lower() in product_item['name'].lower():
+                                break
+                            elif key.lower() in product_item['name'].lower():
                                 check = True
                                 break
                         if check:
