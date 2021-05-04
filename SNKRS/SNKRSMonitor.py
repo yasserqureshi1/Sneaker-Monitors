@@ -1,13 +1,17 @@
+from random_user_agent.params import SoftwareName, HardwareType
+from random_user_agent.user_agent import UserAgent
+
+from fp.fp import FreeProxy
+
 import requests as rq
-import json
-import time
-import datetime
 import urllib3
+
+from datetime import datetime
+import time
+
+import json
 import logging
 import dotenv
-from random_user_agent.user_agent import UserAgent
-from random_user_agent.params import SoftwareName, HardwareType
-from fp.fp import FreeProxy
 
 logging.basicConfig(filename='SNKRSlog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
 
@@ -24,65 +28,83 @@ INSTOCK = []
 def scrape_site(headers, proxy):
     """
     Scrapes SNKRS site and adds items to array
-    :return: None
     """
     items = []
+
+    # Makes request to site
     anchor = 0
     while anchor < 180:
         url = f'https://api.nike.com/product_feed/threads/v2/?anchor={anchor}&count=60&filter=marketplace%28{CONFIG["LOC"]}%29&filter=language%28{CONFIG["LAN"]}%29&filter=channelId%28010794e5-35fe-4e32-aaff-cd2c74f89d61%29&filter=exclusiveAccess%28true%2Cfalse%29&fields=active%2Cid%2ClastFetchTime%2CproductInfo%2CpublishedContent.nodes%2CpublishedContent.subType%2CpublishedContent.properties.coverCard%2CpublishedContent.properties.productCard%2CpublishedContent.properties.products%2CpublishedContent.properties.publish.collections%2CpublishedContent.properties.relatedThreads%2CpublishedContent.properties.seo%2CpublishedContent.properties.threadType%2CpublishedContent.properties.custom%2CpublishedContent.properties.title'
-
         html = rq.get(url=url, timeout=20, verify=False, headers=headers, proxies=proxy)
         output = json.loads(html.text)
+
+        # Stores details in array
         for item in output['objects']:
             items.append(item)
-            logging.info(msg='Successfully scraped SNKRS site')
 
         anchor += 60
-        time.sleep(float(CONFIG['DELAY']))
+    
+    logging.info(msg='Successfully scraped SNKRS site')
     return items
 
 
-def checker(product, colour):
+def checker(item):
     """
     Determines whether the product status has changed
-    :param product: Shoe name
-    :param colour: Shoe colour
-    :return: None
     """
-    for item in INSTOCK:
-        if item == [product, colour]:
-            return True
-    return False
+    return item in INSTOCK
 
 
-def discord_webhook(title, colour, slug, thumbnail):
+def test_webhook():
+    '''
+    Sends a test Discord webhook notification
+    '''
+    data = {
+        "username": CONFIG['USERNAME'],
+        "avatar_url": CONFIG['AVATAR_URL'],
+        "embeds": [{
+            "title": "Testing Webhook",
+            "description": "This is just a quick test to ensure the webhook works. Thanks again for using these montiors!",
+            "color": int(CONFIG['COLOUR']),
+            "footer": {'text': 'Made by Yasser'},
+            "timestamp": str(datetime.utcnow())
+        }]
+    }
+
+    result = rq.post(CONFIG['WEBHOOK'], data=json.dumps(data), headers={"Content-Type": "application/json"})
+
+    try:
+        result.raise_for_status()
+    except rq.exceptions.HTTPError as err:
+        logging.error(msg=err)
+    else:
+        print("Payload delivered successfully, code {}.".format(result.status_code))
+        logging.info(msg="Payload delivered successfully, code {}.".format(result.status_code))
+
+
+def discord_webhook(title, description, url, thumbnail, price, style_code, sizes):
     """
     Sends a Discord webhook notification to the specified webhook URL
-    :param title: Shoe name
-    :param colour: Shoe Colour
-    :param slug: Shoe URL
-    :param thumbnail: URL to shoe image
-    :return: None
     """
-    data = {}
-    data["username"] = CONFIG['USERNAME']
-    data["avatar_url"] = CONFIG['AVATAR_URL']
-    data["embeds"] = []
-    embed = {}
-    if title != '' and colour != '' and slug != '':
-        embed["title"] = title
-        embed["fields"] = [{'name': 'Colour', 'value': colour}]
-        embed["url"] = f'https://www.nike.com/{CONFIG["LOC"]}/launch/t/' + slug
-        embed["thumbnail"] = {'url': thumbnail}
-    else:
-        embed["description"] = "Thank you for using Yasser's Sneaker Monitors. This message is to let you know " \
-                               "that everything is working fine! You can find more monitoring solutions at " \
-                               "https://github.com/yasserqureshi1/Sneaker-Monitors "
-    embed["color"] = int(CONFIG['COLOUR'])
-    embed["footer"] = {'text': 'Made by Yasser'}
-    embed["timestamp"] = str(datetime.datetime.utcnow())
-    data["embeds"].append(embed)
-
+    data = {
+        'username': CONFIG['USERNAME'],
+        'avatar_url':  CONFIG['AVATAR_URL'],
+        'embeds': [{
+            'title': title,
+            'description': description,
+            'url': url,
+            'thumbnail': {'url': thumbnail},
+            'color': int(CONFIG['COLOUR']),
+            'footer': {'text': 'Made by Yasser'},
+            'timestamp': str(datetime.utcnow()),
+            'fields': [
+                {'name': 'Price', 'value': price},
+                {'name': 'Style Code', 'value': style_code},
+                {'name': 'Sizes', 'value': sizes}
+            ]
+        }]
+    }
+    
     result = rq.post(CONFIG['WEBHOOK'], data=json.dumps(data), headers={"Content-Type": "application/json"})
 
     try:
@@ -97,70 +119,111 @@ def discord_webhook(title, colour, slug, thumbnail):
 def remove_duplicates(mylist):
     """
     Removes duplicate values from a list
-    :param mylist: list
-    :return: list
     """
     return [list(t) for t in set(tuple(element) for element in mylist)]
 
 
 def comparitor(j, start):
-    if checker(j['merchProduct']['labelName'], j['productContent']['colorDescription']):
-        pass
-    else:
-        INSTOCK.append([j['merchProduct']['labelName'], j['productContent']['colorDescription']])
-        if start == 0:
-            print('Sending notification to Discord...')
-            discord_webhook(j['merchProduct']['labelName'], j['productContent']['colorDescription'],
-                            j['productContent']['slug'], j['imageUrls']['productImageUrl'])
-            logging.info(msg='Sending new notification')
+    for k in j['availableSkus']:
+        if k['available'] == True:
+            item = [j['merchProduct']['labelName'], j['productContent']['colorDescription'], k['id']]
+            if checker(item):
+                pass
+            else:
+                INSTOCK.append(item)
+                
+                for s in j['skus']:
+                    if start == 0:
+                        if s['id'] == k['id']:
+                            sizes = str(s['nikeSize']) + ': ' + str(k['level'])
+                            start = 1
+                            break
+                        else:
+                            if s['id'] == k['id']:
+                                sizes += '\n' + str(s['nikeSize']) + ': ' + str(k['level'])
+                                break
+        else:
+            if checker(item):
+                INSTOCK.remove(item)
+
+    if sizes != '':
+        print('Sending notification to Discord...')
+        discord_webhook(
+            title=j['merchProduct']['labelName'],
+            description=j['productContent']['colorDescription'],
+            url='https://www.nike.com/' + CONFIG['LOC'] + '/launch/t/' + j['productContent']['slug'],
+            thumbnail=j['imageUrls']['productImageUrl'],
+            price=str(j['merchPrice']['currentPrice']),
+            style_code=str(j['merchProduct']['styleColor']),
+            sizes=sizes)
+
 
 
 def monitor():
     """
     Initiates the monitor
-    :return: None
     """
     print('STARTING MONITOR')
     logging.info(msg='Successfully started monitor')
-    discord_webhook(title='', slug='', colour='', thumbnail='')
-    start = 1
-    proxy_no = 0
 
+    # Tests webhook URL
+    test_webhook()
+
+    # Ensures that first scrape does not notify all products
+    start = 0
+
+    # Initialising proxy and headers
+    proxy_no = 0
     proxy_list = CONFIG['PROXY'].split('%')
     proxy = {"http": proxyObject.get()} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
     headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
+
+    # Collecting all keywords (if any)
     keywords = CONFIG['KEYWORDS'].split('%')
     while True:
+        # Makes request to site and stores products 
         items = scrape_site(proxy, headers)
         for item in items:
             try:
                 for j in item['productInfo']:
                     if j['availability']['available'] == True and j['merchProduct']['status'] == 'ACTIVE':
-                        check = False
+                        
                         if keywords == "":
+                            # If no keywords set, checks whether item status has changed
                             comparitor(j, start)
+
                         else:
+                            # For each keyword, checks whether particular item status has changed
                             for key in keywords:
                                 if key.lower() in j['merchProduct']['labelName'].lower() or key.lower() in j['productContent']['colorDescription'].lower():
-                                    check = True
-                                    break
-                            if check:
-                                comparitor(j, start)
+                                    comparitor(j, start)
+
                     else:
-                        if checker(j['merchProduct']['labelName'], j['productContent']['colorDescription']):
-                            INSTOCK.remove([j['merchProduct']['labelName'], j['productContent']['colorDescription']])
-            except rq.exceptions.HTTPError as e:
+                        for item in INSTOCK:
+                            if item[0] == j['merchProduct']['labelName'] and item[1] == j['productContent']['colorDescription']:
+                                INSTOCK.remove(item)
+
+            except Exception as e:
                 print(f"Exception found '{e}' - Rotating proxy and user-agent")
                 logging.error(e)
+
+                # Rotates headers
                 headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
+
                 if CONFIG['PROXY'] == "":
+                    # If no optional proxy set, rotates free proxy
                     proxy = {"http": proxyObject.get()}
+                
                 else:
+                    # If optional proxy set, rotates if there are multiple proxies
                     proxy_no = 0 if proxy_no == (len(proxy_list) - 1) else proxy_no + 1
                     proxy = {"http": f"http://{proxy_list[proxy_no]}"}
-            except Exception as e:
-                logging.error(e)
+            
+        # Allows changes to be notified
         start = 0
+
+        # User set delay
+        time.sleep(float(CONFIG['DELAY']))
 
 
 if __name__ == '__main__':
