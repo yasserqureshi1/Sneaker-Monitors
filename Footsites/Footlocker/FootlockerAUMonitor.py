@@ -1,6 +1,6 @@
 # No restocks, only releases
 import requests
-import datetime
+from datetime import datetime
 import json
 from bs4 import BeautifulSoup
 import urllib3
@@ -22,31 +22,50 @@ proxyObject = FreeProxy(country_id=['AU'], rand=True)
 
 INSTOCK = []
 
+def test_webhook():
+    data = {
+        "username": CONFIG['USERNAME'],
+        "avatar_url": CONFIG['AVATAR_URL'],
+        "embeds": [{
+            "title": "Testing Webhook",
+            "description": "This is just a quick test to ensure the webhook works. Thanks again for using these montiors!",,
+            "color": int(CONFIG['COLOUR']),
+            "footer": {'text': 'Made by Yasser'},
+            "timestamp": str(datetime.datetime.utcnow())
+        }]
+    }
 
-def discord_webhook(product_item):
+    result = rq.post(CONFIG['WEBHOOK'], data=json.dumps(data), headers={"Content-Type": "application/json"})
+
+    try:
+        result.raise_for_status()
+    except rq.exceptions.HTTPError as err:
+        logging.error(err)
+    else:
+        print("Payload delivered successfully, code {}.".format(result.status_code))
+        logging.info(msg="Payload delivered successfully, code {}.".format(result.status_code))
+
+
+def discord_webhook(title, thumbnail, url, price, colour):
     """
     Sends a Discord webhook notification to the specified webhook URL
-    :param product_item: An array of the product's details
-    :return: None
     """
-    data = {}
-    data["username"] = CONFIG['USERNAME']
-    data["avatar_url"] = CONFIG['AVATAR_URL']
-    data["embeds"] = []
-    embed = {}
-    if product_item == 'initial':
-        embed["description"] = "Thank you for using Yasser's Sneaker Monitors. This message is to let you know " \
-                               "that everything is working fine! You can find more monitoring solutions at " \
-                               "https://github.com/yasserqureshi1/Sneaker-Monitors "
-    else:
-        embed["title"] = product_item[0]
-        embed["fields"] = [{'name': 'Colour', 'value': product_item[1]}, {'name': 'Price', 'value': product_item[2]}]
-        embed["thumbnail"] = {'url': product_item[3]}
-        embed['url'] = f'https://www.footlocker.ca{product_item[4]}'
-    embed["color"] = int(CONFIG['COLOUR'])
-    embed["footer"] = {'text': 'Made by Yasser'}
-    embed["timestamp"] = str(datetime.datetime.utcnow())
-    data["embeds"].append(embed)
+    data = {
+        "username": CONFIG['USERNAME'],
+        "avatar_url": CONFIG['AVATAR_URL'],
+        "embeds": [{
+            "title": title,
+            "thumbnail": {"url": thumbnail},
+            "url": f'https://www.footlocker.ca{url}'
+            "color": int(CONFIG['COLOUR']),
+            "footer": {'text': 'Made by Yasser'},
+            "timestamp": str(datetime.utcnow())
+            "fields": [
+                {"name": "Colour", "value": colour},
+                {"name": "Price": "value": price}
+            ]
+        }]
+    }
 
     result = requests.post(CONFIG['WEBHOOK'], data=json.dumps(data), headers={"Content-Type": "application/json"})
 
@@ -63,8 +82,6 @@ def discord_webhook(product_item):
 def checker(item):
     """
     Determines whether the product status has changed
-    :param item: list of item details
-    :return: Boolean whether the status has changed or not
     """
     for product in INSTOCK:
         if product == item:
@@ -75,7 +92,6 @@ def checker(item):
 def scrape_main_site(headers, proxy):
     """
     Scrape the Footlocker site and adds each item to an array
-    :return: None
     """
     items = []
     s = requests.Session()
@@ -99,8 +115,6 @@ def scrape_main_site(headers, proxy):
 def remove_duplicates(mylist):
     """
     Removes duplicate values from a list
-    :param mylist: list
-    :return: list
     """
     return [list(t) for t in set(tuple(element) for element in mylist)]
 
@@ -112,17 +126,22 @@ def comparitor(item, start):
         INSTOCK.append(item)
         if start == 0:
             print(item)
-            discord_webhook(item)
+            discord_webhook(
+                title='',
+                thumbnail='',
+                url='',
+                price='',
+                colour=''
+            )
 
 
 def monitor():
     """
     Initiates monitor
-    :return: None
     """
     print('STARTING MONITOR')
     logging.info(msg='Successfully started monitor')
-    discord_webhook('initial')
+    test_webhook()
     start = 1
     proxy_no = 0
 

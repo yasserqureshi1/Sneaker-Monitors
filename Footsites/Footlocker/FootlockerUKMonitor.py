@@ -1,15 +1,20 @@
 # No restocks, only releases
-import requests
-import datetime
-import json
+from random_user_agent.params import SoftwareName, HardwareType
+from random_user_agent.user_agent import UserAgent
+
+from fp.fp import FreeProxy
+
 from bs4 import BeautifulSoup
+import requests
 import urllib3
+
+from datetime import datetime
 import time
+
+import json
 import logging
 import dotenv
-from random_user_agent.user_agent import UserAgent
-from random_user_agent.params import SoftwareName, HardwareType
-from fp.fp import FreeProxy
+
 
 logging.basicConfig(filename='Footlockerlog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
 
@@ -22,33 +27,49 @@ proxyObject = FreeProxy(country_id=['GB'], rand=True)
 
 INSTOCK = []
 
-def clear_log():
-    with open('yourlog.log', 'w'):
-        pass
+def test_webhook():
+    """
+    Sends a test Discord webhook notification
+    """
+    data = {
+        "username": CONFIG['USERNAME'],
+        "avatar_url": CONFIG['AVATAR_URL'],
+        "embeds": [{
+            "title": "Testing Webhook",
+            "description": "This is just a quick test to ensure the webhook works. Thanks again for using these montiors!",,
+            "color": int(CONFIG['COLOUR']),
+            "footer": {'text': 'Made by Yasser'},
+            "timestamp": str(datetime.datetime.utcnow())
+        }]
+    }
+
+    result = rq.post(CONFIG['WEBHOOK'], data=json.dumps(data), headers={"Content-Type": "application/json"})
+
+    try:
+        result.raise_for_status()
+    except rq.exceptions.HTTPError as err:
+        logging.error(err)
+    else:
+        print("Payload delivered successfully, code {}.".format(result.status_code))
+        logging.info(msg="Payload delivered successfully, code {}.".format(result.status_code))
 
 
-def discord_webhook(product_item):
+def discord_webhook(title, url, thumbnail):
     """
     Sends a Discord webhook notification to the specified webhook URL
-
     """
-    data = {}
-    data["username"] = CONFIG['USERNAME']
-    data["avatar_url"] = CONFIG['AVATAR_URL']
-    data["embeds"] = []
-    embed = {}
-    if product_item == 'initial':
-        embed["description"] = "Thank you for using Yasser's Sneaker Monitors. This message is to let you know " \
-                               "that everything is working fine! You can find more monitoring solutions at " \
-                               "https://github.com/yasserqureshi1/Sneaker-Monitors "
-    else:
-        embed["title"] = product_item[0]            # Item Name
-        embed['url'] = product_item[1]                                           # Item link
-        embed["thumbnail"] = {'url': product_item[2]}                            # Item image
-    embed["color"] = int(CONFIG['COLOUR'])
-    embed["footer"] = {'text': 'Made by Yasser'}
-    embed["timestamp"] = str(datetime.datetime.utcnow())
-    data["embeds"].append(embed)
+    data = {
+        "username": CONFIG['USERNAME'],
+        "avatar_url": CONFIG['AVATAR_URL'],
+        "embeds": [{
+            "title": title, 
+            "url": url,
+            "thumbnail": thumbnail,
+            "color": CONFIG['COLOUR'],
+            "footer": {"text": "Made by Yasser"},
+            "timestamp": str(datetime.utcnow()),
+        }]
+    }
 
     result = requests.post(CONFIG['WEBHOOK'], data=json.dumps(data), headers={"Content-Type": "application/json"})
 
@@ -65,8 +86,6 @@ def discord_webhook(product_item):
 def checker(item):
     """
     Determines whether the product status has changed
-    :param item: list of item details
-    :return: Boolean whether the status has changed or not
     """
     for product in INSTOCK:
         if product == item:
@@ -77,14 +96,16 @@ def checker(item):
 def scrape_main_site(headers, proxy):
     """
     Scrape the Footlocker site and adds each item to an array
-    :return: None
     """
-    s = requests.Session()
     items = []
 
+    # Makes request to site
+    s = requests.Session()
     html = s.get('https://www.footlocker.co.uk/en/men/shoes/', headers=headers, proxies=proxy, verify=False, timeout=10)
     soup = BeautifulSoup(html.text, 'html.parser')
     array = soup.find_all('div', {'class': 'fl-category--productlist--item'})
+    
+    # Stores particular details in array
     for i in array:
         item = [i.find('span', {'itemprop': 'name'}).text,
                 i.find('a')['href'],
@@ -99,60 +120,79 @@ def scrape_main_site(headers, proxy):
 def remove_duplicates(mylist):
     """
     Removes duplicate values from a list
-    :param mylist: list
-    :return: list
     """
     return [list(t) for t in set(tuple(element) for element in mylist)]
 
 
 def comparitor(item, start):
-    if checker(item):
-        pass
-    else:
+    if not checker(item):
+        # If product is available but not stored - sends notification and stores
         INSTOCK.append(item)
         if start == 0:
             print(item)
-            discord_webhook(item)
+            discord_webhook(
+                title=item[0],
+                url=item[1],
+                thumbnail=item[2]
+            )
 
 
 def monitor():
     """
     Initiates monitor
-    :return: None
     """
     print('STARTING MONITOR')
     logging.info(msg='Successfully started monitor')
-    discord_webhook('initial')
-    start = 1
-    proxy_no = 0
 
+    # Tests webhook URL
+    test_webhook()
+
+    # Ensures that first scrape does not notify all products
+    start = 1
+
+    # Initialising proxy and headers
+    proxy_no = 0
     proxy_list = CONFIG['PROXY'].split('%')
     proxy = {"http": proxyObject.get()} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
     headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
+    
+    # Collecting all keywords (if any)
     keywords = CONFIG['KEYWORDS'].split('%')
     while True:
         try:
+            # Makes request to site and stores products 
             items = remove_duplicates(scrape_main_site(headers, proxy))
             for item in items:
+
                 if keywords == "":
+                    # If no keywords set, checks whether item status has changed
                     comparitor(item, start)
+                
                 else:
-                    check = False
+                    # For each keyword, checks whether particular item status has changed
                     for key in keywords:
                         if key.lower() in item[0].lower():
-                            check = True
-                            break
-                    if check:
-                        comparitor(item, start)
+                            comparitor(item, start)
+            
+            # Allows changes to be notified
             start = 0
-            time.sleep(0.5)
+
+            # User set delay
+            time.sleep(int(CONFIG['DELAY']))
+
         except Exception as e:
             print(f"Exception found '{e}' - Rotating proxy and user-agent")
             logging.error(e)
+
+            # Rotates headers
             headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
+            
             if CONFIG['PROXY'] == "":
+                # If no optional proxy set, rotates free proxy
                 proxy = {"http": proxyObject.get()}
+                
             else:
+                # if optional proxy set, rotates if there are multiple proxies
                 proxy_no = 0 if proxy_no == (len(proxy_list) - 1) else proxy_no + 1
                 proxy = {"http": f"https://{proxy_list[proxy_no]}"}
 
