@@ -138,10 +138,10 @@ def comparitor(j, start):
                             sizes = str(s['nikeSize']) + ': ' + str(k['level'])
                             start = 1
                             break
-                        else:
-                            if s['id'] == k['id']:
-                                sizes += '\n' + str(s['nikeSize']) + ': ' + str(k['level'])
-                                break
+                    else:
+                        if s['id'] == k['id']:
+                            sizes += '\n' + str(s['nikeSize']) + ': ' + str(k['level'])
+                            break
         else:
             if checker(item):
                 INSTOCK.remove(item)
@@ -167,10 +167,10 @@ def monitor():
     logging.info(msg='Successfully started monitor')
 
     # Tests webhook URL
-    test_webhook()
+    #test_webhook()
 
     # Ensures that first scrape does not notify all products
-    start = 1
+    start = 0
 
     # Initialising proxy and headers
     proxy_no = 0
@@ -203,7 +203,7 @@ def monitor():
                             if item[0] == j['merchProduct']['labelName'] and item[1] == j['productContent']['colorDescription']:
                                 INSTOCK.remove(item)
 
-            except Exception as e:
+            except rq.exceptions.HTTPError as e:
                 print(f"Exception found '{e}' - Rotating proxy and user-agent")
                 logging.error(e)
 
@@ -218,6 +218,11 @@ def monitor():
                     # If optional proxy set, rotates if there are multiple proxies
                     proxy_no = 0 if proxy_no == (len(proxy_list) - 1) else proxy_no + 1
                     proxy = {"http": f"http://{proxy_list[proxy_no]}"}
+            
+            except Exception as e:
+                print(e)
+                logging.error(e)
+
             
         # Allows changes to be notified
         start = 0
