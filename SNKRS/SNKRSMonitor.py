@@ -167,10 +167,10 @@ def monitor():
     logging.info(msg='Successfully started monitor')
 
     # Tests webhook URL
-    #test_webhook()
+    test_webhook()
 
     # Ensures that first scrape does not notify all products
-    start = 0
+    start = 1
 
     # Initialising proxy and headers
     proxy_no = 0
