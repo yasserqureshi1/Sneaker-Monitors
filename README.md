@@ -1,7 +1,8 @@
 <p align="center">
-  <a  href="https://github.com/yasserqureshi1/Sneaker-Monitors/">
+  <a href="https://github.com/yasserqureshi1/Sneaker-Monitors/">
     <img src="static/logo.png" alt="Logo" width="auto" height="128">
   </a>
+  <figcaption>Logo developed by <a href="https://www.instagram.com/bri.illustratesz/">@bri.illustratesz</a></figcaption>
   
   <h3 align="center">Sneaker Monitors</h3>
 
