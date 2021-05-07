@@ -183,7 +183,6 @@ def monitor():
     keywords = CONFIG['KEYWORDS'].split('%')
     while True:
         # Makes request to site and stores products 
-        print(INSTOCK)
         items = scrape_site(proxy, headers)
         for item in items:
             try:
@@ -225,14 +224,11 @@ def monitor():
                 print(e)
                 logging.error(e)
 
-            
         # Allows changes to be notified
         start = 0
 
         # User set delay
         time.sleep(float(CONFIG['DELAY']))
-
-        print(INSTOCK)
 
 
 if __name__ == '__main__':
