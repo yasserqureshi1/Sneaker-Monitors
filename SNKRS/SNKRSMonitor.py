@@ -124,19 +124,20 @@ def remove_duplicates(mylist):
 
 
 def comparitor(j, start):
+    first = 0
     for k in j['availableSkus']:
+        item = [j['merchProduct']['labelName'], j['productContent']['colorDescription'], k['id']]
         if k['available'] == True:
-            item = [j['merchProduct']['labelName'], j['productContent']['colorDescription'], k['id']]
             if checker(item):
                 pass
             else:
                 INSTOCK.append(item)
                 
                 for s in j['skus']:
-                    if start == 0:
+                    if first == 0:
                         if s['id'] == k['id']:
                             sizes = str(s['nikeSize']) + ': ' + str(k['level'])
-                            start = 1
+                            first = 1
                             break
                     else:
                         if s['id'] == k['id']:
@@ -146,7 +147,7 @@ def comparitor(j, start):
             if checker(item):
                 INSTOCK.remove(item)
 
-    if sizes != '':
+    if sizes != '' and start == 0:
         print('Sending notification to Discord...')
         discord_webhook(
             title=j['merchProduct']['labelName'],
@@ -182,6 +183,7 @@ def monitor():
     keywords = CONFIG['KEYWORDS'].split('%')
     while True:
         # Makes request to site and stores products 
+        print(INSTOCK)
         items = scrape_site(proxy, headers)
         for item in items:
             try:
@@ -229,6 +231,8 @@ def monitor():
 
         # User set delay
         time.sleep(float(CONFIG['DELAY']))
+
+        print(INSTOCK)
 
 
 if __name__ == '__main__':
