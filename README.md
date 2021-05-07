@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/yasserqureshi1/Sneaker-Monitors/">
-    <img src="static/logo.png" alt="Logo" width="auto" height="128">
+    <img src="https://raw.githubusercontent.com/yasserqureshi1/Sneaker-Monitors/master/static/logo.png" alt="Logo" width="auto" height="128">
   </a>
   <figcaption>Logo developed by <a href="https://www.instagram.com/bri.illustratesz/">@bri.illustratesz</a></figcaption>
   
