@@ -25,6 +25,8 @@
 To be notified of changes, please **star** or **watch** this repository.
 This will also increase the awareness of the project for others to use or add to. 
 
+Check out the docs [here](https://yasserqureshi1.github.io/Sneaker-Monitors/)
+
 
 ## About the Project
 This project is aimed at providing web-monitors for various sites to the sneaker community for free. 
