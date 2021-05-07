@@ -1,11 +1,11 @@
-# SNKRS Monitor
+# Sneaker Monitors: SNKRS Monitor
 
 This will outline how to use the SNKRS Monitor
 
 If set up properly, the monitor can work in a variety of countries.
 Below is a list of the countries that the monitor supports.
 
-To set up the monitor, please put the 2 letter country code into the ```LOCATION``` variable and one of the corresponding language codes in the ```LANGUAGE``` variable found in the ```.env``` file.
+To set up the monitor, please put the 2 letter country code into the ```LOC``` variable and one of the corresponding language codes in the ```LAN``` variable found in the ```.env``` file.
 See the table below for the country codes and language codes.
 
 For example, if I want a monitor for Belgium, there are multiple languages to choose from.
