@@ -136,18 +136,20 @@ def remove_duplicates(mylist):
 
 
 def comparitor(product, start):
-    product_item = [product['title'], [], product['image'], product['handle']]
+    product_item = [product['title'], product['image'], product['handle']]
 
     # Collect all available sizes
     available_sizes = []
     for size in product['variants']:
         if size['available']:
             available_sizes.append(size['title'])
-
+    
+    product_item.append(available_sizes)
+    
     if available_sizes:
         if not checker(product_item):
             # If product is available but not stored - sends notification and stores
-            product_item[1].append(available_sizes)
+            
             INSTOCK.append(product_item)
 
             if start == 0:
