@@ -153,7 +153,11 @@ def monitor():
     proxy_no = 0
     proxy_list = CONFIG['PROXY'].split('%')
     proxy = {"http": proxyObject.get()} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
-    headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
+    headers = {
+        'User-Agent': user_agent_rotator.get_random_user_agent(),
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+        'accept-encoding': 'gzip, deflate, br',
+        'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8'}
 
     # Collecting all keywords (if any)
     keywords = CONFIG['KEYWORDS'].split('%')
@@ -183,7 +187,11 @@ def monitor():
             logging.error(e)
 
             # Rotates headers
-            headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
+            headers = {
+                'User-Agent': user_agent_rotator.get_random_user_agent(),
+                'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+                'accept-encoding': 'gzip, deflate, br',
+                'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8'}
 
             if CONFIG['PROXY'] == "":
                 # If no optional proxy set, rotates free proxy
