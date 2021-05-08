@@ -125,6 +125,7 @@ def remove_duplicates(mylist):
 
 def comparitor(j, start):
     first = 0
+    sizes = ''
     for k in j['availableSkus']:
         item = [j['merchProduct']['labelName'], j['productContent']['colorDescription'], k['id']]
         if k['available'] == True:
@@ -221,8 +222,7 @@ def monitor():
                     proxy = {"http": f"http://{proxy_list[proxy_no]}"}
             
             except Exception as e:
-                print(e)
-                logging.error(e)
+                pass
 
         # Allows changes to be notified
         start = 0
