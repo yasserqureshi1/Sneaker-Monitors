@@ -181,6 +181,9 @@ def monitor():
             
             # Allows changes to be notified
             start = 0
+
+            # Logging
+            logging.info(msg='Supreme scrape successful')
             
         except Exception as e:
             print(f"Exception found '{e}' - Rotating proxy and user-agent")
