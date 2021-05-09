@@ -113,7 +113,7 @@ def scrape_main_site(headers, proxy):
     for i in array:
         item = [i.find('span', {'class': 'ProductName-primary'}).text,
                 i.find('span', {'class': 'ProductName-alt'}).text.replace("Men's•", ''),
-                i.find('div', {'class': 'ProductPrice'}).text,
+                i.find('span', {'class': 'ProductPrice'}).text,
                 i.find('a', {'class': 'ProductCard-link ProductCard-content'})['href'], 
                 i.find('img')['data-src']]
         items.append(item)
