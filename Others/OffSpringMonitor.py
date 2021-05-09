@@ -80,7 +80,7 @@ def test_webhook():
 
     try:
         result.raise_for_status()
-    except rq.exceptions.HTTPError as err:
+    except requests.exceptions.HTTPError as err:
         logging.error(err)
     else:
         print("Payload delivered successfully, code {}.".format(result.status_code))
