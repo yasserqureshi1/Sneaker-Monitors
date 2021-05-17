@@ -114,8 +114,7 @@ def scrape_main_site(headers, proxy):
         item = [i.find('span', {'class': 'ProductName-primary'}).text,
                 i.find('span', {'class': 'ProductName-alt'}).text.replace("Men's•", ''),
                 i.find('span', {'class': 'ProductPrice'}).text,
-                i.find('a', {'class': 'ProductCard-link ProductCard-content'})['href'], 
-                i.find('img')['data-src']]
+                i.find('a', {'class': 'ProductCard-link ProductCard-content'})['href']]
         items.append(item)
 
     logging.info(msg='Successfully scraped site')
@@ -140,7 +139,7 @@ def comparitor(item, start):
                 colour=item[1],
                 description=item[2],
                 url=item[3],
-                thumbnail=item[4],
+                thumbnail= "https://modfile.info/wp-content/uploads/2020/02/Foot-Locker-Sneakers-clothes-culture-4.0.2-UNLIMITED-APK-For-IOS-ANDROID.png",
             )
             print(item)
 
