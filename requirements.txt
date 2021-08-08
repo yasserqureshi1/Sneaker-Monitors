@@ -19,5 +19,5 @@ soupsieve==2.2
 typing-extensions==3.7.4.3
 tzlocal==2.1
 urllib3==1.26.5
-websockets==8.1
+websockets==9.1
 yarl==1.6.3
