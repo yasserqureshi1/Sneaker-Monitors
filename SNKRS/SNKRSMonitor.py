@@ -182,7 +182,7 @@ def monitor():
     keywords = CONFIG['KEYWORDS'].split('%')
     while True:
         # Makes request to site and stores products 
-        items = scrape_site(proxy, headers)
+        items = scrape_site(proxy=proxy, headers=headers)
         for item in items:
             try:
                 for j in item['productInfo']:
