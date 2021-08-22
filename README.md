@@ -71,7 +71,7 @@ Currently the sites that have monitors are:
 ## Installation
 Ensure you have [Python 3+](https://www.python.org/downloads/) and [pip](https://pip.pypa.io/en/stable/installing/) installed. 
 
-To install the dependencies, use the command:
+To install the dependencies, navigate to the cloned directory in Terminal or Command Prompt and use the command:
 ```
 pip install -r requirements.txt
 ```
@@ -88,15 +88,15 @@ Click on the image below to watch a YouTube tutorial on setting the monitor up o
 
 ### Basic Steps
 
-1. First perform the installation described in [#Installation](#installation).
-
-2. Clone or Download the repository
+1. Clone or Download the repository
     - Clone:
     ```
     git clone https://github.com/yasserqureshi1/Sneaker-Monitors.git
     ```
     - Download: Click on the green `Code` button and click on `Download ZIP`. Then unzip this folder
     
+2. Perform the installation described in [#Installation](#installation).
+
 3. Start editting the `.env` file to your specifications. You will only be interacting with the ```.env``` file.
     - **Add Webhook**: Paste your Discord Webhook URL under the `WEBHOOK` variable. It should look like this:
     ```
@@ -119,7 +119,7 @@ Click on the image below to watch a YouTube tutorial on setting the monitor up o
 ## Issues
 
 If you find an issue, please open an issue [here](https://github.com/yasserqureshi1/Sneaker-Monitors/issues/new). 
-I will respond fairly quickly and try to come up with solution.
+I will try to respond fairly quickly and try to come up with solution.
 
 I may ask you to provide the log file that is produced by the monitor.
 It contains no personal data but may help me diagnose where the issue arises.
