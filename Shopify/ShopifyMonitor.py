@@ -1,8 +1,6 @@
 from random_user_agent.params import SoftwareName, HardwareType
 from random_user_agent.user_agent import UserAgent
 
-from fp.fp import FreeProxy
-
 import requests as rq
 import urllib3
 
@@ -20,8 +18,6 @@ software_names = [SoftwareName.CHROME.value]
 hardware_type = [HardwareType.MOBILE__PHONE]
 user_agent_rotator = UserAgent(software_names=software_names, hardware_type=hardware_type)
 CONFIG = dotenv.dotenv_values()
-
-proxyObject = FreeProxy(country_id=[CONFIG['LOCATION']], rand=True)
 
 INSTOCK = []
 
@@ -151,7 +147,7 @@ def comparitor(product, start):
             # If product is available but not stored - sends notification and stores
             
             INSTOCK.append(product_item)
-
+            
             if start == 0:
                 print(product_item)
                 discord_webhook(
@@ -190,7 +186,7 @@ def monitor():
     # Initialising proxy and headers
     proxy_no = 0
     proxy_list = CONFIG['PROXY'].split('%')
-    proxy = {"http": proxyObject.get()} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
+    proxy = {} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
     headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
 
     # Collecting all keywords (if any)
@@ -225,10 +221,6 @@ def monitor():
             headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
             
             if CONFIG['PROXY'] == "":
-                # If no optional proxy set, rotates free proxy
-                proxy = {"http": proxyObject.get()}
-
-            else:
                 # If optional proxy set, rotates if there are multiple proxies
                 proxy_no = 0 if proxy_no == (len(proxy_list) - 1) else proxy_no + 1
                 proxy = {"http": f"http://{proxy_list[proxy_no]}"}

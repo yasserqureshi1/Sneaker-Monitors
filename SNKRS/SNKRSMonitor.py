@@ -1,8 +1,6 @@
 from random_user_agent.params import SoftwareName, HardwareType
 from random_user_agent.user_agent import UserAgent
 
-from fp.fp import FreeProxy
-
 import requests as rq
 import urllib3
 
@@ -20,8 +18,6 @@ hardware_type = [HardwareType.MOBILE__PHONE]
 user_agent_rotator = UserAgent(software_names=software_names, hardware_type=hardware_type)
 CONFIG = dotenv.dotenv_values()
 
-proxyObject = FreeProxy(country_id=[CONFIG['LOCATION']], rand=True)
-
 INSTOCK = []
 
 
@@ -34,6 +30,7 @@ def scrape_site(headers, proxy):
     # Makes request to site
     anchor = 0
     while anchor < 180:
+        headers = {"user-agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"}
         url = f'https://api.nike.com/product_feed/threads/v2/?anchor={anchor}&count=60&filter=marketplace%28{CONFIG["LOC"]}%29&filter=language%28{CONFIG["LAN"]}%29&filter=channelId%28010794e5-35fe-4e32-aaff-cd2c74f89d61%29&filter=exclusiveAccess%28true%2Cfalse%29&fields=active%2Cid%2ClastFetchTime%2CproductInfo%2CpublishedContent.nodes%2CpublishedContent.subType%2CpublishedContent.properties.coverCard%2CpublishedContent.properties.productCard%2CpublishedContent.properties.products%2CpublishedContent.properties.publish.collections%2CpublishedContent.properties.relatedThreads%2CpublishedContent.properties.seo%2CpublishedContent.properties.threadType%2CpublishedContent.properties.custom%2CpublishedContent.properties.title'
         html = rq.get(url=url, timeout=20, verify=False, headers=headers, proxies=proxy)
         output = json.loads(html.text)
@@ -43,6 +40,7 @@ def scrape_site(headers, proxy):
             items.append(item)
 
         anchor += 60
+        print(f'Anchor {anchor}')
     
     logging.info(msg='Successfully scraped SNKRS site')
     return items
@@ -147,7 +145,7 @@ def comparitor(j, start):
         else:
             if checker(item):
                 INSTOCK.remove(item)
-
+    
     if sizes != '' and start == 0:
         print('Sending notification to Discord...')
         discord_webhook(
@@ -177,7 +175,7 @@ def monitor():
     # Initialising proxy and headers
     proxy_no = 0
     proxy_list = CONFIG['PROXY'].split('%')
-    proxy = {"http": proxyObject.get()} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
+    proxy = {} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
     headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
 
     # Collecting all keywords (if any)
@@ -212,11 +210,7 @@ def monitor():
                 # Rotates headers
                 headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
 
-                if CONFIG['PROXY'] == "":
-                    # If no optional proxy set, rotates free proxy
-                    proxy = {"http": proxyObject.get()}
-                
-                else:
+                if CONFIG['PROXY'] != "":
                     # If optional proxy set, rotates if there are multiple proxies
                     proxy_no = 0 if proxy_no == (len(proxy_list) - 1) else proxy_no + 1
                     proxy = {"http": f"http://{proxy_list[proxy_no]}"}

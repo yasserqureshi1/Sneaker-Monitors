@@ -1,10 +1,11 @@
-# No restocks, only releases
 from random_user_agent.params import SoftwareName, HardwareType
 from random_user_agent.user_agent import UserAgent
 
+from fp.fp import FreeProxy
+
 from bs4 import BeautifulSoup
-import requests
 import urllib3
+import requests
 
 from datetime import datetime
 import time
@@ -13,7 +14,7 @@ import json
 import logging
 import dotenv
 
-logging.basicConfig(filename='Snipeslog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s',
+logging.basicConfig(filename='Sivasdescalzolog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s',
                     level=logging.DEBUG)
 
 software_names = [SoftwareName.CHROME.value]
@@ -21,7 +22,33 @@ hardware_type = [HardwareType.MOBILE__PHONE]
 user_agent_rotator = UserAgent(software_names=software_names, hardware_type=hardware_type)
 CONFIG = dotenv.dotenv_values()
 
+proxyObject = FreeProxy(country_id=[CONFIG['LOCATION']], rand=True)
+
 INSTOCK = []
+
+
+def scrape_main_site(headers, proxy):
+    """
+    Scrape the Zalando site and adds each item to an array
+    """
+    items = []
+
+    # Makes request to site
+    url = 'https://www.sivasdescalzo.com/en/footwear'
+    s = requests.Session()
+    html = s.get(url=url, headers=headers, proxies=proxy, verify=False, timeout=15)
+    soup = BeautifulSoup(html.text, 'html.parser')
+    products = soup.find_all('li',  {'class': 'grid-col'})
+    
+    # Stores particular details in array
+    for product in products:
+        item = [product.find('h3', {'class': 'product-card__title'}).text, 
+                product.find('p', {'class': 'product-card__short-desc'}).text, 
+                product.find('a')['href'], 
+                product.find('div', {'class': 'price-box price-final_price'}).text, 
+                product.div.img['src']] 
+        items.append(item)
+    return items
 
 
 def test_webhook():
@@ -35,7 +62,7 @@ def test_webhook():
             "title": "Testing Webhook",
             "description": "This is just a quick test to ensure the webhook works. Thanks again for using these monitors!",
             "color": int(CONFIG['COLOUR']),
-            "footer": {'text': 'Made by Yasser'},
+            "footer": {'text': 'Made by Eznir'},
             "timestamp": str(datetime.utcnow())
         }]
     }
@@ -51,7 +78,7 @@ def test_webhook():
         logging.info(msg="Payload delivered successfully, code {}.".format(result.status_code))
 
 
-def discord_webhook(title, url, id, price, colour, thumbnail):
+def discord_webhook(title, description, url, thumbnail, price):
     """
     Sends a Discord webhook notification to the specified webhook URL
     """
@@ -60,15 +87,14 @@ def discord_webhook(title, url, id, price, colour, thumbnail):
         "avatar_url": CONFIG['AVATAR_URL'],
         "embeds": [{
             "title": title,
+            "description": description,
             "url": url,
-            "color": int(CONFIG['COLOUR']),
-            "footer": {'text': 'Made by Chafik#8639'},
             "thumbnail": {"url": thumbnail},
+            "footer": {"text": "Created by Eznir"},
+            "color": int(CONFIG['COLOUR']),
             "timestamp": str(datetime.utcnow()),
             "fields": [
-                {"name": "ID", "value": id},
-                {"name": "Price", "value": price},
-                {"name": "Colour", "value": colour}
+                {"name": "Price", "value": price}
             ]
         }]
     }
@@ -92,36 +118,6 @@ def checker(item):
     return item in INSTOCK
 
 
-def scrape_main_site(headers, proxy):
-    """
-    Scrape the Snipes site and adds each item to an array
-    """
-    items = []
-
-    # Makes request to site
-    s = requests.Session()
-    html = s.get('https://www.snipes.com/c/shoes?srule=New&sz=48', headers=headers, proxies=proxy, verify=False, timeout=50)
-    soup = BeautifulSoup(html.text, 'html.parser')
-    array = soup.find_all('div', {'class': 'b-product-grid-tile'})
-
-    # Stores particular details in array
-    for i in array:
-        data = json.loads(i.find('div', {'class': 'b-product-tile js-product-tile'})['data-gtm'])
-        item = [i.find('span', {'class': 'b-product-tile-brand b-product-tile-text js-product-tile-link'}).text,
-                data['name'],
-                'https://www.snipes.com/' + i.find('a', {'class': 'b-product-tile-body-link'})['href'],
-                data['id'],
-                data['price'],
-                data['dimension25'],
-                i.find('source', {'media': '(min-width: 1024px)'})['data-srcset'].split(', ')[0]
-                ]
-        items.append(item)
-    
-    logging.info(msg='Successfully scraped site')
-    s.close()
-    return items
-
-
 def remove_duplicates(mylist):
     """
     Removes duplicate values from a list
@@ -131,18 +127,18 @@ def remove_duplicates(mylist):
 
 def comparitor(item, start):
     if not checker(item):
-        # If product is available but not stored - sends notification and stores
         INSTOCK.append(item)
         if start == 0:
-            discord_webhook(
-                title=f'{item[0]}: {item[1]}',
-                url=item[2],
-                id=item[3],
-                price=item[4],
-                colour=item[5],
-                thumbnail=item[6]
-            )
             print(item)
+            '''
+            discord_webhook(
+                title=item[0],
+                description=item[1],
+                url=item[2],
+                price=item[3],
+                thumbnail=item[4]
+            )
+            '''
 
 
 def monitor():
@@ -151,37 +147,36 @@ def monitor():
     """
     print('STARTING MONITOR')
     logging.info(msg='Successfully started monitor')
-
+    
     # Tests webhook URL
     test_webhook()
 
     # Ensures that first scrape does not notify all products
-    start = 1
+    start = 0
 
     # Initialising proxy and headers
     proxy_no = 0
     proxy_list = CONFIG['PROXY'].split('%')
-    proxy = {} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
+    proxy = {"http": proxyObject.get()} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
     headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
     
     # Collecting all keywords (if any)
     keywords = CONFIG['KEYWORDS'].split('%')
     while True:
         try:
-            # Makes request to site and stores products 
+            # Makes request to site and stores products
             items = remove_duplicates(scrape_main_site(headers, proxy))
             for item in items:
-
-                if keywords == "":
+                
+                if keywords == '':
                     # If no keywords set, checks whether item status has changed
                     comparitor(item, start)
-
                 else:
                     # For each keyword, checks whether particular item status has changed
                     for key in keywords:
                         if key.lower() in item[0].lower():
                             comparitor(item, start)
-
+            
             # Allows changes to be notified
             start = 0
 
@@ -195,7 +190,11 @@ def monitor():
             # Rotates headers
             headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
             
-            if CONFIG['PROXY'] != "":
+            if CONFIG['PROXY'] == "":
+                # If no optional proxy set, rotates free proxy
+                proxy = {"http": proxyObject.get()}
+            
+            else:
                 # If optional proxy set, rotates if there are multiple proxies
                 proxy_no = 0 if proxy_no == (len(proxy_list) - 1) else proxy_no + 1
                 proxy = {"http": f"http://{proxy_list[proxy_no]}"}

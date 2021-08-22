@@ -1,8 +1,6 @@
 from random_user_agent.params import SoftwareName, HardwareType
 from random_user_agent.user_agent import UserAgent
 
-from fp.fp import FreeProxy
-
 import requests
 
 from datetime import datetime
@@ -18,8 +16,6 @@ software_names = [SoftwareName.CHROME.value]
 hardware_type = [HardwareType.MOBILE__PHONE]
 user_agent_rotator = UserAgent(software_names=software_names, hardware_type=hardware_type)
 CONFIG = dotenv.dotenv_values()
-
-proxyObject = FreeProxy(country_id=[CONFIG['LOCATION']], rand=True)
 
 INSTOCK = []
 
@@ -45,7 +41,7 @@ def scrape_main_site(headers, proxy):
             product['picture']['thumbnail']['url'], 
             product['productPageUrl'], 
             product['shoeColour']['name']
-            ]
+        ]
         items.append(item)
 
     logging.info(msg='Successfully scraped site')
@@ -155,7 +151,7 @@ def monitor():
     # Initialising proxy and headers
     proxy_no = 0
     proxy_list = CONFIG['PROXY'].split('%')
-    proxy = {"http": proxyObject.get()} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
+    proxy = {} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
     headers = {'User-Agent': user_agent_rotator.get_random_user_agent(),
                'accept-encoding': 'gzip, deflate, br',
                'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8'}
@@ -193,11 +189,7 @@ def monitor():
                        'accept-encoding': 'gzip, deflate, br',
                        'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8'}
 
-            if CONFIG['PROXY'] == "":
-                # If no optional proxy set, rotates free proxy
-                proxy = {"http": proxyObject.get()}
-
-            else:
+            if CONFIG['PROXY'] != "":
                 # If optional proxy set, rotates if there are multiple proxies
                 proxy_no = 0 if proxy_no == (len(proxy_list) - 1) else proxy_no + 1
                 proxy = {"http": f"http://{proxy_list[proxy_no]}"}
