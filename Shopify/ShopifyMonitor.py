@@ -98,7 +98,7 @@ def discord_webhook(title, url, thumbnail, sizes):
     """
     fields = []
     for size in sizes:
-        fields.append({"name": size, "value": "Available", "inline": True})
+        fields.append({"name": size['title'], "value": size['url'], "inline": True})
 
     data = {
         "username": CONFIG['USERNAME'],
@@ -138,10 +138,11 @@ def comparitor(product, start):
     # Collect all available sizes
     available_sizes = []
     for size in product['variants']:
-        if size['available']:
-            available_sizes.append(size['title'])
+        if size['available']: # Makes an ATC link from the variant ID
+            available_sizes.append({'title': size['title'], 'url': '[ATC](' + CONFIG['URL'][:CONFIG['URL'].find('/', 10)] + '/cart/' + str(size['id']) + ':1)'})
+
     
-    product_item.append(available_sizes)
+    product_item.append(available_sizes) # Appends in field
     
     if available_sizes:
         if not checker(product_item):
