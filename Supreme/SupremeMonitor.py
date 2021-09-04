@@ -36,51 +36,36 @@ def get_item_variants(item_id, item_name, start, proxy, headers):
     Scrapes each item on the webstore and checks whether the product is in-stock or not. If in-stock
     it will send a Discord notification
     """
-    try:
-        item_url = f"https://www.supremenewyork.com/shop/{item_id}.json"
 
-        item_variants = rq.get(item_url, headers=headers, proxies=proxy).json()
+    item_url = f"https://www.supremenewyork.com/shop/{item_id}.json"
 
-        for stylename in item_variants["styles"]:
-            for itemsize in stylename["sizes"]:
-                item = [item_name, stylename["name"], itemsize['name'], item_variants["description"], 'https:' + stylename["image_url"], item_url.split('.json')[0]]
-                if itemsize["stock_level"] != 0:
-                    # Checks if it already exists in our instock
-                    if checker(item):
-                        pass
-                    else:
-                        # Add to instock array
-                        INSTOCK.append(item)
+    item_variants = rq.get(item_url, headers=headers, proxies=proxy).json()
 
-                        # Send a notification to the discord webhook with the in-stock product
-                        if start == 0:
-                            print(item)
-                            discord_webhook(
-                                title=f'{item_name} - {stylename["name"]} - {itemsize["name"]}',
-                                description=item_variants["description"],
-                                thumbnail='https:' + stylename["image_url"],
-                                url=item_url.split('.json')[0]
-                            )
-                            logging.info(msg='Successfully sent Discord notification')
-
+    for stylename in item_variants["styles"]:
+        for itemsize in stylename["sizes"]:
+            item = [item_name, stylename["name"], itemsize['name'], item_variants["description"], 'https:' + stylename["image_url"], item_url.split('.json')[0]]
+            if itemsize["stock_level"] != 0:
+                # Checks if it already exists in our instock
+                if checker(item):
+                    pass
                 else:
-                    if checker(item):
-                        INSTOCK.remove(item)
-    
-    except Exception as e:
-            print(f"Exception found '{e}' - Rotating proxy and user-agent")
-            logging.error(e)
+                    # Add to instock array
+                    INSTOCK.append(item)
 
-            # Rotates headers
-            headers = {
-                'User-Agent': user_agent_rotator.get_random_user_agent(),
-                'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-                'accept-encoding': 'gzip, deflate, br',
-                'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8'}
+                    # Send a notification to the discord webhook with the in-stock product
+                    if start == 0:
+                        print(item)
+                        discord_webhook(
+                            title=f'{item_name} - {stylename["name"]} - {itemsize["name"]}',
+                            description=item_variants["description"],
+                            thumbnail='https:' + stylename["image_url"],
+                            url='https://www.supremenewyork.com/mobile/#products/' + str(item_id) + '/' +str(stylename['id'])
+                        )
+                        logging.info(msg='Successfully sent Discord notification')
 
-            if CONFIG['PROXY'] != "":
-                proxy_no = 0 if proxy_no == (len(proxy_list)-1) else proxy_no + 1
-                proxy = {"http": f"http://{proxy_list[proxy_no]}"}
+            else:
+                if checker(item):
+                    INSTOCK.remove(item)
 
 
 def test_webhook():
