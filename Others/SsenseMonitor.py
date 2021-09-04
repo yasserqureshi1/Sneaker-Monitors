@@ -12,6 +12,7 @@ import time
 import json
 import logging
 import dotenv
+import traceback
 
 logging.basicConfig(filename='Ssenselog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s',
                     level=logging.DEBUG)
@@ -190,7 +191,7 @@ def monitor():
             time.sleep(float(CONFIG['DELAY']))
 
         except Exception as e:
-            print(f"Exception found '{e}' - Rotating proxy and user-agent")
+            print(f"Exception found: {traceback.format_exc()}")
             logging.error(e)
 
             # Rotates headers

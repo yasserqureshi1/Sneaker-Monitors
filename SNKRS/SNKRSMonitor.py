@@ -10,6 +10,7 @@ import time
 import json
 import logging
 import dotenv
+import traceback
 
 logging.basicConfig(filename='SNKRSlog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
 
@@ -204,7 +205,7 @@ def monitor():
                                 INSTOCK.remove(item)
 
             except rq.exceptions.HTTPError as e:
-                print(f"Exception found '{e}' - Rotating proxy and user-agent")
+                print(f"Exception found: {traceback.format_exc()}")
                 logging.error(e)
 
                 # Rotates headers
@@ -216,6 +217,7 @@ def monitor():
                     proxy = {"http": f"http://{proxy_list[proxy_no]}"}
             
             except Exception as e:
+                print(f"Exception found: {traceback.format_exc()}")
                 pass
 
         # Allows changes to be notified

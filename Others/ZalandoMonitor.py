@@ -2,8 +2,6 @@
 from random_user_agent.params import SoftwareName, HardwareType
 from random_user_agent.user_agent import UserAgent
 
-from fp.fp import FreeProxy
-
 from bs4 import BeautifulSoup
 import requests
 import urllib3
@@ -23,8 +21,6 @@ hardware_type = [HardwareType.MOBILE__PHONE]
 user_agent_rotator = UserAgent(software_names=software_names, hardware_type=hardware_type)
 CONFIG = dotenv.dotenv_values()
 
-proxyObject = FreeProxy(country_id=[CONFIG['LOCATION']], rand=True)
-
 INSTOCK = []
 
 
@@ -33,7 +29,7 @@ def scrape_main_site(headers, proxy):
     Scrape the Zalando site and adds each item to an array
     """
     items = []
-
+    
     # Makes request to site
     url = 'https://m.zalando.co.uk/mens-shoes-trainers/?order=activation_date'
     s = requests.Session()
@@ -136,8 +132,10 @@ def remove_duplicates(mylist):
 def comparitor(item, start):
     if not checker(item):
         # If product is available but not stored - sends notification and stores
+        print(item)
         INSTOCK.append(item)
         if start == 0:
+            '''
             discord_webhook(
                 title=item[0],
                 sku=item[1],
@@ -145,6 +143,7 @@ def comparitor(item, start):
                 url=item[3],
                 thumbnail=item[4]
             )
+            '''
 
 
 def monitor():
@@ -155,7 +154,7 @@ def monitor():
     logging.info(msg='Successfully started monitor')
 
     # Tests webhook URL
-    test_webhook()
+    #test_webhook()
 
     # Ensures that first scrape does not notify all products
     start = 1
@@ -163,7 +162,7 @@ def monitor():
     # Initialising proxy and headers
     proxy_no = 0
     proxy_list = CONFIG['PROXY'].split('%')
-    proxy = {"http": proxyObject.get()} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
+    proxy = {} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
     headers = {
         'User-Agent': user_agent_rotator.get_random_user_agent(),
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
@@ -206,10 +205,6 @@ def monitor():
                 'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8'}
             
             if CONFIG['PROXY'] == "":
-                # If no optional proxy set, rotates free proxy
-                proxy = {"http": proxyObject.get()}
-
-            else:
                 # If optional proxy set, rotates if there are multiple proxies
                 proxy_no = 0 if proxy_no == (len(proxy_list) - 1) else proxy_no + 1
                 proxy = {"http": f"http://{proxy_list[proxy_no]}"}

@@ -1,8 +1,6 @@
 from random_user_agent.params import SoftwareName, HardwareType
 from random_user_agent.user_agent import UserAgent
 
-from fp.fp import FreeProxy
-
 from bs4 import BeautifulSoup
 import urllib3
 import requests
@@ -13,6 +11,7 @@ import time
 import json
 import logging
 import dotenv
+import traceback
 
 logging.basicConfig(filename='Sivasdescalzolog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s',
                     level=logging.DEBUG)
@@ -21,8 +20,6 @@ software_names = [SoftwareName.CHROME.value]
 hardware_type = [HardwareType.MOBILE__PHONE]
 user_agent_rotator = UserAgent(software_names=software_names, hardware_type=hardware_type)
 CONFIG = dotenv.dotenv_values()
-
-proxyObject = FreeProxy(country_id=[CONFIG['LOCATION']], rand=True)
 
 INSTOCK = []
 
@@ -157,7 +154,7 @@ def monitor():
     # Initialising proxy and headers
     proxy_no = 0
     proxy_list = CONFIG['PROXY'].split('%')
-    proxy = {"http": proxyObject.get()} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
+    proxy = {} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
     headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
     
     # Collecting all keywords (if any)
@@ -184,17 +181,13 @@ def monitor():
             time.sleep(float(CONFIG['DELAY']))
 
         except Exception as e:
-            print(f"Exception found '{e}' - Rotating proxy and user-agent")
+            print(f"Exception found: {traceback.format_exc()}")
             logging.error(e)
 
             # Rotates headers
             headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
             
-            if CONFIG['PROXY'] == "":
-                # If no optional proxy set, rotates free proxy
-                proxy = {"http": proxyObject.get()}
-            
-            else:
+            if CONFIG['PROXY'] != "":
                 # If optional proxy set, rotates if there are multiple proxies
                 proxy_no = 0 if proxy_no == (len(proxy_list) - 1) else proxy_no + 1
                 proxy = {"http": f"http://{proxy_list[proxy_no]}"}
