@@ -203,9 +203,11 @@ def monitor():
                         for item in INSTOCK:
                             if item[0] == j['merchProduct']['labelName'] and item[1] == j['productContent']['colorDescription']:
                                 INSTOCK.remove(item)
+            
+            except KeyError as e:
+                pass
 
             except rq.exceptions.HTTPError as e:
-                print(f"Exception found: {traceback.format_exc()}")
                 logging.error(e)
 
                 # Rotates headers
