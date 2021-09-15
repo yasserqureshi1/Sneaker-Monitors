@@ -35,15 +35,14 @@ def scrape_main_site(headers, proxy):
     s = requests.Session()
     html = s.get(url=url, headers=headers, proxies=proxy, verify=False, timeout=15)
     soup = BeautifulSoup(html.text, 'html.parser')
-    products = soup.find_all('li',  {'class': 'grid-col'})
+    products = soup.find_all('li',  {'class': 'item product product-item grid-col'})
     
     # Stores particular details in array
     for product in products:
-        item = [product.find('h3', {'class': 'product-card__title'}).text, 
-                product.find('p', {'class': 'product-card__short-desc'}).text, 
+        item = [f"{product.find('h3', {'class': 'product-card__title'}).text} {product.find('h3', {'class': 'product name product-item-name product-card__short-desc'}).text}",  
                 product.find('a')['href'], 
                 product.find('div', {'class': 'price-box price-final_price'}).text, 
-                product.div.img['src']] 
+                f"{product.find('img')['src'].split('?')[0]}?quality=50&fit=bounds&width=210"] 
         items.append(item)
     return items
 
@@ -75,7 +74,7 @@ def test_webhook():
         logging.info(msg="Payload delivered successfully, code {}.".format(result.status_code))
 
 
-def discord_webhook(title, description, url, thumbnail, price):
+def discord_webhook(title, url, thumbnail, price):
     """
     Sends a Discord webhook notification to the specified webhook URL
     """
@@ -84,7 +83,6 @@ def discord_webhook(title, description, url, thumbnail, price):
         "avatar_url": CONFIG['AVATAR_URL'],
         "embeds": [{
             "title": title,
-            "description": description,
             "url": url,
             "thumbnail": {"url": thumbnail},
             "footer": {"text": "Created by Eznir"},
@@ -126,16 +124,12 @@ def comparitor(item, start):
     if not checker(item):
         INSTOCK.append(item)
         if start == 0:
-            print(item)
-            '''
             discord_webhook(
                 title=item[0],
-                description=item[1],
-                url=item[2],
-                price=item[3],
-                thumbnail=item[4]
+                url=item[1],
+                price=item[2],
+                thumbnail=item[3]
             )
-            '''
 
 
 def monitor():
@@ -149,7 +143,7 @@ def monitor():
     test_webhook()
 
     # Ensures that first scrape does not notify all products
-    start = 0
+    start = 1
 
     # Initialising proxy and headers
     proxy_no = 0
