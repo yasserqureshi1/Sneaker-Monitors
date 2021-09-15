@@ -12,6 +12,7 @@ import time
 import json
 import logging
 import dotenv
+import traceback
 
 logging.basicConfig(filename='Zalandolog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s',
                     level=logging.DEBUG)
@@ -35,18 +36,22 @@ def scrape_main_site(headers, proxy):
     s = requests.Session()
     html = s.get(url=url, headers=headers, proxies=proxy, verify=False, timeout=15)
     soup = BeautifulSoup(html.text, 'html.parser')
-    products = json.loads(str(soup.find('script', {'id': 'z-nvg-cognac-props'}))[65:-12])
+    products = soup.find_all('div', {'class': '_4qWUe8 w8MdNG cYylcv QylWsg SQGpu8 iOzucJ JT3_zV DvypSJ'})
 
     # Stores particular details in array 
-    for product in products['articles']:
-        item = [
-            product['name'],
-            product['sku'],
-            product['price']['original'],
-            product['url_key'],
-            product['media'][0]['path']
+    for product in products:
+        try:
+            span = product.find_all('span')
+            item = [
+                product.find('h3').text,    #name
+                product.find('a')['href'],  #url
+                span[2].text,               #brand
+                span[3].text,               #price
+                product.find('img')['src']  #image
             ]
-        items.append(item)
+            items.append(item)
+        except Exception as e:
+            pass
     
     logging.info(msg='Successfully scraped site')
     s.close()
@@ -81,7 +86,7 @@ def test_webhook():
         logging.info("Payload delivered successfully, code {}.".format(result.status_code))
 
 
-def discord_webhook(title, url, thumbnail, price, sku):
+def discord_webhook(product):
     """
     Sends a Discord webhook notification to the specified webhook URL
     """
@@ -89,15 +94,15 @@ def discord_webhook(title, url, thumbnail, price, sku):
         "username": CONFIG['USERNAME'],
         "avatar_url": CONFIG['AVATAR_URL'],
         "embeds": [{
-            "title": title,
-            "url": f'https://m.zalando.co.uk{url}.html',
-            "thumbnail": {"url": f'https://img01.ztat.net/article/{thumbnail}'},
+            "title": product[0],
+            "url": product[1],
+            "thumbnail": {"url": product[4]},
             "color": int(CONFIG['COLOUR']),
             "footer": {"text": "Made by Yasser"},
             "timestamp": str(datetime.utcnow()),
             "fields": [
-                {"name": "Price", "value": price},
-                {"name": "SKU", "value": sku}
+                {"name": "Brand", "value": product[2]},
+                {"name": "Price", "value": product[3]}
             ]
 
         }]
@@ -135,15 +140,7 @@ def comparitor(item, start):
         print(item)
         INSTOCK.append(item)
         if start == 0:
-            '''
-            discord_webhook(
-                title=item[0],
-                sku=item[1],
-                price=item[2],
-                url=item[3],
-                thumbnail=item[4]
-            )
-            '''
+            discord_webhook(item)
 
 
 def monitor():
@@ -154,7 +151,7 @@ def monitor():
     logging.info(msg='Successfully started monitor')
 
     # Tests webhook URL
-    #test_webhook()
+    test_webhook()
 
     # Ensures that first scrape does not notify all products
     start = 1
@@ -195,6 +192,7 @@ def monitor():
             
         except Exception as e:
             print(f"Exception found '{e}' - Rotating proxy and user-agent")
+            print(traceback.format_exc())
             logging.error(e)
 
             # Rotates headers
