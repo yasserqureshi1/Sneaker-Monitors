@@ -147,7 +147,7 @@ def monitor():
     test_webhook()
 
     # Ensures that first scrape does not notify all products
-    start = 0
+    start = 1
 
     # Initialising proxy and headers
     proxy_no = 0
@@ -204,8 +204,6 @@ def monitor():
                 # If optional proxy set, rotates if there are multiple proxies
                 proxy_no = 0 if proxy_no == (len(proxy_list) - 1) else proxy_no + 1
                 proxy = {"http": f"https://{proxy_list[proxy_no]}"}
-
-        break
 
 
 if __name__ == '__main__':
