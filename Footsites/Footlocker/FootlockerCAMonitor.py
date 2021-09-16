@@ -34,7 +34,7 @@ def test_webhook():
             "description": "This is just a quick test to ensure the webhook works. Thanks again for using these montiors!",
             "color": int(CONFIG['COLOUR']),
             "footer": {'text': 'Made by Yasser'},
-            "timestamp": str(datetime.datetime.utcnow())
+            "timestamp": str(datetime.utcnow())
         }]
     }
 
