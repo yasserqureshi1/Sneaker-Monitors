@@ -9,7 +9,7 @@ import logging
 import dotenv
 from random_user_agent.user_agent import UserAgent
 from random_user_agent.params import SoftwareName, HardwareType
-from fp.fp import FreeProxy
+
 
 logging.basicConfig(filename='Footlockerlog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
 
@@ -17,8 +17,6 @@ software_names = [SoftwareName.CHROME.value]
 hardware_type = [HardwareType.MOBILE__PHONE]
 user_agent_rotator = UserAgent(software_names=software_names, hardware_type=hardware_type)
 CONFIG = dotenv.dotenv_values()
-
-proxyObject = FreeProxy(country_id=['AU'], rand=True)
 
 INSTOCK = []
 
@@ -28,25 +26,25 @@ def test_webhook():
         "avatar_url": CONFIG['AVATAR_URL'],
         "embeds": [{
             "title": "Testing Webhook",
-            "description": "This is just a quick test to ensure the webhook works. Thanks again for using these montiors!",,
+            "description": "This is just a quick test to ensure the webhook works. Thanks again for using these montiors!",
             "color": int(CONFIG['COLOUR']),
             "footer": {'text': 'Made by Yasser'},
-            "timestamp": str(datetime.datetime.utcnow())
+            "timestamp": str(datetime.utcnow())
         }]
     }
 
-    result = rq.post(CONFIG['WEBHOOK'], data=json.dumps(data), headers={"Content-Type": "application/json"})
+    result = requests.post(CONFIG['WEBHOOK'], data=json.dumps(data), headers={"Content-Type": "application/json"})
 
     try:
         result.raise_for_status()
-    except rq.exceptions.HTTPError as err:
+    except requests.exceptions.HTTPError as err:
         logging.error(err)
     else:
         print("Payload delivered successfully, code {}.".format(result.status_code))
         logging.info(msg="Payload delivered successfully, code {}.".format(result.status_code))
 
 
-def discord_webhook(title, thumbnail, url, price, colour):
+def discord_webhook(title, url, thumbnail, style, sku, price):
     """
     Sends a Discord webhook notification to the specified webhook URL
     """
@@ -54,15 +52,16 @@ def discord_webhook(title, thumbnail, url, price, colour):
         "username": CONFIG['USERNAME'],
         "avatar_url": CONFIG['AVATAR_URL'],
         "embeds": [{
-            "title": title,
+            "title": title, 
+            "url": url,
             "thumbnail": {"url": thumbnail},
-            "url": f'https://www.footlocker.ca{url}'
             "color": int(CONFIG['COLOUR']),
-            "footer": {'text': 'Made by Yasser'},
-            "timestamp": str(datetime.utcnow())
+            "footer": {"text": "Made by Yasser"},
+            "timestamp": str(datetime.utcnow()),
             "fields": [
-                {"name": "Colour", "value": colour},
-                {"name": "Price": "value": price}
+                {"name": "Style", "value": style},
+                {"name": "SKU", "value": sku},
+                {"name": "Price", "value": price},
             ]
         }]
     }
@@ -83,10 +82,7 @@ def checker(item):
     """
     Determines whether the product status has changed
     """
-    for product in INSTOCK:
-        if product == item:
-            return True
-    return False
+    return item in INSTOCK
 
 
 def scrape_main_site(headers, proxy):
@@ -146,7 +142,7 @@ def monitor():
     proxy_no = 0
 
     proxy_list = CONFIG['PROXY'].split('%')
-    proxy = {"http": proxyObject.get()} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
+    proxy = {} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
     headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
     keywords = CONFIG['KEYWORDS'].split('%')
     while True:
@@ -170,7 +166,7 @@ def monitor():
             logging.error(e)
             headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
             if CONFIG['PROXY'] == "":
-                proxy = {"http": proxyObject.get()}
+                proxy = {}
             else:
                 proxy_no = 0 if proxy_no == (len(proxy_list) - 1) else proxy_no + 1
                 proxy = {"http": f"http://{proxy_list[proxy_no]}"}
