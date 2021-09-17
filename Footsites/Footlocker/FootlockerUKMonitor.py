@@ -157,7 +157,7 @@ def monitor():
             items = scrape_main_site(headers, proxy)
             for item in items:
 
-                if keywords == '':
+                if keywords == '' or keywords == ['']:
                     # If no keywords set, checks whether item status has changed
                     comparitor(item, start)
                 
