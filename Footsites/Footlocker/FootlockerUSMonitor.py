@@ -153,7 +153,6 @@ def monitor():
     proxy_no = 0
     proxy_list = CONFIG['PROXY'].split('%')
     proxy = {} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
-    proxy = {'http': '35.169.178.165:3128'}
     headers = {
         'user-agent': user_agent_rotator.get_random_user_agent(),
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
@@ -168,7 +167,7 @@ def monitor():
             items = remove_duplicates(scrape_main_site(headers, proxy))
             for item in items:
 
-                if keywords == "":
+                if keywords == "" or keywords == ['']:
                     # If no keywords set, checks whether item status has changed
                     comparitor(item, start)
 
