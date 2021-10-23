@@ -86,6 +86,9 @@ Click on the image below to watch a YouTube tutorial on setting the monitor up l
 Click on the image below to watch a YouTube tutorial on setting the monitor up on a server...
 [![Watch the video](https://img.youtube.com/vi/nmUSSlt4JKk/mqdefault.jpg)](https://youtu.be/nmUSSlt4JKk)
 
+Click on the image below to watch a YouTube tutorial on setting the monitor up using git...
+[![Watch the video](https://img.youtube.com/vi/QjeLg4xbnqc/mqdefault.jpg)](https://youtu.be/QjeLg4xbnqc)
+
 ### Basic Steps
 
 1. Clone or Download the repository
