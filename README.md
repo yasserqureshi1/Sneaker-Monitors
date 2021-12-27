@@ -22,8 +22,7 @@
 </p>
 <br />
 
-To be notified of changes, please **star** or **watch** this repository.
-This will also increase the awareness of the project for others to use or add to. 
+Please **star** this repository to increase the awareness of the project for others to use or add to. 
 
 Check out the docs [here](https://yasserqureshi1.github.io/Sneaker-Monitors/)
 
