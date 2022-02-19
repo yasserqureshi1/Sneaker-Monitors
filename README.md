@@ -133,5 +133,5 @@ Distributed under the MIT License. See ```LICENSE``` for more information.
 
 ## Contact
 
-For help join my Discord server [here](https://discord.gg/D8kfJ4pt3m) and post a question in the #questions channel
+For help join my Discord server [here](https://discord.gg/kWmAqpUtrf) and post a question in the #questions channel
 
