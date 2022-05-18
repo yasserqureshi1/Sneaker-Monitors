@@ -12,7 +12,7 @@ cryptography==3.4.7
 discord.py==1.7.3
 free-proxy==1.0.2
 idna==3.2
-lxml==4.6.3
+lxml==4.6.5
 multidict==5.1.0
 pycparser==2.20
 pyOpenSSL==20.0.1
