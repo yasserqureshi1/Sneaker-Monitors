@@ -3,22 +3,24 @@ from random_user_agent.user_agent import UserAgent
 
 import requests as rq
 import urllib3
+from fp.fp import FreeProxy
 
 from datetime import datetime
 import time
 
 import json
 import logging
-import dotenv
 import traceback
+import config
 
-logging.basicConfig(filename='Shopifylog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s',
+logging.basicConfig(filename='shopifylog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s',
                     level=logging.DEBUG)
 
 software_names = [SoftwareName.CHROME.value]
 hardware_type = [HardwareType.MOBILE__PHONE]
 user_agent_rotator = UserAgent(software_names=software_names, hardware_type=hardware_type)
-CONFIG = dotenv.dotenv_values()
+
+proxy_obj = FreeProxy(country_id=[config.FREE_PROXY_LOCATION])
 
 INSTOCK = []
 
@@ -69,18 +71,18 @@ def checker(item):
 
 def test_webhook():
     data = {
-        "username": CONFIG['USERNAME'],
-        "avatar_url": CONFIG['AVATAR_URL'],
+        "username": config.USERNAME,
+        "avatar_url": config.AVATAR_URL,
         "embeds": [{
             "title": "Testing Webhook",
             "description": "This is just a quick test to ensure the webhook works. Thanks again for using these monitors!",
-            "color": int(CONFIG['COLOUR']),
+            "color": int(config.COLOUR),
             "footer": {'text': 'Made by Yasser'},
             "timestamp": str(datetime.utcnow())
         }]
     }
 
-    result = rq.post(CONFIG['WEBHOOK'], data=json.dumps(data), headers={"Content-Type": "application/json"})
+    result = rq.post(config.WEBHOOK, data=json.dumps(data), headers={"Content-Type": "application/json"})
 
     try:
         result.raise_for_status()
@@ -101,20 +103,20 @@ def discord_webhook(title, url, thumbnail, sizes):
         fields.append({"name": size['title'], "value": size['url'], "inline": True})
 
     data = {
-        "username": CONFIG['USERNAME'],
-        "avatar_url": CONFIG['AVATAR_URL'],
+        "username": config.USERNAME,
+        "avatar_url": config.AVATAR_URL,
         "embeds": [{
             "title": title,
-            "url": CONFIG['URL'].replace('.json', '/') + url, 
+            "url": config.URL.replace('.json', '/') + url, 
             "thumbnail": {"url": thumbnail},
             "fields": fields,
-            "color": int(CONFIG['COLOUR']),
+            "color": int(config.COLOUR),
             "footer": {"text": "Made by Yasser"},
             "timestamp": str(datetime.utcnow()),
         }]
     }
 
-    result = rq.post(CONFIG['WEBHOOK'], data=json.dumps(data), headers={"Content-Type": "application/json"})
+    result = rq.post(config.WEBHOOK, data=json.dumps(data), headers={"Content-Type": "application/json"})
 
     try:
         result.raise_for_status()
@@ -134,12 +136,11 @@ def remove_duplicates(mylist):
 
 def comparitor(product, start):
     product_item = [product['title'], product['image'], product['handle']]
-
     # Collect all available sizes
     available_sizes = []
     for size in product['variants']:
         if size['available']: # Makes an ATC link from the variant ID
-            available_sizes.append({'title': size['title'], 'url': '[ATC](' + CONFIG['URL'][:CONFIG['URL'].find('/', 10)] + '/cart/' + str(size['id']) + ':1)'})
+            available_sizes.append({'title': size['title'], 'url': '[ATC](' + config.URL[:config.URL.find('/', 10)] + '/cart/' + str(size['id']) + ':1)'})
 
     
     product_item.append(available_sizes) # Appends in field
@@ -170,13 +171,21 @@ def monitor():
     """
     Initiates the monitor
     """
-    print('STARTING MONITOR')
+    print('''\n---------------------------
+--- MONITOR HAS STARTED ---
+---------------------------\n''')
+    print(''' ** Now you will recieve notifications when an item drops or restocks **
+This may take some time so you have to leave this script running. It's best to do this on a server (you can get a free one via AWS)!
+    
+Check out the docs at https://yasserqureshi1.github.io/Sneaker-Monitors/ for more info.
+    
+Join the Sneakers & Code family via Discord and subscribe to my YouTube channel https://www.youtube.com/c/YasCode\n\n''')
     logging.info(msg='Successfully started monitor')
 
     # Checks URL
-    if not check_url(CONFIG['URL']):
+    if not check_url(config.URL):
         print('Store URL not in correct format. Please ensure that it is a path pointing to a /products.json file')
-        logging.error(msg='Store URL formatting incorrect for: ' + str(CONFIG['URL']))
+        logging.error(msg='Store URL formatting incorrect for: ' + str(config.URL))
         return
 
     # Tests webhook URL
@@ -186,20 +195,22 @@ def monitor():
     start = 1
 
     # Initialising proxy and headers
-    proxy_no = 0
-    proxy_list = CONFIG['PROXY'].split('%')
-    proxy = {} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
+    if config.ENABLE_FREE_PROXY:
+        proxy = {'http': proxy_obj.get()}
+    else:
+        proxy_no = 0
+        proxy = {} if config.PROXY == [] else {"http": f"http://{config.PROXY[proxy_no]}"}
     headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
 
     # Collecting all keywords (if any)
-    keywords = CONFIG['KEYWORDS'].split('%')
+    keywords = config.KEYWORDS
     while True:
         try:
             # Makes request to site and stores products 
-            items = scrape_site(CONFIG['URL'], proxy, headers)
+            items = scrape_site(config.URL, proxy, headers)
             for product in items:
 
-                if keywords == "":
+                if keywords == []:
                     # If no keywords set, checks whether item status has changed
                     comparitor(product, start)
 
@@ -213,19 +224,21 @@ def monitor():
             start = 0
 
             # User set delay
-            time.sleep(float(CONFIG['DELAY']))
+            time.sleep(float(config.DELAY))
 
         except Exception as e:
             print(f"Exception found: {traceback.format_exc()}")
             logging.error(e)
 
             # Rotates headers
-            headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
+            headers['User-Agent'] = user_agent_rotator.get_random_user_agent()
             
-            if CONFIG['PROXY'] == "":
-                # If optional proxy set, rotates if there are multiple proxies
-                proxy_no = 0 if proxy_no == (len(proxy_list) - 1) else proxy_no + 1
-                proxy = {"http": f"http://{proxy_list[proxy_no]}"}
+            if config.ENABLE_FREE_PROXY:
+                proxy = {'http': proxy_obj.get()}
+
+            elif config.PROXY != []:
+                proxy_no = 0 if proxy_no == (len(config.PROXY)-1) else proxy_no + 1
+                proxy = {"http": f"http://{config.PROXY[proxy_no]}"}
 
 
 if __name__ == '__main__':

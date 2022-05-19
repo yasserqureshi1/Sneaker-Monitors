@@ -2,21 +2,23 @@ from random_user_agent.params import SoftwareName, HardwareType
 from random_user_agent.user_agent import UserAgent
 
 import requests
+from fp.fp import FreeProxy
 
 from datetime import datetime
 import time
 
 import json
 import logging
-import dotenv
 import traceback
+import config
 
-logging.basicConfig(filename='OffSpringlog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
+logging.basicConfig(filename='offspring.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
 
 software_names = [SoftwareName.CHROME.value]
 hardware_type = [HardwareType.MOBILE__PHONE]
 user_agent_rotator = UserAgent(software_names=software_names, hardware_type=hardware_type)
-CONFIG = dotenv.dotenv_values()
+
+proxy_obj = FreeProxy(country_id=[config.FREE_PROXY_LOCATION], rand=True)
 
 INSTOCK = []
 
@@ -62,18 +64,18 @@ def test_webhook():
     Sends a test Discord webhook notification
     """
     data = {
-        "username": CONFIG['USERNAME'],
-        "avatar_url": CONFIG['AVATAR_URL'],
+        "username": config.USERNAME,
+        "avatar_url": config.AVATAR_URL,
         "embeds": [{
             "title": "Testing Webhook",
             "description": "This is just a quick test to ensure the webhook works. Thanks again for using these monitors!",
-            "color": int(CONFIG['COLOUR']),
+            "color": int(config.COLOUR),
             "footer": {'text': 'Made by Yasser'},
             "timestamp": str(datetime.utcnow())
         }]
     }
 
-    result = requests.post(CONFIG['WEBHOOK'], data=json.dumps(data), headers={"Content-Type": "application/json"})
+    result = requests.post(config.WEBHOOK, data=json.dumps(data), headers={"Content-Type": "application/json"})
 
     try:
         result.raise_for_status()
@@ -89,22 +91,22 @@ def discord_webhook(title, url, thumbnail, colour):
     Sends a Discord webhook notification to the specified webhook URL
     """
     data = {
-        "username": CONFIG['USERNAME'],
-        "avatar_url": CONFIG['AVATAR_URL'],
+        "username": config.USERNAME,
+        "avatar_url": config.AVATAR_URL,
         "embeds": [{
             "title": title,
             "url": 'https://www.offspring.co.uk/'+url,
             "thumbnail": {"url": thumbnail},
             "footer": {"text": "Made by Yasser"},
             "timestamp": str(datetime.utcnow()),
-            "color": int(CONFIG['COLOUR']),
+            "color": int(config.COLOUR),
             "fields": [
                 {"name": "Colour", "value": colour}
             ]
         }]
     }
 
-    result = requests.post(CONFIG['WEBHOOK'], data=json.dumps(data), headers={"Content-Type": "application/json"})
+    result = requests.post(config.WEBHOOK, data=json.dumps(data), headers={"Content-Type": "application/json"})
 
     try:
         result.raise_for_status()
@@ -140,7 +142,15 @@ def monitor():
     """
     Initiates monitor for the Off-Spring site
     """
-    print('STARTING MONITOR')
+    print('''\n---------------------------
+--- MONITOR HAS STARTED ---
+---------------------------\n''')
+    print(''' ** Now you will recieve notifications when an item drops or restocks **
+This may take some time so you have to leave this script running. It's best to do this on a server (you can get a free one via AWS)!
+    
+Check out the docs at https://yasserqureshi1.github.io/Sneaker-Monitors/ for more info.
+    
+Join the Sneakers & Code family via Discord and subscribe to my YouTube channel https://www.youtube.com/c/YasCode\n\n''')
     logging.info(msg='Successfully started monitor')
     
     # Tests webhook URL
@@ -150,22 +160,24 @@ def monitor():
     start = 1
 
     # Initialising proxy and headers
-    proxy_no = 0
-    proxy_list = CONFIG['PROXY'].split('%')
-    proxy = {} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
+    if config.ENABLE_FREE_PROXY:
+        proxy = {'http': proxy_obj.get()}
+    else:
+        proxy_no = 0
+        proxy = {} if config.PROXY == [] else {"http": f"http://{config.PROXY[proxy_no]}"}
     headers = {'User-Agent': user_agent_rotator.get_random_user_agent(),
                'accept-encoding': 'gzip, deflate, br',
                'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8'}
     
     # Collecting all keywords (if any)
-    keywords = CONFIG['KEYWORDS'].split('%')
+    keywords = config.KEYWORDS
     while True:
         try:
             # Makes request to site and stores products 
             items = remove_duplicates(scrape_main_site(headers, proxy))
             for product in items:
 
-                if keywords == '':
+                if keywords == []:
                     # If no keywords set, checks whether item status has changed
                     comparitor(product, start)
 
@@ -179,21 +191,21 @@ def monitor():
             start = 0
 
             # User set delay
-            time.sleep(float(CONFIG['DELAY']))
+            time.sleep(float(config.DELAY))
 
         except Exception as e:
             print(f"Exception found: {traceback.format_exc()}")
             logging.error(e)
 
             # Rotates headers
-            headers = {'User-Agent': user_agent_rotator.get_random_user_agent(),
-                       'accept-encoding': 'gzip, deflate, br',
-                       'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8'}
+            headers['User-Agent'] = user_agent_rotator.get_random_user_agent()
 
-            if CONFIG['PROXY'] != "":
-                # If optional proxy set, rotates if there are multiple proxies
-                proxy_no = 0 if proxy_no == (len(proxy_list) - 1) else proxy_no + 1
-                proxy = {"http": f"http://{proxy_list[proxy_no]}"}
+            if config.ENABLE_FREE_PROXY:
+                proxy = {'http': proxy_obj.get()}
+
+            elif config.PROXY != []:
+                proxy_no = 0 if proxy_no == (len(config.PROXY)-1) else proxy_no + 1
+                proxy = {"http": f"http://{config.PROXY[proxy_no]}"}
 
 
 if __name__ == '__main__':

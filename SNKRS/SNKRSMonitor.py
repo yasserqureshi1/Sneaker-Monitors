@@ -3,21 +3,24 @@ from random_user_agent.user_agent import UserAgent
 
 import requests as rq
 import urllib3
+from fp.fp import FreeProxy
 
 from datetime import datetime
 import time
 
 import json
 import logging
-import dotenv
 import traceback
 
-logging.basicConfig(filename='SNKRSlog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
+import config
+
+logging.basicConfig(filename='SNKRS.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
 
 software_names = [SoftwareName.CHROME.value]
 hardware_type = [HardwareType.MOBILE__PHONE]
 user_agent_rotator = UserAgent(software_names=software_names, hardware_type=hardware_type)
-CONFIG = dotenv.dotenv_values()
+
+proxy_obj = FreeProxy(country_id=[config.FREE_PROXY_LOCATION], rand=True)
 
 INSTOCK = []
 
@@ -30,9 +33,8 @@ def scrape_site(headers, proxy):
 
     # Makes request to site
     anchor = 0
-    while anchor < 180:
-        headers = {"user-agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"}
-        url = f'https://api.nike.com/product_feed/threads/v2/?anchor={anchor}&count=60&filter=marketplace%28{CONFIG["LOC"]}%29&filter=language%28{CONFIG["LAN"]}%29&filter=channelId%28010794e5-35fe-4e32-aaff-cd2c74f89d61%29&filter=exclusiveAccess%28true%2Cfalse%29&fields=active%2Cid%2ClastFetchTime%2CproductInfo%2CpublishedContent.nodes%2CpublishedContent.subType%2CpublishedContent.properties.coverCard%2CpublishedContent.properties.productCard%2CpublishedContent.properties.products%2CpublishedContent.properties.publish.collections%2CpublishedContent.properties.relatedThreads%2CpublishedContent.properties.seo%2CpublishedContent.properties.threadType%2CpublishedContent.properties.custom%2CpublishedContent.properties.title'
+    while anchor < 160:
+        url = f'https://api.nike.com/product_feed/threads/v3/?anchor={anchor}&count=50&filter=marketplace%28{config.LOCATION}%29&filter=language%28{config.LANGUAGE}%29&filter=channelId%28010794e5-35fe-4e32-aaff-cd2c74f89d61%29&filter=exclusiveAccess%28true%2Cfalse%29'
         html = rq.get(url=url, timeout=20, verify=False, headers=headers, proxies=proxy)
         output = json.loads(html.text)
 
@@ -40,9 +42,8 @@ def scrape_site(headers, proxy):
         for item in output['objects']:
             items.append(item)
 
-        anchor += 60
-        print(f'Anchor {anchor}')
-    
+        anchor += 50
+    print('done')
     logging.info(msg='Successfully scraped SNKRS site')
     return items
 
@@ -59,18 +60,18 @@ def test_webhook():
     Sends a test Discord webhook notification
     '''
     data = {
-        "username": CONFIG['USERNAME'],
-        "avatar_url": CONFIG['AVATAR_URL'],
+        "username": config.USERNAME,
+        "avatar_url": config.AVATAR_URL,
         "embeds": [{
             "title": "Testing Webhook",
             "description": "This is just a quick test to ensure the webhook works. Thanks again for using these montiors!",
-            "color": int(CONFIG['COLOUR']),
+            "color": int(config.COLOUR),
             "footer": {'text': 'Made by Yasser'},
             "timestamp": str(datetime.utcnow())
         }]
     }
 
-    result = rq.post(CONFIG['WEBHOOK'], data=json.dumps(data), headers={"Content-Type": "application/json"})
+    result = rq.post(config.WEBHOOK, data=json.dumps(data), headers={"Content-Type": "application/json"})
 
     try:
         result.raise_for_status()
@@ -86,14 +87,14 @@ def discord_webhook(title, description, url, thumbnail, price, style_code, sizes
     Sends a Discord webhook notification to the specified webhook URL
     """
     data = {
-        'username': CONFIG['USERNAME'],
-        'avatar_url':  CONFIG['AVATAR_URL'],
+        'username': config.USERNAME,
+        'avatar_url':  config.AVATAR_URL,
         'embeds': [{
             'title': title,
             'description': description,
             'url': url,
             'thumbnail': {'url': thumbnail},
-            'color': int(CONFIG['COLOUR']),
+            'color': int(config.COLOUR),
             'footer': {'text': 'Made by Yasser'},
             'timestamp': str(datetime.utcnow()),
             'fields': [
@@ -104,7 +105,7 @@ def discord_webhook(title, description, url, thumbnail, price, style_code, sizes
         }]
     }
     
-    result = rq.post(CONFIG['WEBHOOK'], data=json.dumps(data), headers={"Content-Type": "application/json"})
+    result = rq.post(config.WEBHOOK, data=json.dumps(data), headers={"Content-Type": "application/json"})
 
     try:
         result.raise_for_status()
@@ -125,8 +126,8 @@ def remove_duplicates(mylist):
 def comparitor(j, start):
     first = 0
     sizes = ''
-    for k in j['availableSkus']:
-        item = [j['merchProduct']['labelName'], j['productContent']['colorDescription'], k['id']]
+    for k in j['availableGtins']:
+        item = [j['productContent']['fullTitle'], j['productContent']['colorDescription'], k['gtin']]
         if k['available'] == True:
             if checker(item):
                 pass
@@ -135,12 +136,12 @@ def comparitor(j, start):
                 
                 for s in j['skus']:
                     if first == 0:
-                        if s['id'] == k['id']:
+                        if s['gtin'] == k['gtin']:
                             sizes = str(s['nikeSize']) + ': ' + str(k['level'])
                             first = 1
                             break
                     else:
-                        if s['id'] == k['id']:
+                        if s['gtin'] == k['gtin']:
                             sizes += '\n' + str(s['nikeSize']) + ': ' + str(k['level'])
                             break
         else:
@@ -152,7 +153,7 @@ def comparitor(j, start):
         discord_webhook(
             title=j['merchProduct']['labelName'],
             description=j['productContent']['colorDescription'],
-            url='https://www.nike.com/' + CONFIG['LOC'] + '/launch/t/' + j['productContent']['slug'],
+            url='https://www.nike.com/' + config.LOCATION + '/launch/t/' + j['productContent']['slug'],
             thumbnail=j['imageUrls']['productImageUrl'],
             price=str(j['merchPrice']['currentPrice']),
             style_code=str(j['merchProduct']['styleColor']),
@@ -164,7 +165,15 @@ def monitor():
     """
     Initiates the monitor
     """
-    print('STARTING MONITOR')
+    print('''\n---------------------------
+--- MONITOR HAS STARTED ---
+---------------------------\n''')
+    print(''' ** Now you will recieve notifications when an item drops or restocks **
+This may take some time so you have to leave this script running. It's best to do this on a server (you can get a free one via AWS)!
+    
+Check out the docs at https://yasserqureshi1.github.io/Sneaker-Monitors/ for more info.
+    
+Join the Sneakers & Code family via Discord and subscribe to my YouTube channel https://www.youtube.com/c/YasCode\n\n''')
     logging.info(msg='Successfully started monitor')
 
     # Tests webhook URL
@@ -174,13 +183,30 @@ def monitor():
     start = 1
 
     # Initialising proxy and headers
-    proxy_no = 0
-    proxy_list = CONFIG['PROXY'].split('%')
-    proxy = {} if proxy_list[0] == "" else {"http": f"http://{proxy_list[proxy_no]}"}
-    headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
+    if config.ENABLE_FREE_PROXY:
+        proxy = {'http': proxy_obj.get()}
+    else:
+        proxy_no = 0
+        proxy = {} if config.PROXY == [] else {"http": f"http://{config.PROXY[proxy_no]}"}
+
+    headers = {
+        'accept': '*/*',
+        'accept-encoding': 'gzip, deflate, br',
+        'accept-language': 'en-GB,en;q=0.9',
+        'appid': 'com.nike.commerce.snkrs.web',
+        'content-type': 'application/json; charset=UTF-8',
+        'dnt': '1',
+        'nike-api-caller-id': 'nike:snkrs:web:1.0',
+        'origin': 'https://www.nike.com',
+        'referer': 'https://www.nike.com/',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'same-site',
+        'user-agent': user_agent_rotator.get_random_user_agent()
+    }
 
     # Collecting all keywords (if any)
-    keywords = CONFIG['KEYWORDS'].split('%')
+    keywords = config.KEYWORDS
     while True:
         # Makes request to site and stores products 
         items = scrape_site(proxy=proxy, headers=headers)
@@ -188,8 +214,7 @@ def monitor():
             try:
                 for j in item['productInfo']:
                     if j['availability']['available'] == True and j['merchProduct']['status'] == 'ACTIVE':
-                        
-                        if keywords == "":
+                        if keywords == []:
                             # If no keywords set, checks whether item status has changed
                             comparitor(j, start)
 
@@ -211,22 +236,23 @@ def monitor():
                 logging.error(e)
 
                 # Rotates headers
-                headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
+                headers['user-agent'] = user_agent_rotator.get_random_user_agent()
+                
+                if config.ENABLE_FREE_PROXY:
+                    proxy = {'http': proxy_obj.get()}
 
-                if CONFIG['PROXY'] != "":
-                    # If optional proxy set, rotates if there are multiple proxies
-                    proxy_no = 0 if proxy_no == (len(proxy_list) - 1) else proxy_no + 1
-                    proxy = {"http": f"http://{proxy_list[proxy_no]}"}
-            
+                elif config.PROXY != []:
+                    proxy_no = 0 if proxy_no == (len(config.PROXY)-1) else proxy_no + 1
+                    proxy = {"http": f"http://{config.PROXY[proxy_no]}"}
+
             except Exception as e:
                 print(f"Exception found: {traceback.format_exc()}")
-                pass
 
         # Allows changes to be notified
         start = 0
 
         # User set delay
-        time.sleep(float(CONFIG['DELAY']))
+        time.sleep(float(config.DELAY))
 
 
 if __name__ == '__main__':
