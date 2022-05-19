@@ -63,7 +63,6 @@ Currently the sites that have monitors are:
 - Ssense
 - Zalando (UK)
 - Off-Spring (UK)
-- Solebox
 - Snipes
 
 
@@ -99,16 +98,16 @@ Click on the image below to watch a YouTube tutorial on setting the monitor up u
     
 2. Perform the installation described in [#Installation](#installation).
 
-3. Start editting the `.env` file to your specifications. You will only be interacting with the ```.env``` file.
+3. Start editting the `config.py` file to your specifications. You will only be interacting with the ```config.py``` file.
     - **Add Webhook**: Paste your Discord Webhook URL under the `WEBHOOK` variable. It should look like this:
     ```
     WEBHOOK = "https://discord.com/api/webhooks/..."
     ```
     - (Optional) **Add Proxy**: Paste your proxy under the `PROXY` variable. There are two structures:
 
-        1. ```PROXY = "<proxy>:<port>"``` 
-        2. ```PROXY = "<proxy_username>:<proxy_password>@<proxy_domain>:<port>"```
-    - You can also edit other details within the `.env` file as you see fit
+        1. ```PROXY = ["<proxy>:<port>"]``` 
+        2. ```PROXY = ["<proxy_username>:<proxy_password>@<proxy_domain>:<port>"]```
+    - You can also edit other details within the `config.py` file as you see fit
 
 4. Run the Python file. You can use the following command:
   ```
