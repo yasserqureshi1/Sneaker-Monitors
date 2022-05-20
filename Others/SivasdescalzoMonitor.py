@@ -11,7 +11,6 @@ import time
 
 import json
 import logging
-import dotenv
 import traceback
 import config
 
