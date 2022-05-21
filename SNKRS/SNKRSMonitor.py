@@ -122,7 +122,7 @@ def remove_duplicates(mylist):
     return [list(t) for t in set(tuple(element) for element in mylist)]
 
 
-def comparitor(j, start):
+def comparitor(j, start, image):
     first = 0
     sizes = ''
     for k in j['availableGtins']:
@@ -150,10 +150,10 @@ def comparitor(j, start):
     if sizes != '' and start == 0:
         print('Sending notification to Discord...')
         discord_webhook(
-            title=j['merchProduct']['labelName'],
+            title=j['productContent']['fullTitle'],
             description=j['productContent']['colorDescription'],
             url='https://www.nike.com/' + config.LOCATION + '/launch/t/' + j['productContent']['slug'],
-            thumbnail=j['imageUrls']['productImageUrl'],
+            thumbnail=image['nodes'][0]['nodes'][0]['properties']['squarishURL'],
             price=str(j['merchPrice']['currentPrice']),
             style_code=str(j['merchProduct']['styleColor']),
             sizes=sizes)
@@ -215,13 +215,13 @@ Join the Sneakers & Code family via Discord and subscribe to my YouTube channel 
                     if j['availability']['available'] == True and j['merchProduct']['status'] == 'ACTIVE':
                         if keywords == []:
                             # If no keywords set, checks whether item status has changed
-                            comparitor(j, start)
+                            comparitor(j, start, item['publishedContent'])
 
                         else:
                             # For each keyword, checks whether particular item status has changed
                             for key in keywords:
                                 if key.lower() in j['merchProduct']['labelName'].lower() or key.lower() in j['productContent']['colorDescription'].lower():
-                                    comparitor(j, start)
+                                    comparitor(j, start, item['publishedContent'])
 
                     else:
                         for item in INSTOCK:
