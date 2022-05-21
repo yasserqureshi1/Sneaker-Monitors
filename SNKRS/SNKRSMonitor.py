@@ -43,7 +43,6 @@ def scrape_site(headers, proxy):
             items.append(item)
 
         anchor += 50
-    print('done')
     logging.info(msg='Successfully scraped SNKRS site')
     return items
 
