@@ -7,9 +7,9 @@ WEBHOOK = ""
 URL = "https://www.hanon-shop.com/collections/whats-new/products.json"
 
 # --------------------- FREE PROXY ---------------------
-# This is your location code according to Location-Code-List.md
+# Multiple locations can be added in the array (e.g. ["GB", "US"])
 ENABLE_FREE_PROXY = False
-FREE_PROXY_LOCATION = "GB"
+FREE_PROXY_LOCATION = ["GB"]
 
 # --------------------- DELAY ---------------------
 # This is the delay between checks. If you start to get error messages, it's best to increase this.

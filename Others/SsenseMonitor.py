@@ -27,7 +27,7 @@ software_names = [SoftwareName.CHROME.value]
 hardware_type = [HardwareType.MOBILE__PHONE]
 user_agent_rotator = UserAgent(software_names=software_names, hardware_type=hardware_type)
 
-proxy_obj = FreeProxy(country_id=[config.FREE_PROXY_LOCATION], rand=True)
+proxy_obj = FreeProxy(country_id=config.FREE_PROXY_LOCATION, rand=True)
 
 INSTOCK = []
 

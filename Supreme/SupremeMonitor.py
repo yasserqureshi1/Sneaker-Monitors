@@ -19,7 +19,7 @@ software_names = [SoftwareName.CHROME.value]
 hardware_type = [HardwareType.MOBILE__PHONE]
 user_agent_rotator = UserAgent(software_names=software_names, hardware_type=hardware_type)
 
-proxy_obj = FreeProxy(country_id=[config.FREE_PROXY_LOCATION], rand=True)
+proxy_obj = FreeProxy(country_id=config.FREE_PROXY_LOCATION, rand=True)
 
 INSTOCK = []
 
@@ -30,7 +30,6 @@ def get_stock(proxy, headers):
     """
     url = "https://www.supremenewyork.com/mobile_stock.json"
     stock = rq.get(url=url, headers=headers, proxies=proxy, timeout=10).json()['products_and_categories']
-    print('got')
     return stock
 
 
