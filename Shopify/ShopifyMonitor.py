@@ -49,11 +49,17 @@ def scrape_site(url, headers, proxy):
         else:
             # Stores particular details in array
             for product in output:
-                product_item = {
-                    'title': product['title'], 
-                    'image': product['images'][0]['src'], 
-                    'handle': product['handle'],
-                    'variants': product['variants']}
+                try:
+                    product_item = {
+                        'title': product['title'], 
+                        'image': product['images'][0]['src'], 
+                        'handle': product['handle'],
+                        'variants': product['variants']}
+                except:
+                    product_item = {
+                        'title': product['title'], 
+                        'handle': product['handle'],
+                        'variants': product['variants']}
                 items.append(product_item)
             page += 1
     
