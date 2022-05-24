@@ -179,18 +179,7 @@ Join the Sneakers & Code family via Discord and subscribe to my YouTube channel 
             start = 0
             time.sleep(float(config.DELAY))
 
-        except (
-            requests.exceptions.ConnectionError,
-            requests.exceptions.ChunkedEncodingError,
-            requests.exceptions.ConnectTimeout,
-            requests.exceptions.HTTPError,
-            requests.exceptions.ProxyError,
-            requests.exceptions.Timeout,
-            requests.exceptions.ReadTimeout,
-            requests.exceptions.RetryError,
-            requests.exceptions.SSLError,
-            requests.exceptions.TooManyRedirects
-        ) as e:
+        except requests.exceptions.RequestException as e:
             logging.error(e)
             logging.info('Rotating headers and proxy')
 

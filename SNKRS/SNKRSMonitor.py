@@ -231,18 +231,7 @@ Join the Sneakers & Code family via Discord and subscribe to my YouTube channel 
             except KeyError as e:
                 pass
 
-            except (
-            rq.exceptions.ConnectionError,
-            rq.exceptions.ChunkedEncodingError,
-            rq.exceptions.ConnectTimeout,
-            rq.exceptions.HTTPError,
-            rq.exceptions.ProxyError,
-            rq.exceptions.Timeout,
-            rq.exceptions.ReadTimeout,
-            rq.exceptions.RetryError,
-            rq.exceptions.SSLError,
-            rq.exceptions.TooManyRedirects
-            ) as e:
+            except rq.exceptions.RequestException as e:
                 logging.error(e)
                 logging.info('Rotating headers and proxy')
 
