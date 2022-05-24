@@ -231,8 +231,20 @@ Join the Sneakers & Code family via Discord and subscribe to my YouTube channel 
             except KeyError as e:
                 pass
 
-            except rq.exceptions.HTTPError as e:
+            except (
+            rq.exceptions.ConnectionError,
+            rq.exceptions.ChunkedEncodingError,
+            rq.exceptions.ConnectTimeout,
+            rq.exceptions.HTTPError,
+            rq.exceptions.ProxyError,
+            rq.exceptions.Timeout,
+            rq.exceptions.ReadTimeout,
+            rq.exceptions.RetryError,
+            rq.exceptions.SSLError,
+            rq.exceptions.TooManyRedirects
+            ) as e:
                 logging.error(e)
+                logging.info('Rotating headers and proxy')
 
                 # Rotates headers
                 headers['user-agent'] = user_agent_rotator.get_random_user_agent()
@@ -246,6 +258,7 @@ Join the Sneakers & Code family via Discord and subscribe to my YouTube channel 
 
             except Exception as e:
                 print(f"Exception found: {traceback.format_exc()}")
+                logging.error(e)
 
         # Allows changes to be notified
         start = 0

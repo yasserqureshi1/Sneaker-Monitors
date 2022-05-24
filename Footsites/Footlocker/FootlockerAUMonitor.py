@@ -10,6 +10,7 @@ from random_user_agent.user_agent import UserAgent
 from random_user_agent.params import SoftwareName, HardwareType
 import config
 from fp.fp import FreeProxy
+import traceback
 
 
 logging.basicConfig(filename='Footlockerlog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
@@ -177,9 +178,22 @@ Join the Sneakers & Code family via Discord and subscribe to my YouTube channel 
                         comparitor(item, start)
             start = 0
             time.sleep(float(config.DELAY))
-        except Exception as e:
-            print(f"Exception found '{e}' - Rotating proxy and user-agent")
+
+        except (
+            requests.exceptions.ConnectionError,
+            requests.exceptions.ChunkedEncodingError,
+            requests.exceptions.ConnectTimeout,
+            requests.exceptions.HTTPError,
+            requests.exceptions.ProxyError,
+            requests.exceptions.Timeout,
+            requests.exceptions.ReadTimeout,
+            requests.exceptions.RetryError,
+            requests.exceptions.SSLError,
+            requests.exceptions.TooManyRedirects
+        ) as e:
             logging.error(e)
+            logging.info('Rotating headers and proxy')
+
             headers['User-Agent'] = user_agent_rotator.get_random_user_agent()
             
             if config.ENABLE_FREE_PROXY:
@@ -189,6 +203,9 @@ Join the Sneakers & Code family via Discord and subscribe to my YouTube channel 
                 proxy_no = 0 if proxy_no == (len(config.PROXY)-1) else proxy_no + 1
                 proxy = {"http": f"http://{config.PROXY[proxy_no]}"}
 
+        except Exception as e:
+            print(f"Exception found: {traceback.format_exc()}")
+            logging.error(e)
 
 if __name__ == '__main__':
     urllib3.disable_warnings()
