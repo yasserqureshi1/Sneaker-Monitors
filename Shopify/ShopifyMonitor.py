@@ -58,6 +58,7 @@ def scrape_site(url, headers, proxy):
                 except:
                     product_item = {
                         'title': product['title'], 
+                        'image': None, 
                         'handle': product['handle'],
                         'variants': product['variants']}
                 items.append(product_item)
