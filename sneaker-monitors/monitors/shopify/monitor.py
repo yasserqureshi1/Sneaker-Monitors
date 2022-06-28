@@ -11,16 +11,32 @@ import time
 import json
 import logging
 import traceback
-import config
+import sqlite3
+import os
 
-logging.basicConfig(filename='shopifylog.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s',
+con = sqlite3.connect(os.path.abspath('config.db'))
+cur = con.cursor()
+item = cur.execute(f"SELECT * FROM monitors WHERE name = 'shopify'")
+for i in item:
+    WEBHOOK = i[1]
+    USERNAME = i[2]
+    AVATAR_URL = i[3]
+    COLOUR = i[4]
+    DELAY = i[5]
+    KEYWORDS = [] if i[6] is None else i[6]
+    PROXIES = [] if i[7] is None else i[7]
+    FREE_PROXY = i[8]   #location
+    DETAILS = i[9]
+
+logging.basicConfig(filename='shopify-monitor.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s',
                     level=logging.DEBUG)
 
 software_names = [SoftwareName.CHROME.value]
 hardware_type = [HardwareType.MOBILE__PHONE]
 user_agent_rotator = UserAgent(software_names=software_names, hardware_type=hardware_type)
 
-proxy_obj = FreeProxy(country_id=config.FREE_PROXY_LOCATION)
+if FREE_PROXY:  
+    proxy_obj = FreeProxy(country_id=FREE_PROXY, rand=True)
 
 INSTOCK = []
 
@@ -76,31 +92,6 @@ def checker(item):
     return item in INSTOCK
 
 
-def test_webhook():
-    data = {
-        "username": config.USERNAME,
-        "avatar_url": config.AVATAR_URL,
-        "embeds": [{
-            "title": "Testing Webhook",
-            "description": "This is just a quick test to ensure the webhook works. Thanks again for using these monitors!",
-            "color": int(config.COLOUR),
-            "footer": {'text': 'Made by Yasser'},
-            "timestamp": str(datetime.utcnow())
-        }]
-    }
-
-    result = rq.post(config.WEBHOOK, data=json.dumps(data), headers={"Content-Type": "application/json"})
-
-    try:
-        result.raise_for_status()
-    except rq.exceptions.HTTPError as err:
-        logging.error(err)
-    else:
-        print("Payload delivered successfully, code {}.".format(result.status_code))
-        logging.info(msg="Payload delivered successfully, code {}.".format(result.status_code))
-
-
-
 def discord_webhook(title, url, thumbnail, sizes):
     """
     Sends a Discord webhook notification to the specified webhook URL
@@ -110,20 +101,20 @@ def discord_webhook(title, url, thumbnail, sizes):
         fields.append({"name": size['title'], "value": size['url'], "inline": True})
 
     data = {
-        "username": config.USERNAME,
-        "avatar_url": config.AVATAR_URL,
+        "username": USERNAME,
+        "avatar_url": AVATAR_URL,
         "embeds": [{
             "title": title,
-            "url": config.URL.replace('.json', '/') + url, 
+            "url": DETAILS.replace('.json', '/') + url, 
             "thumbnail": {"url": thumbnail},
             "fields": fields,
-            "color": int(config.COLOUR),
+            "color": int(COLOUR),
             "footer": {"text": "Made by Yasser"},
             "timestamp": str(datetime.utcnow()),
         }]
     }
 
-    result = rq.post(config.WEBHOOK, data=json.dumps(data), headers={"Content-Type": "application/json"})
+    result = rq.post(WEBHOOK, data=json.dumps(data), headers={"Content-Type": "application/json"})
 
     try:
         result.raise_for_status()
@@ -147,7 +138,7 @@ def comparitor(product, start):
     available_sizes = []
     for size in product['variants']:
         if size['available']: # Makes an ATC link from the variant ID
-            available_sizes.append({'title': size['title'], 'url': '[ATC](' + config.URL[:config.URL.find('/', 10)] + '/cart/' + str(size['id']) + ':1)'})
+            available_sizes.append({'title': size['title'], 'url': '[ATC](' + DETAILS[:DETAILS.find('/', 10)] + '/cart/' + str(size['id']) + ':1)'})
 
     
     product_item.append(available_sizes) # Appends in field
@@ -190,40 +181,38 @@ Join the Sneakers & Code family via Discord and subscribe to my YouTube channel 
     logging.info(msg='Successfully started monitor')
 
     # Checks URL
-    if not check_url(config.URL):
+    if not check_url(DETAILS):
         print('Store URL not in correct format. Please ensure that it is a path pointing to a /products.json file')
-        logging.error(msg='Store URL formatting incorrect for: ' + str(config.URL))
+        logging.error(msg='Store URL formatting incorrect for: ' + str(DETAILS))
         return
 
-    # Tests webhook URL
-    test_webhook()
-
     # Ensures that first scrape does not notify all products
-    start = 1
+    start = 0
 
     # Initialising proxy and headers
-    if config.ENABLE_FREE_PROXY:
+    if FREE_PROXY:
         proxy = {'http': proxy_obj.get()}
-    else:
+    elif PROXIES != []:
         proxy_no = 0
-        proxy = {} if config.PROXY == [] else {"http": f"http://{config.PROXY[proxy_no]}"}
+        proxy = {} if PROXIES == [] else {"http": f"http://{PROXIES[proxy_no]}"}
+    else:
+        proxy = {}
+
     headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
 
-    # Collecting all keywords (if any)
-    keywords = config.KEYWORDS
     while True:
         try:
             # Makes request to site and stores products 
-            items = scrape_site(config.URL, proxy, headers)
+            items = scrape_site(DETAILS, proxy, headers)
             for product in items:
 
-                if keywords == []:
+                if KEYWORDS == []:
                     # If no keywords set, checks whether item status has changed
                     comparitor(product, start)
 
                 else:
                     # For each keyword, checks whether particular item status has changed
-                    for key in keywords:
+                    for key in KEYWORDS:
                         if key.lower() in product['title'].lower():
                             comparitor(product, start)
 
@@ -231,7 +220,7 @@ Join the Sneakers & Code family via Discord and subscribe to my YouTube channel 
             start = 0
 
             # User set delay
-            time.sleep(float(config.DELAY))
+            time.sleep(float(DELAY))
 
         except rq.exceptions.RequestException as e:
             logging.error(e)
@@ -240,12 +229,12 @@ Join the Sneakers & Code family via Discord and subscribe to my YouTube channel 
             # Rotates headers
             headers['User-Agent'] = user_agent_rotator.get_random_user_agent()
             
-            if config.ENABLE_FREE_PROXY:
+            if FREE_PROXY:
                 proxy = {'http': proxy_obj.get()}
 
-            elif config.PROXY != []:
-                proxy_no = 0 if proxy_no == (len(config.PROXY)-1) else proxy_no + 1
-                proxy = {"http": f"http://{config.PROXY[proxy_no]}"}
+            elif PROXIES != []:
+                proxy_no = 0 if proxy_no == (len(PROXIES)-1) else proxy_no + 1
+                proxy = {"http": f"http://{PROXIES[proxy_no]}"}
 
         except Exception as e:
             print(f"Exception found: {traceback.format_exc()}")

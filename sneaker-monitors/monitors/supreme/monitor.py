@@ -11,15 +11,31 @@ import time
 import json
 import logging
 import traceback
-import config
+import sqlite3
+import os
 
-logging.basicConfig(filename='supreme.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
+con = sqlite3.connect(os.path.abspath('config.db'))
+cur = con.cursor()
+item = cur.execute(f"SELECT * FROM monitors WHERE name = 'supreme'")
+for i in item:
+    WEBHOOK = i[1]
+    USERNAME = i[2]
+    AVATAR_URL = i[3]
+    COLOUR = i[4]
+    DELAY = i[5]
+    KEYWORDS = [] if i[6] is None else i[6]
+    PROXIES = [] if i[7] is None else i[7]
+    FREE_PROXY = i[8]   #location
+    DETAILS = i[9]
+
+logging.basicConfig(filename='supreme-monitor.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
 
 software_names = [SoftwareName.CHROME.value]
 hardware_type = [HardwareType.MOBILE__PHONE]
 user_agent_rotator = UserAgent(software_names=software_names, hardware_type=hardware_type)
 
-proxy_obj = FreeProxy(country_id=config.FREE_PROXY_LOCATION, rand=True)
+if FREE_PROXY:  
+    proxy_obj = FreeProxy(country_id=FREE_PROXY, rand=True)
 
 INSTOCK = []
 
@@ -75,18 +91,18 @@ def test_webhook():
     Sends a test Discord webhook notification
     """
     data = {
-        "username": config.USERNAME,
-        "avatar_url": config.AVATAR_URL,
+        "username": USERNAME,
+        "avatar_url": AVATAR_URL,
         "embeds": [{
             "title": "Testing Webhook",
             "description": "This is just a quick test to ensure the webhook works. Thanks again for using these monitors!",
-            "color": config.COLOUR,
-            "footer": {'text': 'Made by Yasser & Bogdan'},
+            "color": COLOUR,
+            "footer": {'text': 'Developed by GitHub:yasserqureshi1'},
             "timestamp": str(datetime.utcnow())
         }]
     }
     
-    result = rq.post(config.WEBHOOK, data=json.dumps(data), headers={"Content-Type": "application/json"})
+    result = rq.post(WEBHOOK, data=json.dumps(data), headers={"Content-Type": "application/json"})
 
     try:
         result.raise_for_status()
@@ -103,20 +119,20 @@ def discord_webhook(title, description, thumbnail, url):
     Sends a Discord webhook notification to the specified webhook URL
     """
     data = {
-        "username": config.USERNAME,
-        "avatar_url": config.AVATAR_URL,
+        "username": USERNAME,
+        "avatar_url": AVATAR_URL,
         "embeds": [{
             "title": title,
             "description": description,
             "thumbnail": {"url": thumbnail},
             "url": url,
-            "color": int(config.COLOUR),
+            "color": int(COLOUR),
             "footer": {'text': 'Made by Yasser'},
             "timestamp": str(datetime.utcnow())
         }]
     }
 
-    result = rq.post(config.WEBHOOK, data=json.dumps(data), headers={"Content-Type": "application/json"})
+    result = rq.post(WEBHOOK, data=json.dumps(data), headers={"Content-Type": "application/json"})
 
     try:
         result.raise_for_status()
@@ -151,17 +167,19 @@ Join the Sneakers & Code family via Discord and subscribe to my YouTube channel 
     logging.info(msg='Successfully started monitor')
 
     # Tests webhook URL
-    test_webhook()
+    #test_webhook()
 
     # Ensures that first scrape does not notify all products
     start = 1
 
     # Initialising proxy and headers
-    if config.ENABLE_FREE_PROXY:
+    if FREE_PROXY:
         proxy = {'http': proxy_obj.get()}
-    else:
+    elif PROXIES != []:
         proxy_no = 0
-        proxy = {} if config.PROXY == [] else {"http": f"http://{config.PROXY[proxy_no]}"}
+        proxy = {} if PROXIES == [] else {"http": f"http://{PROXIES[proxy_no]}"}
+    else:
+        proxy = {}
 
     headers = {
         'User-Agent': user_agent_rotator.get_random_user_agent(),
@@ -169,22 +187,20 @@ Join the Sneakers & Code family via Discord and subscribe to my YouTube channel 
         'accept-encoding': 'gzip, deflate, br',
         'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8'}
 
-    # Collecting all keywords (if any)
-    keywords = config.KEYWORDS
     while True:
         try:
             # Makes request to site and stores products 
             stock = get_stock(proxy, headers)
-            time.sleep(float(config.DELAY))
+            time.sleep(float(DELAY))
             for cat in stock:
                 for product_item in stock[cat]:
-                    if keywords == []:
+                    if KEYWORDS == []:
                         # If no keywords set, checks whether item status has changed
                         get_item_variants(product_item['id'], product_item['name'], start, proxy, headers)
                     
                     else:
                         # For each keyword, checks whether particular item status has changed
-                        for key in keywords:
+                        for key in KEYWORDS:
                             if key.lower() in product_item['name'].lower():
                                 get_item_variants(product_item['id'], product_item['name'], start, proxy, headers)
             
@@ -201,12 +217,12 @@ Join the Sneakers & Code family via Discord and subscribe to my YouTube channel 
             # Rotates headers
             headers["User-Agent"] = user_agent_rotator.get_random_user_agent()
 
-            if config.ENABLE_FREE_PROXY:
+            if FREE_PROXY:
                 proxy = {'http': proxy_obj.get()}
 
-            elif config.PROXY != []:
-                proxy_no = 0 if proxy_no == (len(config.PROXY)-1) else proxy_no + 1
-                proxy = {"http": f"http://{config.PROXY[proxy_no]}"}
+            elif PROXIES != []:
+                proxy_no = 0 if proxy_no == (len(PROXIES)-1) else proxy_no + 1
+                proxy = {"http": f"http://{PROXIES[proxy_no]}"}
 
         except Exception as e:
             print(f"Exception found: {traceback.format_exc()}")
@@ -216,4 +232,5 @@ Join the Sneakers & Code family via Discord and subscribe to my YouTube channel 
 
 if __name__ == '__main__':
     urllib3.disable_warnings()
-    monitor()
+
+monitor()

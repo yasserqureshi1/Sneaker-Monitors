@@ -1,23 +1,13 @@
-# Sneaker Monitors: SNKRS Monitor
+# SNKRS MONITOR NOTES
 
-This will outline how to use the SNKRS Monitor
+The SNKRS monitor is able to work in a variety of countries. In this document, you will find the 2-letter country code and language code that is needed for this monitor.
 
-If set up properly, the monitor can work in a variety of countries.
-Below is a list of the countries that the monitor supports.
-
-To set up the monitor, please put the 2 letter country code into the ```LOC``` variable and one of the corresponding language codes in the ```LAN``` variable found in the ```.env``` file.
-See the table below for the country codes and language codes.
-
-For example, if I want a monitor for Belgium, there are multiple languages to choose from.
-Looking at the table, I have the choices of ```en-GB```, ```nl```, ```de``` or ```fr```.
-If I then want the monitor to refer to the Belgium site in the French language, I can put the following into the ```.env``` file:
+To set up the monitor, please put the 2-letter country code and corresponding language code in the `DETAILS` section when configuring the monitors. The country code should come first, followed by the language code with a space between the two, as shown below:
 ```
-LOCATION = "BE"
-LANGUAGE = "fr"
+GB en-GB
 ```
 
-If your country is not found below, it is because Nike use a different set-up.
-As a result, we cannot cater to your country.
+If your country is not found below, it is because Nike use a different set-up. As such, some countries may need dedicated solutions. If this is the case, please open up an issue on GitHub or send a message via Discord.
 
 Country | 2 Letter Country Code | Language Code
 --------|-----------------------|--------------

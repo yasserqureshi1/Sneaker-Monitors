@@ -1,4 +1,5 @@
 # No restocks, only releases
+from re import I
 from random_user_agent.params import SoftwareName, HardwareType
 from random_user_agent.user_agent import UserAgent
 
@@ -13,73 +14,122 @@ import time
 import json
 import logging
 import traceback
+import sqlite3
+import os
 
-import asyncio
-from pyppeteer import launch
-from pyppeteer_stealth import stealth
+con = sqlite3.connect(os.path.abspath('config.db'))
+cur = con.cursor()
+item = cur.execute(f"SELECT * FROM monitors WHERE name = 'zalando'")
+for j, i in enumerate(item):
+    WEBHOOK = i[1]
+    USERNAME = i[2]
+    AVATAR_URL = i[3]
+    COLOUR = i[4]
+    DELAY = i[5]
+    KEYWORDS = [] if i[6] is None else i[6]
+    PROXIES = [] if i[7] is None else i[7]
+    FREE_PROXY = i[8]   #location
+    DETAILS = i[9]
 
-import config
 
-logging.basicConfig(filename='ssense.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s',
+logging.basicConfig(filename='zalando-monitor.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s',
                     level=logging.DEBUG)
 
 software_names = [SoftwareName.CHROME.value]
 hardware_type = [HardwareType.MOBILE__PHONE]
 user_agent_rotator = UserAgent(software_names=software_names, hardware_type=hardware_type)
 
-proxy_obj = FreeProxy(country_id=config.FREE_PROXY_LOCATION, rand=True)
+if FREE_PROXY:
+    proxy_obj = FreeProxy(country_id=FREE_PROXY, rand=True)
 
 INSTOCK = []
+
+
+def scrape_main_site(headers, proxy):
+    """
+    Scrape the Zalando site and adds each item to an array
+    """
+    items = []
+    
+    # Makes request to site
+    url = 'https://m.zalando.co.uk/mens-shoes-trainers/?order=activation_date'
+    s = requests.Session()
+    html = s.get(url=url, headers=headers, proxies=proxy, verify=False, timeout=15)
+    soup = BeautifulSoup(html.text, 'html.parser')
+    products = soup.find_all('div', {'class': 'DT5BTM w8MdNG cYylcv QylWsg _75qWlu iOzucJ JT3_zV DvypSJ'})
+
+    # Stores particular details in array 
+    for product in products:
+        try:
+            span = product.find_all('span')
+            item = [
+                product.find('h3').text,    #name
+                product.find('a')['href'],  #url
+                span[2].text,               #brand
+                span[3].text,               #price
+                product.find('img')['src']  #image
+            ]
+            items.append(item)
+        except Exception as e:
+            pass
+    
+    logging.info(msg='Successfully scraped site')
+    s.close()
+    return items
+
 
 def test_webhook():
     """
     Sends a test Discord webhook notification
     """
     data = {
-        "username": config.USERNAME,
-        "avatar_url": config.AVATAR_URL,
+        "username": USERNAME,
+        "avatar_url": AVATAR_URL,
         "embeds": [{
             "title": "Testing Webhook",
             "description": "This is just a quick test to ensure the webhook works. Thanks again for using these monitors!",
-            "color": int(config.COLOUR),
-            "footer": {'text': 'Made by Yasser'},
+            "color": COLOUR,
+            "footer": {'text': 'Developed by GitHub:yasserqureshi1'},
             "timestamp": str(datetime.utcnow())
         }]
     }
-
-    result = requests.post(config.WEBHOOK, data=json.dumps(data), headers={"Content-Type": "application/json"})
+    
+    result = requests.post(WEBHOOK, data=json.dumps(data), headers={"Content-Type": "application/json"})
 
     try:
         result.raise_for_status()
     except requests.exceptions.HTTPError as err:
-        logging.error(err)
+        print(err)
+        logging.error(msg=err)
     else:
         print("Payload delivered successfully, code {}.".format(result.status_code))
         logging.info(msg="Payload delivered successfully, code {}.".format(result.status_code))
 
 
-def discord_webhook(title, id, price, url, thumbnail):
+
+def discord_webhook(product):
     """
     Sends a Discord webhook notification to the specified webhook URL
     """
     data = {
-        "username": config.USERNAME,
-        "avatar_url": config.AVATAR_URL,
+        "username": USERNAME,
+        "avatar_url": AVATAR_URL,
         "embeds": [{
-            "title": title,
-            "url": url,
-            "thumbnail": {"url": thumbnail},
-            "colour": int(config.COLOUR),
-            "footer": {"text": "Made by Yasser"},
+            "title": product[0],
+            "url": product[1],
+            "thumbnail": {"url": product[4]},
+            "color": int(COLOUR),
+            "footer": {"text": "Developed by GitHub:yasserqureshi1"},
             "timestamp": str(datetime.utcnow()),
             "fields": [
-                {"name": "ID", "value": id},
-                {"name": "Price", "value": price}
+                {"name": "Brand", "value": product[2]},
+                {"name": "Price", "value": product[3]}
             ]
+
         }]
     }
 
-    result = requests.post(config.WEBHOOK, data=json.dumps(data), headers={"Content-Type": "application/json"})
+    result = requests.post(WEBHOOK, data=json.dumps(data), headers={"Content-Type": "application/json"})
 
     try:
         result.raise_for_status()
@@ -98,60 +148,6 @@ def checker(item):
     return item in INSTOCK
 
 
-async def get_content(user_agent, proxy):
-    if proxy == None:
-        browser = await launch()
-    else:
-        browser = await launch({'http_proxy': proxy})
-    page = await browser.newPage()
-    await stealth(page)
-    await page.emulate({
-        'userAgent': user_agent,
-        'viewport': {
-            'width': 414,
-            'height': 736,
-            'deviceScaleFactor': 3,
-            'isMobile': True,
-            'hasTouch': True,
-            'isLandscape': False
-        }
-    })
-    await page.goto('https://www.ssense.com/en-gb/men/shoes')
-    content = await page.content()
-    await page.close()
-    return content
-
-
-def scrape_main_site(user_agent, proxy):
-    """
-    Scrape the Ssense site and adds each item to an array
-    """
-    items = []
-
-    # Makes request to site
-    html = asyncio.get_event_loop().run_until_complete(get_content(user_agent, proxy))
-    soup = BeautifulSoup(html, 'html.parser')
-
-    products = soup.find_all('div', {'class': 'plp-products__product-tile'})
-    for product in products:
-        prod = str(product.find('script', {'type': 'application/ld+json'})).replace(
-            '<script type="application/ld+json">',
-            ''
-        ).replace('</script>','')
-        prod = json.loads(prod)
-        item = [
-            prod["name"],
-            prod["productID"],
-            prod["offers"]["price"],
-            prod["image"],
-            "https://www.ssense.com/en-gb"+prod["url"]
-        ]
-        items.append(item)
-
-    logging.info(msg='Successfully scraped site')
-    return items
-
-
 def remove_duplicates(mylist):
     """
     Removes duplicate values from a list
@@ -162,16 +158,10 @@ def remove_duplicates(mylist):
 def comparitor(item, start):
     if not checker(item):
         # If product is available but not stored - sends notification and stores
+        print(item)
         INSTOCK.append(item)
         if start == 0:
-            discord_webhook(
-                title=item[0],
-                id=item[1],
-                price=item[2],
-                thumbnail=item[3],
-                url=item[4]
-            )
-            print(item)
+            discord_webhook(item)
 
 
 def monitor():
@@ -189,35 +179,37 @@ Check out the docs at https://yasserqureshi1.github.io/Sneaker-Monitors/ for mor
 Join the Sneakers & Code family via Discord and subscribe to my YouTube channel https://www.youtube.com/c/YasCode\n\n''')
     logging.info(msg='Successfully started monitor')
 
-    # Tests webhook URL
-    test_webhook()
-
     # Ensures that first scrape does not notify all products
     start = 1
 
     # Initialising proxy and headers
-    if config.ENABLE_FREE_PROXY:
+    if FREE_PROXY:
         proxy = {'http': proxy_obj.get()}
-    else:
+    elif PROXIES != []:
         proxy_no = 0
-        proxy = {} if config.PROXY == [] else {"http": f"http://{config.PROXY[proxy_no]}"}
-    user_agent = user_agent_rotator.get_random_user_agent()
-
-    # Collecting all keywords (if any)
-    keywords = config.KEYWORDS
+        proxy = {} if PROXIES == [] else {"http": f"http://{PROXIES[proxy_no]}"}
+    else:
+        proxy = {}
+   
+    headers = {
+        'User-Agent': user_agent_rotator.get_random_user_agent(),
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+        'accept-encoding': 'gzip, deflate, br',
+        'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8'}
+    
     while True:
         try:
-            # Makes request to site and stores products
-            items = remove_duplicates(scrape_main_site(user_agent, proxy))
+            # Makes request to site and stores products 
+            items = remove_duplicates(scrape_main_site(headers, proxy))
             for item in items:
 
-                if keywords == []:
+                if KEYWORDS == []:
                     # If no keywords set, checks whether item status has changed
                     comparitor(item, start)
 
                 else:
                     # For each keyword, checks whether particular item status has changed
-                    for key in keywords:
+                    for key in KEYWORDS:
                         if key.lower() in item[0].lower():
                             comparitor(item, start)
 
@@ -225,27 +217,28 @@ Join the Sneakers & Code family via Discord and subscribe to my YouTube channel 
             start = 0
 
             # User set delay
-            time.sleep(float(config.DELAY))
-
+            time.sleep(float(DELAY))
+            
         except requests.exceptions.RequestException as e:
             logging.error(e)
             logging.info('Rotating headers and proxy')
 
             # Rotates headers
-            user_agent = user_agent_rotator.get_random_user_agent()
-            
-            if config.ENABLE_FREE_PROXY:
+            headers['User-Agent'] = user_agent_rotator.get_random_user_agent()
+        
+            if FREE_PROXY:
                 proxy = {'http': proxy_obj.get()}
 
-            elif config.PROXY != []:
-                proxy_no = 0 if proxy_no == (len(config.PROXY)-1) else proxy_no + 1
-                proxy = {"http": f"http://{config.PROXY[proxy_no]}"}
+            elif PROXIES != []:
+                proxy_no = 0 if proxy_no == (len(PROXIES)-1) else proxy_no + 1
+                proxy = {"http": f"http://{PROXIES[proxy_no]}"}
 
+        
         except Exception as e:
             print(f"Exception found: {traceback.format_exc()}")
             logging.error(e)
 
-            
 if __name__ == '__main__':
     urllib3.disable_warnings()
-    monitor()
+
+#monitor()
