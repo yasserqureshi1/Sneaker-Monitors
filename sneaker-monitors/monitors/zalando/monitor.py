@@ -158,9 +158,9 @@ def remove_duplicates(mylist):
 def comparitor(item, start):
     if not checker(item):
         # If product is available but not stored - sends notification and stores
-        print(item)
         INSTOCK.append(item)
         if start == 0:
+            print(item)
             discord_webhook(item)
 
 
@@ -169,14 +169,8 @@ def monitor():
     Initiates monitor
     """
     print('''\n---------------------------
---- MONITOR HAS STARTED ---
+--- ZALANDO MONITOR HAS STARTED ---
 ---------------------------\n''')
-    print(''' ** Now you will recieve notifications when an item drops or restocks **
-This may take some time so you have to leave this script running. It's best to do this on a server (you can get a free one via AWS)!
-    
-Check out the docs at https://yasserqureshi1.github.io/Sneaker-Monitors/ for more info.
-    
-Join the Sneakers & Code family via Discord and subscribe to my YouTube channel https://www.youtube.com/c/YasCode\n\n''')
     logging.info(msg='Successfully started monitor')
 
     # Ensures that first scrape does not notify all products
@@ -238,7 +232,6 @@ Join the Sneakers & Code family via Discord and subscribe to my YouTube channel 
             print(f"Exception found: {traceback.format_exc()}")
             logging.error(e)
 
-if __name__ == '__main__':
-    urllib3.disable_warnings()
 
-#monitor()
+urllib3.disable_warnings()
+monitor()

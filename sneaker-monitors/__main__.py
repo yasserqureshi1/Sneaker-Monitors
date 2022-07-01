@@ -1,9 +1,10 @@
 from pyfiglet import  figlet_format
 import six
 import os
-import threading
+import subprocess
 import signal
 import ctypes
+import traceback
 #import cursor
 try:
     from termcolor import colored
@@ -36,9 +37,6 @@ def log(text, colour, font='slant', figlet=False):
         six.print_(text)
 
 
-def run(path):
-    pass
-
 
 def configure(monitor):
     clear()
@@ -67,13 +65,6 @@ def get_monitor(index):
 
 
 def get_monitor_path(index):
-    '''
-    params:
-     - index (str): Index of monitor 
-
-    return:
-     - path of monitor.py file 
-    '''
     return os.path.realpath(get_monitor(index)+'/monitor.py')
 
 
@@ -81,29 +72,41 @@ def monitor_command(command):
     os.system(command)
 
 
+def run_monitor(path):
+    subprocess.run(path, shell=True)
+
+
 def run_screen():
     clear()
     log('Select the monitor(s) you want to run. To run multiple, list them with spaces (Example: 1 5 6 7), but note the risks related to running multiple monitors here: ', colour='green')
+    log('r', colour='blue') # URL
     for i, m in enumerate(__monitors__):
         log(f'    [{i}] {m}', colour='blue')
     log(f'    [{i+1}] Back', colour='blue')
     log('Type the option(s) here: ', colour='green')
     monitor_options = input().split(' ')
 
-    # Go back
-    if str(int(i)+1) in monitor_options:
-        main()
+    try:
+        if str(int(i)+1) in monitor_options:
+            main()
 
-    commands = ''
-    start = 0
-    for m in monitor_options:
-        if start == 0:
-            commands+=f'python {os.path.abspath(f"sneaker-monitors/monitors/{get_monitor(m)}/monitor.py")}'
-            start = 1
-        else:
-            commands+=f' && python {os.path.abspath(f"sneaker-monitors/monitors/{get_monitor(m)}/monitor.py")}'
+        commands = ''
+        start = 0
+        for m in monitor_options:
+            if start == 0:
+                commands+=f'python {os.path.abspath(f"sneaker-monitors/monitors/{get_monitor(m)}/monitor.py")}'
+                start = 1
+            else:
+                commands+=f' & python {os.path.abspath(f"sneaker-monitors/monitors/{get_monitor(m)}/monitor.py")}'
 
-    print(commands)
+        print(commands)
+        subprocess.run(commands, shell=True)
+
+    except:
+        print(traceback.format_exc())
+        log('Something went wrong. Please check the input... ', colour='red')
+        time.sleep(2)
+        run_screen()
 
 
 def configure_screen():
@@ -115,6 +118,7 @@ def configure_screen():
     log(f'    [{i+2}] Back', colour='blue')
     log('Type the option here: ', colour='green')
     monitor_option = input()
+
 
     if str(int(i)+1) in monitor_option:
         clear()
@@ -136,8 +140,10 @@ def configure_screen():
         configure(monitor)
 
     except:
-        pass
-
+        log('Something went wrong. Please check the input... ', colour='red')
+        time.sleep(2)
+        configure_screen()
+    
 
 def main():
     create_config_db()
@@ -184,6 +190,5 @@ def main():
         log('1', colour='red')
         main()
 
-main()
-
-
+if __name__ == '__main__':
+    main()

@@ -100,21 +100,14 @@ Click on the image below to watch a YouTube tutorial on setting the monitor up u
     
 2. Perform the installation described in [#Installation](#installation).
 
-3. Start editting the `config.py` file to your specifications. You will only be interacting with the ```config.py``` file.
-    - **Add Webhook**: Paste your Discord Webhook URL under the `WEBHOOK` variable. It should look like this:
-    ```
-    WEBHOOK = "https://discord.com/api/webhooks/..."
-    ```
-    - (Optional) **Add Proxy**: Paste your proxy under the `PROXY` variable. There are two structures:
-
-        1. ```PROXY = ["<proxy>:<port>"]``` 
-        2. ```PROXY = ["<proxy_username>:<proxy_password>@<proxy_domain>:<port>"]```
-    - You can also edit other details within the `config.py` file as you see fit
-
-4. Run the Python file. You can use the following command:
+3. Run the Python file. You can use the following command:
   ```
-  python [file name].py
+  python sneaker-monitors.py
   ```
+
+4. Configure the monitors before attempting to run them by navigating through the CLI
+
+5. Run the monitors using the CLI
 
 **NOTE:** The script needs to be running continuously for it to keep monitoring websites. As such, you should host it on a server. I have a YouTube tutorial on this [here](https://youtu.be/nmUSSlt4JKk). However, I suggest testing this out on your PC before using a server.
 

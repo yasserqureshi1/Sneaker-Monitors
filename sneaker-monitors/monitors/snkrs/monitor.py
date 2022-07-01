@@ -31,8 +31,12 @@ for i in item:
     FREE_PROXY = i[8]   #location
     DETAILS = i[9]
 
-LOCATION = DETAILS.split(' ')[0]
-LANGUAGE = DETAILS.split(' ')[1]
+try:
+    LOCATION = DETAILS.split(' ')[0]
+    LANGUAGE = DETAILS.split(' ')[1]
+except:
+    print('Please configure the SNKRS monitor by adding the location and language codes')
+    exit()
 
 logging.basicConfig(filename='snkrs-monitor.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
 
@@ -85,14 +89,8 @@ def monitor():
     Initiates the monitor
     """
     print('''\n---------------------------
---- MONITOR HAS STARTED ---
+--- SNKRS MONITOR HAS STARTED ---
 ---------------------------\n''')
-    print(''' ** Now you will recieve notifications when an item drops or restocks **
-This may take some time so you have to leave this script running. It's best to do this on a server (you can get a free one via AWS)!
-    
-Check out the docs at https://yasserqureshi1.github.io/Sneaker-Monitors/ for more info.
-    
-Join the Sneakers & Code family via Discord and subscribe to my YouTube channel https://www.youtube.com/c/YasCode\n\n''')
     logging.info(msg='Successfully started monitor')
 
     # Ensures that first scrape does not notify all products
@@ -126,6 +124,7 @@ Join the Sneakers & Code family via Discord and subscribe to my YouTube channel 
             
             for product in to_discord:
                 discord_webhook(product['title'], product['description'], product['url'], product['thumbnail'], product['price'], product['style_code'], product['sizes'])
+                print(product['title'])
 
         except KeyError as e:
             pass
@@ -155,6 +154,5 @@ Join the Sneakers & Code family via Discord and subscribe to my YouTube channel 
         time.sleep(float(DELAY))
 
 
-if __name__ == '__main__':
-    urllib3.disable_warnings()
-    monitor()
+urllib3.disable_warnings()
+monitor()
