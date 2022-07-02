@@ -100,6 +100,8 @@ def run_screen():
                 commands+=f' & python {os.path.abspath(f"sneaker-monitors/monitors/{get_monitor(m)}/monitor.py")}'
 
         print(commands)
+        clear()
+        log('--- RUNNING ---', colour='blue')
         subprocess.run(commands, shell=True)
 
     except:
@@ -118,7 +120,6 @@ def configure_screen():
     log(f'    [{i+2}] Back', colour='blue')
     log('Type the option here: ', colour='green')
     monitor_option = input()
-
 
     if str(int(i)+1) in monitor_option:
         clear()
@@ -169,11 +170,13 @@ def main():
     elif option == '3':
         clear()
         log(' ***** HELP *****\n', colour='green')
+        log('You can follow along to YouTube tutorials at:', colour='blue')
+        log('\n',colour='green')
         log('You can find documentation at the following link:', colour='blue')
-        log('', colour='blue')  # Link to documentation
+        log('\n', colour='green')  # Link to documentation
         log('You can join the Discord server for more help here:', colour='blue')
-        log('', colour='blue')  # Link to discord server
-        log('', colour='blue')
+        log('\n', colour='green')  # Link to discord server
+        log('\n\nPress any button to go back.', colour='yellow')
         if type(input()) == type(""):
             main()
 
