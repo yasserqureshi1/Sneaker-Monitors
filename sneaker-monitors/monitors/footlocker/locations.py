@@ -13,8 +13,7 @@ def US(ITEMS, LOCATION, LANGUAGE, user_agent, proxy, KEYWORDS, start):
     # Do parsing
     #return data
 
-
-def UK(ITEMS, start):
+def UK(ITEMS, user_agent, proxy, KEYWORDS, start):
     url = 'https://www.footlocker.co.uk/api/products/search?query=men&currentPage=1&sort=newArrivals&pageSize=60'
     headers = {
         'accept': 'application/json',
@@ -23,10 +22,10 @@ def UK(ITEMS, start):
         'sec-fetch-dest': 'empty',
         'sec-fetch-mode': 'cors',
         'sec-fetch-site': 'same-origin',
-        'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
+        'user-agent': user_agent,
         'x-api-lang': 'en-GB'
     }
-    html = requests.get(url=url, headers=headers)
+    html = requests.get(url=url, headers=headers, proxies=proxy)
     output = json.loads(html.text)['products']
     to_discord = []
     
@@ -57,17 +56,26 @@ def UK(ITEMS, start):
 
 
             if start == 0 and sizes != '':
-                to_discord.append(dict(
-                    name=item['name'],
-                    sku=product['sku'],
-                    price=product['price']['formattedValue'],
-                    thumbnail=product['images'][0]['url'],
-                    url='https://www.footlocker.co.uk/product/'+product['name'].replace(' ', '-')+'/'+product['sku'] + '.html'
-                ))
+                if KEYWORDS is None:
+                    to_discord.append(dict(
+                        name=item['name'],
+                        sku=product['sku'],
+                        price=product['price']['formattedValue'],
+                        thumbnail=product['images'][0]['url'],
+                        url='https://www.footlocker.co.uk/product/'+product['name'].replace(' ', '-')+'/'+product['sku'] + '.html'
+                    ))
+                else:
+                    for key in KEYWORDS:
+                        if key in item['name']:
+                            to_discord.append(dict(
+                                name=item['name'],
+                                sku=product['sku'],
+                                price=product['price']['formattedValue'],
+                                thumbnail=product['images'][0]['url'],
+                                url='https://www.footlocker.co.uk/product/'+product['name'].replace(' ', '-')+'/'+product['sku'] + '.html'
+                            ))
 
         except:
             pass
 
-
-
-UK()
+    return to_discord
