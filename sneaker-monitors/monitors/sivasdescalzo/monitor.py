@@ -136,7 +136,7 @@ def monitor():
     
 
     # Ensures that first scrape does not notify all products
-    start = 0
+    start = 1
 
     # Initialising proxy and headers
     if FREE_PROXY:
