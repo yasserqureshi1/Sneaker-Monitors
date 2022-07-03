@@ -1,5 +1,5 @@
 import requests
-from bs4 import BeautifulSoup
+import traceback
 import json
 import time
 
@@ -27,13 +27,13 @@ def US(ITEMS, user_agent, proxy, KEYWORDS, start):
             html = requests.get(url=url, headers=headers)
             item = json.loads(html.text)
             
-            time.sleep(0.1)
+            time.sleep(1)
 
             # Sizes
             sizes = ''
             sizes_start = 1
             for size in item['sellableUnits']:
-                store = [size['sku'], size['barcode'], size['code']]
+                store = [size['sku'], size['code']]
                 if size['stockLevelStatus'] == 'inStock' and store not in ITEMS:
                     ITEMS.append(store)
                     if sizes_start == 1:
@@ -54,7 +54,7 @@ def US(ITEMS, user_agent, proxy, KEYWORDS, start):
                         sku=product['sku'],
                         price=product['price']['formattedValue'],
                         thumbnail=product['images'][0]['url'],
-                        url='https://www.footlocker.co.uk/product/'+product['name'].replace(' ', '-')+'/'+product['sku'] + '.html'
+                        url='https://www.footlocker.com/product/'+product['name'].replace(' ', '-')+'/'+product['sku'] + '.html'
                     ))
                 else:
                     for key in KEYWORDS:
@@ -64,7 +64,7 @@ def US(ITEMS, user_agent, proxy, KEYWORDS, start):
                                 sku=product['sku'],
                                 price=product['price']['formattedValue'],
                                 thumbnail=product['images'][0]['url'],
-                                url='https://www.footlocker.co.uk/product/'+product['name'].replace(' ', '-')+'/'+product['sku'] + '.html'
+                                url='https://www.footlocker.com/product/'+product['name'].replace(' ', '-')+'/'+product['sku'] + '.html'
                             ))
 
         except:
@@ -95,13 +95,13 @@ def UK(ITEMS, user_agent, proxy, KEYWORDS, start):
             url = f'https://www.footlocker.co.uk/api/products/pdp/{sku}'
             html = requests.get(url=url, headers=headers)
             item = json.loads(html.text)
-            time.sleep(0.1)
+            time.sleep(1)
 
             # Sizes
             sizes = ''
             sizes_start = 1
             for size in item['sellableUnits']:
-                store = [size['sku'], size['barcode'], size['code']]
+                store = [size['sku'], size['code']]
                 if size['stockLevelStatus'] == 'inStock' and store not in ITEMS:
                     ITEMS.append(store)
                     if sizes_start == 1:
@@ -124,6 +124,7 @@ def UK(ITEMS, user_agent, proxy, KEYWORDS, start):
                         thumbnail=product['images'][0]['url'],
                         url='https://www.footlocker.co.uk/product/'+product['name'].replace(' ', '-')+'/'+product['sku'] + '.html'
                     ))
+                
                 else:
                     for key in KEYWORDS:
                         if key in item['name']:
@@ -133,6 +134,75 @@ def UK(ITEMS, user_agent, proxy, KEYWORDS, start):
                                 price=product['price']['formattedValue'],
                                 thumbnail=product['images'][0]['url'],
                                 url='https://www.footlocker.co.uk/product/'+product['name'].replace(' ', '-')+'/'+product['sku'] + '.html'
+                            ))
+
+        except:
+            pass
+
+    return to_discord
+
+
+def AU(ITEMS, user_agent, proxy, KEYWORDS, start):
+    url = 'https://www.footlocker.com.au/api/products/search?query=men&currentPage=1&sort=newArrivals&pageSize=60'
+    headers = {
+        'accept': 'application/json',
+        'accept-encoding': 'gzip, deflate, br',
+        'accept-language': 'en-GB,en;q=0.9',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'same-origin',
+        'user-agent': user_agent,
+        'x-api-lang': 'en-GB',
+        'x-fl-request-id': '1470ff80-fae4-11ec-8f44-7b3338a6657b',
+        'x-flapi-session-id': 'th0pgu3oo28l13bhvwqj5yq3i.fzcxwefapipdb828881'
+    }
+    html = requests.get(url=url, headers=headers, proxies=proxy)
+    output = json.loads(html.text)['products']
+    to_discord = []
+    
+    for product in output:
+        try:
+            sku = product['sku']
+            url = f'https://www.footlocker.com.au/api/products/pdp/{sku}'
+            html = requests.get(url=url, headers=headers)
+            item = json.loads(html.text)
+            time.sleep(1)
+
+            # Sizes
+            sizes = ''
+            sizes_start = 1
+            for size in item['sellableUnits']:
+                store = [size['sku'], size['code']]
+                if size['stockLevelStatus'] == 'inStock' and store not in ITEMS:
+                    ITEMS.append(store)
+                    if sizes_start == 1:
+                        sizes = ''
+                        sizes_start = 0
+                    else:
+                        sizes += '\n' + ''
+
+                elif size['stockLevelStatus'] != 'inStock' and store in ITEMS:
+                    # delete from ITEMS
+                    ITEMS.remove(store)
+
+
+            if start == 0 and sizes != '':
+                if KEYWORDS is None:
+                    to_discord.append(dict(
+                        name=item['name'],
+                        sku=product['sku'],
+                        price=product['price']['formattedValue'],
+                        thumbnail=product['images'][0]['url'],
+                        url='https://www.footlocker.com.au/product/'+product['name'].replace(' ', '-')+'/'+product['sku'] + '.html'
+                    ))
+                else:
+                    for key in KEYWORDS:
+                        if key in item['name']:
+                            to_discord.append(dict(
+                                name=item['name'],
+                                sku=product['sku'],
+                                price=product['price']['formattedValue'],
+                                thumbnail=product['images'][0]['url'],
+                                url='https://www.footlocker.com.au/product/'+product['name'].replace(' ', '-')+'/'+product['sku'] + '.html'
                             ))
 
         except:

@@ -13,7 +13,7 @@ import traceback
 import sqlite3
 import os
 
-from locations import US, UK
+from locations import US, UK, AU
 
 con = sqlite3.connect(os.path.abspath('config.db'))
 cur = con.cursor()
@@ -24,7 +24,7 @@ for i in item:
     AVATAR_URL = i[3]
     COLOUR = i[4]
     DELAY = i[5]
-    KEYWORDS = [] if i[6] is None else i[6]
+    KEYWORDS = None if i[6] is None else i[6]
     PROXIES = [] if i[7] is None else i[7]
     FREE_PROXY = i[8]   #location
     DETAILS = i[9]
@@ -78,9 +78,9 @@ def monitor():
     """
     Initiates monitor for the Off-Spring site
     """
-    print('''\n---------------------------
---- OFFSPRING MONITOR HAS STARTED ---
----------------------------\n''')
+    print('''\n--------------------------------------
+--- FOOTLOCKER MONITOR HAS STARTED ---
+--------------------------------------\n''')
     logging.info(msg='Successfully started monitor')
 
 
@@ -108,9 +108,16 @@ def monitor():
             elif LOCATION == 'UK':
                 to_discord = UK(INSTOCK, user_agent, proxy, KEYWORDS, start)
 
+            elif LOCATION == 'AU':
+                to_discord = AU(INSTOCK, user_agent, proxy, KEYWORDS, start)
+
+            else:
+                print('LOCATION CURRENTLY NOT AVAILABLE. IF YOU BELIEVE THIS IS A MISTAKE PLEASE CREATE AN ISSUE ON GITHUB OR MESSAGE THE #issues CHANNEL IN DISCORD.')
+                return
+
             for product in to_discord:
                 discord_webhook(product['name'],product['url'], product['thumbnail'], product['sku'], product['price'])
-                print(product['title'])
+                print(product['name'])
             
             # Allows changes to be notified
             start = 0
