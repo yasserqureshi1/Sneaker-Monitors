@@ -42,6 +42,7 @@ def configure(monitor):
     items = get_config(monitor)
     log(f'Type in the value you want for... ', colour='blue')
     log('If you want to keep the current value, just hit ENTER', colour='blue')
+    log('If you want to keep the field empty, type "null"', colour='blue')
     inputs = []
     for index, column in enumerate(columns):
         log(f' CURRENT VALUE OF {column.upper()} = {items[index+1]}', colour='blue')
