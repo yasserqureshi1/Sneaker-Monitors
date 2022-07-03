@@ -78,34 +78,6 @@ def scrape_main_site(headers, proxy):
     return items
 
 
-def test_webhook():
-    """
-    Sends a test Discord webhook notification
-    """
-    data = {
-        "username": USERNAME,
-        "avatar_url": AVATAR_URL,
-        "embeds": [{
-            "title": "Testing Webhook",
-            "description": "This is just a quick test to ensure the webhook works. Thanks again for using these monitors!",
-            "color": COLOUR,
-            "footer": {'text': 'Developed by GitHub:yasserqureshi1'},
-            "timestamp": str(datetime.utcnow())
-        }]
-    }
-    
-    result = requests.post(WEBHOOK, data=json.dumps(data), headers={"Content-Type": "application/json"})
-
-    try:
-        result.raise_for_status()
-    except requests.exceptions.HTTPError as err:
-        print(err)
-        logging.error(msg=err)
-    else:
-        print("Payload delivered successfully, code {}.".format(result.status_code))
-        logging.info(msg="Payload delivered successfully, code {}.".format(result.status_code))
-
-
 
 def discord_webhook(product):
     """
