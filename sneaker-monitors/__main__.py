@@ -2,7 +2,6 @@ from pyfiglet import  figlet_format
 import six
 import os
 import subprocess
-import signal
 import ctypes
 import traceback
 try:
@@ -77,8 +76,7 @@ def run_monitor(path):
 
 def run_screen():
     clear()
-    log('Select the monitor(s) you want to run. To run multiple, list them with spaces (Example: 1 5 6 7), but note the risks related to running multiple monitors here: ', colour='green')
-    log('r', colour='blue') # URL
+    log('Select the monitor(s) you want to run. To run multiple, list them with spaces (Example: 1 5 6 7), but note that running too many monitors at once may harm your computer. It is suggested a maximum of 4 monitors to be used at one time, but different systems may be able to handle more or less.', colour='green')
     for i, m in enumerate(__monitors__):
         log(f'    [{i}] {m}', colour='blue')
     log(f'    [{i+1}] Back', colour='blue')
@@ -170,17 +168,18 @@ def main():
         clear()
         log(' ***** HELP *****\n', colour='green')
         log('You can follow along to YouTube tutorials at:', colour='blue')
-        log('\n',colour='green')
+        log('https://www.youtube.com/c/yascode\n',colour='green')
         log('You can find documentation at the following link:', colour='blue')
-        log('\n', colour='green')  # Link to documentation
+        log('https://yasserqureshi1.github.io/Sneaker-Monitors/\n', colour='green')  # Link to documentation
         log('You can join the Discord server for more help here:', colour='blue')
-        log('\n', colour='green')  # Link to discord server
+        log('https://discord.gg/kWmAqpUtrf\n', colour='green')  # Link to discord server
         log('\n\nPress any button to go back.', colour='yellow')
         if type(input()) == type(""):
             main()
 
     elif option == '4':
-        os.kill(os.getppid(), signal.SIGHUP)
+        clear()
+        exit()
     
     else:
         log('Invalid option. Please try again in...', colour='red')
