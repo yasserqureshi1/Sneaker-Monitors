@@ -86,7 +86,7 @@ def discord_webhook(title, url, thumbnail, colour):
             "title": title,
             "url": 'https://www.offspring.co.uk/'+url,
             "thumbnail": {"url": thumbnail},
-            "footer": {"text": "Made by Yasser"},
+            "footer": {"text": "Developed by GitHub:yasserqureshi1"},
             "timestamp": str(datetime.utcnow()),
             "color": int(COLOUR),
             "fields": [

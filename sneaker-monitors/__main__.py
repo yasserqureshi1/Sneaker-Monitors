@@ -5,7 +5,6 @@ import subprocess
 import signal
 import ctypes
 import traceback
-#import cursor
 try:
     from termcolor import colored
 except ImportError:
@@ -20,7 +19,6 @@ from __init__ import __version__, __author__, __monitors__
 def clear():
     if os.name in ("nt", "dos"):
         ctypes.windll.kernel32.SetConsoleTitleW(f"SNEAKER MONITORS [v{__version__}] - Created by {__author__}")
-        #cursor.hide()
         os.system("cls")
     elif os.name in ("linux", "osx", "posix"): os.system("clear")
     else: print("\n") * 100

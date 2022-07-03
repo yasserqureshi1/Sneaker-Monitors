@@ -17,7 +17,7 @@ from locations import US, UK
 
 con = sqlite3.connect(os.path.abspath('config.db'))
 cur = con.cursor()
-item = cur.execute(f"SELECT * FROM monitors WHERE name = 'offspring'")
+item = cur.execute(f"SELECT * FROM monitors WHERE name = 'footlocker'")
 for i in item:
     WEBHOOK = i[1]
     USERNAME = i[2]
@@ -42,7 +42,7 @@ if FREE_PROXY:
 
 INSTOCK = []
 
-def discord_webhook(title, url, thumbnail, colour):
+def discord_webhook(title, url, thumbnail, sku, price):
     """
     Sends a Discord webhook notification to the specified webhook URL
     """
@@ -51,13 +51,14 @@ def discord_webhook(title, url, thumbnail, colour):
         "avatar_url": AVATAR_URL,
         "embeds": [{
             "title": title,
-            "url": 'https://www.offspring.co.uk/'+url,
+            "url": url,
             "thumbnail": {"url": thumbnail},
-            "footer": {"text": "Made by Yasser"},
+            "footer": {"text": "MDeveloped by GitHub:yasserqureshi1"},
             "timestamp": str(datetime.utcnow()),
             "color": int(COLOUR),
             "fields": [
-                {"name": "Colour", "value": colour}
+                {"name": "SKU", "value": sku},
+                {"name": "Price", "value": price}
             ]
         }]
     }
@@ -106,6 +107,10 @@ def monitor():
 
             elif LOCATION == 'UK':
                 to_discord = UK(INSTOCK, user_agent, proxy, KEYWORDS, start)
+
+            for product in to_discord:
+                discord_webhook(product['name'],product['url'], product['thumbnail'], product['sku'], product['price'])
+                print(product['title'])
             
             # Allows changes to be notified
             start = 0

@@ -86,34 +86,6 @@ def get_item_variants(item_id, item_name, start, proxy, headers):
                     INSTOCK.remove(item)
 
 
-def test_webhook():
-    """
-    Sends a test Discord webhook notification
-    """
-    data = {
-        "username": USERNAME,
-        "avatar_url": AVATAR_URL,
-        "embeds": [{
-            "title": "Testing Webhook",
-            "description": "This is just a quick test to ensure the webhook works. Thanks again for using these monitors!",
-            "color": COLOUR,
-            "footer": {'text': 'Developed by GitHub:yasserqureshi1'},
-            "timestamp": str(datetime.utcnow())
-        }]
-    }
-    
-    result = rq.post(WEBHOOK, data=json.dumps(data), headers={"Content-Type": "application/json"})
-
-    try:
-        result.raise_for_status()
-    except rq.exceptions.HTTPError as err:
-        print(err)
-        logging.error(msg=err)
-    else:
-        print("Payload delivered successfully, code {}.".format(result.status_code))
-        logging.info(msg="Payload delivered successfully, code {}.".format(result.status_code))
-
-
 def discord_webhook(title, description, thumbnail, url):
     """
     Sends a Discord webhook notification to the specified webhook URL
@@ -127,7 +99,7 @@ def discord_webhook(title, description, thumbnail, url):
             "thumbnail": {"url": thumbnail},
             "url": url,
             "color": int(COLOUR),
-            "footer": {'text': 'Made by Yasser'},
+            "footer": {'text': 'Developed by GitHub:yasserqureshi1'},
             "timestamp": str(datetime.utcnow())
         }]
     }

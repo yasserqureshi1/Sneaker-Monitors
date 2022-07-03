@@ -109,7 +109,7 @@ def discord_webhook(title, url, thumbnail, sizes):
             "thumbnail": {"url": thumbnail},
             "fields": fields,
             "color": int(COLOUR),
-            "footer": {"text": "Made by Yasser"},
+            "footer": {"text": "Developed by GitHub:yasserqureshi1"},
             "timestamp": str(datetime.utcnow()),
         }]
     }
