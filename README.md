@@ -69,6 +69,7 @@ Currently the sites that have monitors are:
 ## Basic Steps
 
 Click on the image below to watch a YouTube tutorial on setting up the monitors...
+
 [![Watch the video](https://img.youtube.com/vi/BECxMuBFnQA/mqdefault.jpg)](https://youtu.be/BECxMuBFnQA)
 
 1. Clone or Download the repository
