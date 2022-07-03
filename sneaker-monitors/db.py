@@ -6,7 +6,7 @@ monitors = [
         name='footlocker',
         username='Footlocker Monitor',
         avatar_url='',
-        colour='',
+        colour=16777215,
         delay=1,
         details=''
     ),
@@ -14,7 +14,7 @@ monitors = [
         name='offspring',
         username='Offspring Monitor',
         avatar_url='',
-        colour='',
+        colour=16777215,
         delay=1,
         details=''
     ),
@@ -22,7 +22,7 @@ monitors = [
         name='shopify',
         username='Shopify Monitor',
         avatar_url='',
-        colour='',
+        colour=16777215,
         delay=1,
         details=''
     ),
@@ -30,7 +30,7 @@ monitors = [
         name='sivasdescalzo',
         username='Sivasdescalzo Monitor',
         avatar_url='',
-        colour='',
+        colour=16777215,
         delay=1,
         details=''
     ),
@@ -38,7 +38,7 @@ monitors = [
         name='snipes',
         username='Snipes Monitor',
         avatar_url='',
-        colour='',
+        colour=16777215,
         delay=1,
         details=''
     ),
@@ -46,7 +46,7 @@ monitors = [
         name='snkrs',
         username='SNKRS Monitor',
         avatar_url='',
-        colour='',
+        colour=16777215,
         delay=1,
         details=''
     ),
@@ -54,7 +54,7 @@ monitors = [
         name='ssense',
         username='Ssense Monitor',
         avatar_url='',
-        colour='',
+        colour=16777215,
         delay=1,
         details=''
     ),
@@ -62,7 +62,7 @@ monitors = [
         name='supreme',
         username='Supreme Monitor',
         avatar_url='',
-        colour='',
+        colour=16777215,
         delay=1,
         details=''
     ),
@@ -70,7 +70,7 @@ monitors = [
         name='zalando',
         username='Zalando Monitor',
         avatar_url='',
-        colour='',
+        colour=16777215,
         delay=1,
         details=''
     ),
