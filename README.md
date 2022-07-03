@@ -49,7 +49,6 @@ However, due to popular demand, I am developing a paid (but competitively priced
 ## Contents
 * [About the Project](#about-the-project)
 * [Monitors](#monitors)
-* [Installation](#installation)
 * [Set Up](#set-up)
 * [Issues](#issues)
 * [License](#license)
@@ -67,28 +66,6 @@ Currently the sites that have monitors are:
 - Off-Spring (UK)
 - Snipes
 
-
-## Installation
-Ensure you have [Python 3+](https://www.python.org/downloads/) and [pip](https://pip.pypa.io/en/stable/installing/) installed. 
-
-To install the dependencies, navigate to the cloned directory in Terminal or Command Prompt and use the command:
-```
-pip install -r requirements.txt
-```
-
-## Set Up
-
-### Video Tutorials
-
-Click on the image below to watch a YouTube tutorial on setting the monitor up locally...
-[![Watch the video](https://img.youtube.com/vi/mUTGCzWIDQk/mqdefault.jpg)](https://youtu.be/mUTGCzWIDQk)
-
-Click on the image below to watch a YouTube tutorial on setting the monitor up on a server...
-[![Watch the video](https://img.youtube.com/vi/nmUSSlt4JKk/mqdefault.jpg)](https://youtu.be/nmUSSlt4JKk)
-
-Click on the image below to watch a YouTube tutorial on setting the monitor up using git...
-[![Watch the video](https://img.youtube.com/vi/QjeLg4xbnqc/mqdefault.jpg)](https://youtu.be/QjeLg4xbnqc)
-
 ### Basic Steps
 
 1. Clone or Download the repository
@@ -98,7 +75,13 @@ Click on the image below to watch a YouTube tutorial on setting the monitor up u
     ```
     - Download: Click on the green `Code` button and click on `Download ZIP`. Then unzip this folder
     
-2. Perform the installation described in [#Installation](#installation).
+
+2. Install Dependencies
+    - Ensure you have [Python 3+](https://www.python.org/downloads/) and [pip](https://pip.pypa.io/en/stable/installing/) installed. 
+    - To install the dependencies, navigate to the cloned directory in Terminal or Command Prompt and use the command:
+```
+pip install -r requirements.txt
+```
 
 3. Run the Python file. You can use the following command:
   ```
