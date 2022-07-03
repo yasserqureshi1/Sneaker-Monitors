@@ -7,7 +7,12 @@ import asyncio
 from pyppeteer import launch
 from pyppeteer_stealth import stealth
 
-___standard_api___ = []
+___standard_api___ = [
+    'GB', 'US', 'AU', 'AT', 'BE', 'BG', 'CA', 'CN', 'HR', 'CZ', 'DK', 'EG', 
+    'FI', 'FR', 'DE', 'HU', 'IN', 'ID', 'IE', 'IT', 'MY', 'MX', 'MA', 'NL', 
+    'NZ', 'NO', 'PH', 'PL', 'PT', 'PR', 'RO', 'RU', 'SA', 'SG', 'SI', 'ZA', 
+    'ES', 'SE', 'CH', 'TR', 'AE', 'VN' 
+]
 
 
 async def get_content(url, user_agent, proxy):
