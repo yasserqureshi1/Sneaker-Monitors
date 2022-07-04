@@ -118,7 +118,13 @@ def update_config(monitor, webhook=None, username=None, avatar_url=None, colour=
     query = 'UPDATE monitors SET '
     start = 0
     for col in columns:
-        if eval(col) is not None:
+        if eval(col) == 'null':
+            if start == 0:
+                query += f"{col} = null"
+                start = 1
+            else:
+                query += f", {col} = null"
+        elif eval(col) is not None:
             if start == 0:
                 query += f"{col} = '{eval(col)}'"
                 start = 1
