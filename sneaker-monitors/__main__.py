@@ -33,6 +33,13 @@ def log(text, colour, font='slant', figlet=False):
     else:
         six.print_(text)
 
+def python_os():
+    if os.name in ("nt", "dos"):
+        return 'python'
+    elif os.name in ("linux", "osx", "posix"): 
+        return 'python3'
+    else:
+        return 'python'
 
 
 def configure(monitor):
@@ -91,10 +98,10 @@ def run_screen():
         start = 0
         for m in monitor_options:
             if start == 0:
-                commands+=f'python {os.path.abspath(f"sneaker-monitors/monitors/{get_monitor(m)}/monitor.py")}'
+                commands+=f'{python_os()} {os.path.abspath(f"sneaker-monitors/monitors/{get_monitor(m)}/monitor.py")}'
                 start = 1
             else:
-                commands+=f' & python {os.path.abspath(f"sneaker-monitors/monitors/{get_monitor(m)}/monitor.py")}'
+                commands+=f' & {python_os()} {os.path.abspath(f"sneaker-monitors/monitors/{get_monitor(m)}/monitor.py")}'
 
         print(commands)
         clear()
