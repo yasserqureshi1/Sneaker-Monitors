@@ -11,7 +11,7 @@ ___standard_api___ = [
     'GB', 'US', 'AU', 'AT', 'BE', 'BG', 'CA', 'CN', 'HR', 'CZ', 'DK', 'EG', 
     'FI', 'FR', 'DE', 'HU', 'IN', 'ID', 'IE', 'IT', 'MY', 'MX', 'MA', 'NL', 
     'NZ', 'NO', 'PH', 'PL', 'PT', 'PR', 'RO', 'RU', 'SA', 'SG', 'SI', 'ZA', 
-    'ES', 'SE', 'CH', 'TR', 'AE', 'VN' 
+    'ES', 'SE', 'CH', 'TR', 'AE', 'VN', 'JP' 
 ]
 
 
