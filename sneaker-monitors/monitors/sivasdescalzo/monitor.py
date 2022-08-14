@@ -25,7 +25,7 @@ for i in item:
     AVATAR_URL = i[3]
     COLOUR = i[4]
     DELAY = i[5]
-    KEYWORDS = None if i[6] is None else i[6]
+    KEYWORDS = i[6]
     PROXIES = [] if i[7] is None else i[7]
     FREE_PROXY = i[8]   #location
     DETAILS = i[9]
@@ -155,7 +155,7 @@ def monitor():
             items = remove_duplicates(scrape_main_site(headers, proxy))
             for item in items:
                 
-                if KEYWORDS == []:
+                if KEYWORDS is None:
                     # If no keywords set, checks whether item status has changed
                     comparitor(item, start)
                 else:
