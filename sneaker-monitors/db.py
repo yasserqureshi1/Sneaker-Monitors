@@ -7,7 +7,7 @@ monitors = [
         username='Footlocker Monitor',
         avatar_url='',
         colour=16777215,
-        delay=1,
+        delay=5,
         details=''
     ),
         dict(
@@ -15,7 +15,7 @@ monitors = [
         username='Offspring Monitor',
         avatar_url='',
         colour=16777215,
-        delay=1,
+        delay=5,
         details=''
     ),
         dict(
@@ -23,7 +23,7 @@ monitors = [
         username='Shopify Monitor',
         avatar_url='',
         colour=16777215,
-        delay=1,
+        delay=5,
         details=''
     ),
         dict(
@@ -31,7 +31,7 @@ monitors = [
         username='Sivasdescalzo Monitor',
         avatar_url='',
         colour=16777215,
-        delay=1,
+        delay=5,
         details=''
     ),
         dict(
@@ -39,7 +39,7 @@ monitors = [
         username='Snipes Monitor',
         avatar_url='',
         colour=16777215,
-        delay=1,
+        delay=5,
         details=''
     ),
         dict(
@@ -47,7 +47,7 @@ monitors = [
         username='SNKRS Monitor',
         avatar_url='',
         colour=16777215,
-        delay=1,
+        delay=5,
         details=''
     ),
     dict(
@@ -55,7 +55,7 @@ monitors = [
         username='Ssense Monitor',
         avatar_url='',
         colour=16777215,
-        delay=1,
+        delay=5,
         details=''
     ),
         dict(
@@ -63,7 +63,7 @@ monitors = [
         username='Supreme Monitor',
         avatar_url='',
         colour=16777215,
-        delay=1,
+        delay=5,
         details=''
     ),
     dict(
@@ -71,7 +71,7 @@ monitors = [
         username='Zalando Monitor',
         avatar_url='',
         colour=16777215,
-        delay=1,
+        delay=5,
         details=''
     ),
 ]
@@ -117,23 +117,30 @@ def update_config(monitor, webhook=None, username=None, avatar_url=None, colour=
     cur = con.cursor()
     query = 'UPDATE monitors SET '
     start = 0
+    empty = True
     for col in columns:
         if eval(col) == 'null':
             if start == 0:
                 query += f"{col} = null"
                 start = 1
+                empty=False
             else:
                 query += f", {col} = null"
         elif eval(col) is not None:
             if start == 0:
                 query += f"{col} = '{eval(col)}'"
                 start = 1
+                empty=False
             else:
                 query += f", {col} = '{eval(col)}'"
+        elif eval(col) == None:
+            pass
 
     query += f" WHERE name = '{monitor}';"
-    cur.execute(query)
-    con.commit()
+    print(query)
+    if empty is False:
+        cur.execute(query)
+        con.commit()
 
 
 def get_all_config():
