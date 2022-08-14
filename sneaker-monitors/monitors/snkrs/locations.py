@@ -204,13 +204,26 @@ def chile(ITEMS, LOCATION, LANGUAGE, user_agent, proxy, KEYWORDS, start):
                     ITEMS.remove(item)
         
         if sizes != '' and start == 0:
-            to_discord.append(dict(
-                title=product['productName'],
-                description=str(product['items'][0]['color'][0]),
-                url=product['link'],
-                thumbnail=str(int(product['items'][0]['images'][0]['imageUrl'])/1000),
-                price=str(product['items'][0]['sellers'][0]['commertialOffer']['Price']),
-                style_code=str(product['productReferenceCode']),
-                sizes=sizes))
+            if KEYWORDS is None:
+                to_discord.append(dict(
+                    title=product['productName'],
+                    description=str(product['items'][0]['color'][0]),
+                    url=product['link'],
+                    thumbnail=str(int(product['items'][0]['images'][0]['imageUrl'])/1000),
+                    price=str(product['items'][0]['sellers'][0]['commertialOffer']['Price']),
+                    style_code=str(product['productReferenceCode']),
+                    sizes=sizes))
+
+            else:
+                for key in KEYWORDS:
+                    if key.lower() in product['productName'].lower():
+                        to_discord.append(dict(
+                            title=product['productName'],
+                            description=str(product['items'][0]['color'][0]),
+                            url=product['link'],
+                            thumbnail=str(int(product['items'][0]['images'][0]['imageUrl'])/1000),
+                            price=str(product['items'][0]['sellers'][0]['commertialOffer']['Price']),
+                            style_code=str(product['productReferenceCode']),
+                            sizes=sizes))
     return to_discord
 

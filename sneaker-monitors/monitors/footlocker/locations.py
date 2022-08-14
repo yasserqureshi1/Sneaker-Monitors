@@ -58,7 +58,7 @@ def US(ITEMS, user_agent, proxy, KEYWORDS, start):
                     ))
                 else:
                     for key in KEYWORDS:
-                        if key in item['name']:
+                        if key.lower() in item['name'].lower():
                             to_discord.append(dict(
                                 name=item['name'],
                                 sku=product['sku'],
@@ -127,7 +127,7 @@ def UK(ITEMS, user_agent, proxy, KEYWORDS, start):
                 
                 else:
                     for key in KEYWORDS:
-                        if key in item['name']:
+                        if key.lower() in item['name'].lower():
                             to_discord.append(dict(
                                 name=item['name'],
                                 sku=product['sku'],
@@ -196,7 +196,7 @@ def AU(ITEMS, user_agent, proxy, KEYWORDS, start):
                     ))
                 else:
                     for key in KEYWORDS:
-                        if key in item['name']:
+                        if key.lower() in item['name'].lower():
                             to_discord.append(dict(
                                 name=item['name'],
                                 sku=product['sku'],
