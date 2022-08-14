@@ -145,6 +145,7 @@ def configure_screen():
         configure(monitor)
 
     except:
+        print(traceback.format_exc())
         log('Something went wrong. Please check the input... ', colour='red')
         time.sleep(2)
         configure_screen()
