@@ -101,7 +101,7 @@ def monitor():
         proxy = {'http': proxy_obj.get()}
     elif PROXIES != []:
         proxy_no = 0
-        proxy = {} if PROXIES == [] else {"http": f"http://{PROXIES[proxy_no]}", "https": f"http://{PROXIES[proxy_no]}"}
+        proxy = {} if PROXIES == [] else {"http": PROXIES[proxy_no], "https": PROXIES[proxy_no]}
     else:
         proxy = {}
     user_agent = user_agent_rotator.get_random_user_agent()
@@ -141,7 +141,7 @@ def monitor():
 
             elif PROXIES != []:
                 proxy_no = 0 if proxy_no == (len(PROXIES)-1) else proxy_no + 1
-                proxy = {"http": f"http://{PROXIES[proxy_no]}", "https": f"http://{PROXIES[proxy_no]}"}
+                proxy = {"http": PROXIES[proxy_no], "https": PROXIES[proxy_no]}
 
         except Exception as e:
             print(f"Exception found: {traceback.format_exc()}")
