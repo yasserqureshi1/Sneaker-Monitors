@@ -125,31 +125,36 @@ def configure_screen():
     log('Type the option here: ', colour='green')
     monitor_option = input()
 
-    if str(int(i)+1) in monitor_option:
-        clear()
-        log(' ** ALL CONFIGURATIONS **', colour='green')
-        items = get_all_config()
-        print('MONITOR NAME | WEBHOOK | USERNAME | AVATAR URL | COLOUR | DELAY | KEYWORDS | PROXIES | FREE PROXIES | DETAILS')
-        for i in items:
-            print(i)
-
-        if type(input()) == type(""):
-            configure_screen()
-
-    # Go back
-    if str(int(i)+2) in monitor_option:
-        main()
-
     try:
-        monitor = get_monitor(monitor_option)
-        configure(monitor)
+        if str(int(i)+1) in monitor_option:
+            clear()
+            log(' ** ALL CONFIGURATIONS **', colour='green')
+            items = get_all_config()
+            print('MONITOR NAME | WEBHOOK | USERNAME | AVATAR URL | COLOUR | DELAY | KEYWORDS | PROXIES | FREE PROXIES | DETAILS')
+            for i in items:
+                print(i)
 
+            if type(input()) == type(""):
+                configure_screen()
+
+        # Go back
+        if str(int(i)+2) in monitor_option:
+            main()
+
+        try:
+            monitor = get_monitor(monitor_option)
+            configure(monitor)
+
+        except:
+            print(traceback.format_exc())
+            log('Something went wrong. Please check the input... ', colour='red')
+            time.sleep(2)
+            configure_screen()
     except:
-        print(traceback.format_exc())
-        log('Something went wrong. Please check the input... ', colour='red')
-        time.sleep(2)
+        log('Invalid option. Please try again in...', colour='red')
+        time.sleep(1)
         configure_screen()
-    
+
 
 def main():
     create_config_db()

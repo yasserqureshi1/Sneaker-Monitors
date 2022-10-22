@@ -1,5 +1,4 @@
 # No restocks, only releases
-from re import I
 from random_user_agent.params import SoftwareName, HardwareType
 from random_user_agent.user_agent import UserAgent
 

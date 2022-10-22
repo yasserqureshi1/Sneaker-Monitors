@@ -119,7 +119,7 @@ def monitor():
                 to_discord = locations.brazil(INSTOCK, LOCATION, LANGUAGE, user_agent, proxy, KEYWORDS, start)
             
             else:
-                print('LOCATION CURRENTLY NOT AVAILABLE. IF YOU BELIEVE THIS IS A MISTAKE PLEASE CREATE AN ISSUE ON GITHUB OR MESSAGE THE #issues CHANNEL IN DISCORD.')
+                print(f'LOCATION "{LOCATION}" CURRENTLY NOT AVAILABLE. IF YOU BELIEVE THIS IS A MISTAKE PLEASE CREATE AN ISSUE ON GITHUB OR MESSAGE THE #issues CHANNEL IN DISCORD.')
                 return
             
             for product in to_discord:
