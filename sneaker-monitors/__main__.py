@@ -98,10 +98,10 @@ def run_screen():
         start = 0
         for m in monitor_options:
             if start == 0:
-                commands+=f'{python_os()} {os.path.abspath(f"sneaker-monitors/monitors/{get_monitor(m)}/monitor.py")}'
+                commands+=f'{python_os()} {os.path.join(os.path.join(os.path.join(os.path.join(os.getcwd(), "sneaker-monitors"), "monitors"), get_monitor(m)), "monitor.py")}'
                 start = 1
             else:
-                commands+=f' & {python_os()} {os.path.abspath(f"sneaker-monitors/monitors/{get_monitor(m)}/monitor.py")}'
+                commands+=f' & {python_os()} {os.path.join(os.path.join(os.path.join(os.path.join(os.getcwd(), "sneaker-monitors"), "monitors"), get_monitor(m)), "monitor.py")}'
 
         print(commands)
         clear()
