@@ -26,7 +26,7 @@ Please **star** this repository to increase the awareness of the project for oth
 
 Check out the docs [here](https://yasserqureshi1.github.io/Sneaker-Monitors/)
 
-Join my Discord Server for code, sneakers and everything in-between! Join [here](https://discord.gg/kWmAqpUtrf)
+Join my Discord Server for code, sneakers and everything in-between! Join [here](https://discord.gg/b6zyJyCQUu)
 
 
 ## About the Project
@@ -114,5 +114,5 @@ Distributed under the MIT License. See ```LICENSE``` for more information.
 
 ## Contact
 
-For help join my Discord server [here](https://discord.gg/kWmAqpUtrf), get the 'open source sneaker monitor' role and post an issue in the #issues channel.
+For help join my Discord server [here](https://discord.gg/b6zyJyCQUu), get the 'open source sneaker monitor' role and post an issue in the #issues channel.
 
