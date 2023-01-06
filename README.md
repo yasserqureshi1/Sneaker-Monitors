@@ -60,7 +60,7 @@ Currently the sites that have monitors are:
 - All Shopify sites (e.g. Palace Skateboards, Hanon Shop, OVO, shopnicekicks.com, BDGA Store, Noir Fonce, Travis Scott, etc.)
 - Supreme
 - Nike SNKRS (Supports 42 countries - see the associated README file)
-- Footsites (Footlocker UK, US, CA and AU)
+- Footsites (Footlocker UK, US and AU)
 - Ssense
 - Zalando (UK)
 - Off-Spring (UK)
@@ -87,15 +87,12 @@ Click on the image below to watch a YouTube tutorial on setting up the monitors.
 pip install -r requirements.txt
 ```
 
-3. Run the Python file. You can use the following command:
+3. Configure the monitor you want to run by editting the `config.py` file within that folder.
+
+4. To start the monitor, you should run the `monitor.py`file. You can use the following command:
   ```
-  python sneaker-monitors.py
+  python monitor.py
   ```
-
-4. Configure the monitors before attempting to run them by navigating through the CLI
-
-5. Run the monitors using the CLI
-
 **NOTE:** The script needs to be running continuously for it to keep monitoring websites. As such, you should host it on a server. I have a YouTube tutorial on this [here](https://youtu.be/nmUSSlt4JKk). However, I suggest testing this out on your PC before using a server.
 
 
