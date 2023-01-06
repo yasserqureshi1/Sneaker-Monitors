@@ -1,5 +1,4 @@
 import requests
-import traceback
 import json
 import time
 
@@ -17,7 +16,14 @@ def US(ITEMS, user_agent, proxy, KEYWORDS, start):
     }
     url = 'https://www.footlocker.com/api/products/search?query=men&currentPage=1&sort=newArrivals&pageSize=60'
     html = requests.get(url=url, headers=headers, proxies=proxy)
-    output = json.loads(html.text)['products']
+
+    try:
+        output = json.loads(html.text)['products']
+    except:
+        print('Could not load products. Below was the response: ')
+        print(html.text)
+        return None
+
     to_discord = []
     
     for product in output:
@@ -86,7 +92,13 @@ def UK(ITEMS, user_agent, proxy, KEYWORDS, start):
         'x-api-lang': 'en-GB'
     }
     html = requests.get(url=url, headers=headers, proxies=proxy)
-    output = json.loads(html.text)['products']
+    try:
+        output = json.loads(html.text)['products']
+    except:
+        print('Could not load products. Below was the response: ')
+        print(html.text)
+        return None
+
     to_discord = []
     
     for product in output:
@@ -156,7 +168,14 @@ def AU(ITEMS, user_agent, proxy, KEYWORDS, start):
         'x-flapi-session-id': 'th0pgu3oo28l13bhvwqj5yq3i.fzcxwefapipdb828881'
     }
     html = requests.get(url=url, headers=headers, proxies=proxy)
-    output = json.loads(html.text)['products']
+    
+    try:
+        output = json.loads(html.text)['products']
+    except:
+        print('Could not load products. Below was the response: ')
+        print(html.text)
+        return None
+
     to_discord = []
     
     for product in output:

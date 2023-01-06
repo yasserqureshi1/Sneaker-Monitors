@@ -10,22 +10,8 @@ import time
 import json
 import logging
 import traceback
-import sqlite3
-import os
 
-con = sqlite3.connect(os.path.abspath('config.db'))
-cur = con.cursor()
-item = cur.execute(f"SELECT * FROM monitors WHERE name = 'offspring'")
-for i in item:
-    WEBHOOK = i[1]
-    USERNAME = i[2]
-    AVATAR_URL = i[3]
-    COLOUR = i[4]
-    DELAY = i[5]
-    KEYWORDS = i[6]
-    PROXIES = [] if i[7] is None else i[7]
-    FREE_PROXY = i[8]   #location
-    DETAILS = i[9]
+from config import WEBHOOK, ENABLE_FREE_PROXY, FREE_PROXY_LOCATION, DELAY, PROXY, KEYWORDS, USERNAME, AVATAR_URL, COLOUR
 
 logging.basicConfig(filename='offspring-monitor.log', filemode='a', format='%(asctime)s - %(name)s - %(message)s', level=logging.DEBUG)
 
@@ -33,10 +19,10 @@ software_names = [SoftwareName.CHROME.value]
 hardware_type = [HardwareType.MOBILE__PHONE]
 user_agent_rotator = UserAgent(software_names=software_names, hardware_type=hardware_type)
 
-if FREE_PROXY:  
-    proxy_obj = FreeProxy(country_id=FREE_PROXY, rand=True)
-INSTOCK = []
+if ENABLE_FREE_PROXY:  
+    proxy_obj = FreeProxy(country_id=FREE_PROXY_LOCATION, rand=True)
 
+INSTOCK = []
 
 def scrape_main_site(headers, proxy):
     """
@@ -72,7 +58,6 @@ def checker(product):
     Determines whether the product status has changed
     """
     return product in INSTOCK
-
 
 
 def discord_webhook(title, url, thumbnail, colour):
@@ -141,11 +126,11 @@ def monitor():
     start = 1
 
     # Initialising proxy and headers
-    if FREE_PROXY:
+    if ENABLE_FREE_PROXY:
         proxy = {'http': proxy_obj.get()}
-    elif PROXIES != []:
+    elif PROXY != []:
         proxy_no = 0
-        proxy = {} if PROXIES == [] else {"http": PROXIES[proxy_no], "https": PROXIES[proxy_no]}
+        proxy = {} if PROXY == [] else {"http": PROXY[proxy_no], "https": PROXY[proxy_no]}
 
     else:
         proxy = {}    
@@ -181,9 +166,6 @@ def monitor():
             # Allows changes to be notified
             start = 0
 
-            # User set delay
-            time.sleep(float(DELAY))
-
         except requests.exceptions.RequestException as e:
             logging.error(e)
             logging.info('Rotating headers and proxy')
@@ -191,16 +173,20 @@ def monitor():
             # Rotates headers
             headers['User-Agent'] = user_agent_rotator.get_random_user_agent()
 
-            if FREE_PROXY:
+            if ENABLE_FREE_PROXY:
                 proxy = {'http': proxy_obj.get()}
 
-            elif PROXIES != []:
-                proxy_no = 0 if proxy_no == (len(PROXIES)-1) else proxy_no + 1
-                proxy = {"http": PROXIES[proxy_no], "https": PROXIES[proxy_no]}
+            elif PROXY != []:
+                proxy_no = 0 if proxy_no == (len(PROXY)-1) else proxy_no + 1
+                proxy = {"http": PROXY[proxy_no], "https": PROXY[proxy_no]}
 
         except Exception as e:
             print(f"Exception found: {traceback.format_exc()}")
             logging.error(e)
 
+        # User set delay
+        time.sleep(float(DELAY))
 
-monitor()
+
+if __name__ == '__main__':
+    monitor()
