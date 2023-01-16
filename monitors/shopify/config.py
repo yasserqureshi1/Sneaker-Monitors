@@ -1,6 +1,10 @@
 # --------------------- WEBHOOK URL ---------------------
 WEBHOOK = ""
 
+# --------------------- SHOPIFY URL ---------------------
+# Ensure the URL is one that contains products.json (e.g. https://www.hanon-shop.com/collections/whats-new/products.json)
+URL = ""
+
 # --------------------- FREE PROXY ---------------------
 # A single or multiple locations can be added in the array (e.g. ["GB"] or ["GB", "US"])
 ENABLE_FREE_PROXY = False
