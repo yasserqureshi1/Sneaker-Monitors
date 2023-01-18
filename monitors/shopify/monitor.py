@@ -186,7 +186,7 @@ def monitor():
             items = scrape_site(URL, proxy, headers)
             for product in items:
 
-                if KEYWORDS is None:
+                if KEYWORDS is []:
                     # If no keywords set, checks whether item status has changed
                     comparitor(product, start)
 

@@ -54,7 +54,7 @@ def US(ITEMS, user_agent, proxy, KEYWORDS, start):
 
 
             if start == 0 and sizes != '':
-                if KEYWORDS is None:
+                if KEYWORDS is []:
                     to_discord.append(dict(
                         name=item['name'],
                         sku=product['sku'],
@@ -128,7 +128,7 @@ def UK(ITEMS, user_agent, proxy, KEYWORDS, start):
 
 
             if start == 0 and sizes != '':
-                if KEYWORDS is None:
+                if KEYWORDS is []:
                     to_discord.append(dict(
                         name=item['name'],
                         sku=product['sku'],
@@ -205,7 +205,7 @@ def AU(ITEMS, user_agent, proxy, KEYWORDS, start):
 
 
             if start == 0 and sizes != '':
-                if KEYWORDS is None:
+                if KEYWORDS is []:
                     to_discord.append(dict(
                         name=item['name'],
                         sku=product['sku'],

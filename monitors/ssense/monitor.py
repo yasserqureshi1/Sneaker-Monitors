@@ -179,7 +179,7 @@ def monitor():
             items = remove_duplicates(scrape_main_site(user_agent, proxy))
             for item in items:
 
-                if KEYWORDS is None:
+                if KEYWORDS is []:
                     # If no keywords set, checks whether item status has changed
                     comparitor(item, start)
 

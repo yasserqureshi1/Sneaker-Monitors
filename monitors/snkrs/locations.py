@@ -65,7 +65,7 @@ def standard_api(ITEMS, LOCATION, LANGUAGE, user_agent, proxy, KEYWORDS, start):
             try:
                 for product in item['productInfo']:
                     if product['availablity']['available'] == True and product['merchProduct']['status'] == 'ACTIVE':
-                        if KEYWORDS is None:
+                        if KEYWORDS is []:
                             first = 0
                             sizes = ''
                             for k in product['availableGtins']:
@@ -134,7 +134,7 @@ def brazil(ITEMS, LOCATION, LANGUAGE, user_agent, proxy, KEYWORDS, start):
     soup = BeautifulSoup(html.text, 'html.parser')
     output = soup.find_all('div', {'class': 'produto produto--esgotado'})
     for product in output:
-        if KEYWORDS is None:
+        if KEYWORDS is []:
             item = dict(
                 title=product.find('h2', {'class': 'produto__detalhe-titulo'}).text,
                 description=None,
@@ -204,7 +204,7 @@ def chile(ITEMS, LOCATION, LANGUAGE, user_agent, proxy, KEYWORDS, start):
                     ITEMS.remove(item)
         
         if sizes != '' and start == 0:
-            if KEYWORDS is None:
+            if KEYWORDS is []:
                 to_discord.append(dict(
                     title=product['productName'],
                     description=str(product['items'][0]['color'][0]),
