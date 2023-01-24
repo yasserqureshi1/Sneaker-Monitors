@@ -70,7 +70,7 @@ Currently the sites that have monitors are:
 
 Click on the image below to watch a YouTube tutorial on setting up the monitors...
 
-[![Watch the video](https://img.youtube.com/vi/BECxMuBFnQA/mqdefault.jpg)](https://youtu.be/BECxMuBFnQA)
+[![Watch the video](https://img.youtube.com/vi/wlhAtpUxLF4/mqdefault.jpg)](https://youtu.be/wlhAtpUxLF4)
 
 1. Clone or Download the repository
     - Clone:
