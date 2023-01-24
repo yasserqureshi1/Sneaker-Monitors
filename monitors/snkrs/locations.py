@@ -2,6 +2,7 @@
 from bs4 import BeautifulSoup
 import requests
 import json
+import traceback
 
 import asyncio
 from pyppeteer import launch
@@ -72,12 +73,12 @@ def standard_api(ITEMS, LOCATION, LANGUAGE, user_agent, proxy, KEYWORDS, start):
                             first = 0
                             sizes = ''
                             for k in product['availableGtins']:
-                                item = [product['productContent']['fullTitle'], product['productContent']['colorDescription'], k['gtin']]
+                                stored = [product['productContent']['fullTitle'], product['productContent']['colorDescription'], k['gtin']]
                                 if k['available'] == True:
-                                    if item in ITEMS:
+                                    if stored in ITEMS:
                                         pass
                                     else:
-                                        ITEMS.append(item)
+                                        ITEMS.append(stored)
                                         
                                         for s in product['skus']:
                                             if first == 0:
@@ -90,8 +91,8 @@ def standard_api(ITEMS, LOCATION, LANGUAGE, user_agent, proxy, KEYWORDS, start):
                                                     sizes += '\n' + str(s['nikeSize']) + ': ' + str(k['level'])
                                                     break
                                 else:
-                                    if item in ITEMS:
-                                        ITEMS.remove(item)
+                                    if stored in ITEMS:
+                                        ITEMS.remove(stored)
                             
                             if sizes != '' and start == 0:
                                 print('Sending notification to Discord...')
@@ -107,10 +108,45 @@ def standard_api(ITEMS, LOCATION, LANGUAGE, user_agent, proxy, KEYWORDS, start):
                         else:
                             for key in KEYWORDS:
                                 if key.lower() in product['merchProduct']['labelName'].lower() or key.lower() in product['productContent']['colorDescription'].lower():
-                                    pass
+                                    first = 0
+                                    sizes = ''
+                                    for k in product['availableGtins']:
+                                        stored = [product['productContent']['fullTitle'], product['productContent']['colorDescription'], k['gtin']]
+                                        if k['available'] == True:
+                                            if stored in ITEMS:
+                                                pass
+                                            else:
+                                                ITEMS.append(stored)
+                                                
+                                                for s in product['skus']:
+                                                    if first == 0:
+                                                        if s['gtin'] == k['gtin']:
+                                                            sizes = str(s['nikeSize']) + ': ' + str(k['level'])
+                                                            first = 1
+                                                            break
+                                                    else:
+                                                        if s['gtin'] == k['gtin']:
+                                                            sizes += '\n' + str(s['nikeSize']) + ': ' + str(k['level'])
+                                                            break
+                                        else:
+                                            if stored in ITEMS:
+                                                ITEMS.remove(stored)
+                                    
+                                    if sizes != '' and start == 0:
+                                        print('Sending notification to Discord...')
+                                        to_discord.append(dict(
+                                            title=product['productContent']['fullTitle'],
+                                            description=product['productContent']['colorDescription'],
+                                            url='https://www.nike.com/' + LOCATION + '/launch/t/' + product['productContent']['slug'],
+                                            thumbnail=item['publishedContent']['nodes'][0]['nodes'][0]['properties']['squarishURL'],
+                                            price=str(product['merchPrice']['currentPrice']),
+                                            style_code=str(product['merchProduct']['styleColor']),
+                                            sizes=sizes))
+            except KeyError:
+                pass
 
             except:
-                pass
+                print(traceback.format_exc())
 
         anchor += 50
         
