@@ -34,29 +34,31 @@ def scrape_main_site(headers, proxy):
     """
     items = []
     
-    # Makes request to site
-    url = 'https://m.zalando.co.uk/mens-shoes-trainers/?order=activation_date'
-    s = requests.Session()
-    html = s.get(url=url, headers=headers, proxies=proxy, verify=False, timeout=15)
-    soup = BeautifulSoup(html.text, 'html.parser')
-    products = soup.find_all('div', {'class': 'DT5BTM w8MdNG cYylcv QylWsg _75qWlu iOzucJ JT3_zV DvypSJ'})
+    for page in [1, 2, 3, 4]:
+        url = f'https://www.zalando.co.uk/mens-shoes-trainers/?p={page}&order=activation_date'
+        s = requests.Session()
+        html = s.get(url=url, headers=headers, proxies=proxy, verify=False, timeout=15)
+        s.close()
+        soup = BeautifulSoup(html.text, 'html.parser')
+        products = soup.find_all('div', {'class': 'DT5BTM w8MdNG cYylcv _1FGXgy _75qWlu iOzucJ JT3_zV vut4p9'})
 
-    # Stores particular details in array 
-    for product in products:
-        try:
-            item = [
-                product.find('h3', {'class': '_0Qm8W1 u-6V88 FxZV-M pVrzNP ZkIJC- r9BRio qXofat EKabf7 nBq1-s _2MyPg2'}).text,  #name
-                product.find('a')['href'],  #url
-                product.find('h3', {'class': 'SZKKsK u-6V88 FxZV-M pVrzNP ZkIJC- r9BRio qXofat EKabf7 nBq1-s _2MyPg2'}).text,  #brand
-                product.find('p', {'class': '_0Qm8W1 u-6V88 FxZV-M pVrzNP'}).text, #price
-                product.find('img')['src']  #image
-            ]
-            items.append(item)
-        except Exception as e:
-            pass
-    
-    logging.info(msg='Successfully scraped site')
-    s.close()
+        for product in products:
+            try:
+                item = [
+                    product.find('h3', {'class': '_0Qm8W1 u-6V88 FxZV-M pVrzNP ZkIJC- r9BRio qXofat EKabf7 nBq1-s _2MyPg2'}).text,  #name
+                    product.find('a')['href'],  #url
+                    product.find('h3', {'class': 'SZKKsK u-6V88 FxZV-M pVrzNP ZkIJC- r9BRio qXofat EKabf7 nBq1-s _2MyPg2'}).text,  #brand
+                    product.find('p', {'class': '_0Qm8W1 u-6V88 FxZV-M pVrzNP'}).text, #price
+                    product.find('img')['src']  #image
+                ]
+                items.append(item)
+            except AttributeError:
+                pass
+            except Exception as e:
+                print(traceback.format_exc())
+                logging.error(msg=e)
+        
+        time.sleep(0.5)
     return items
 
 
