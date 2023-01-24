@@ -33,20 +33,24 @@ def scrape_main_site(headers, proxy):
     """
     items = []
 
-    # Makes request to site
-    url = 'https://www.sivasdescalzo.com/en/footwear'
-    s = requests.Session()
-    html = s.get(url=url, headers=headers, proxies=proxy, verify=False, timeout=15)
-    soup = BeautifulSoup(html.text, 'html.parser')
-    products = soup.find_all('li',  {'class': 'item product product-item grid-col'})
-    
-    # Stores particular details in array
-    for product in products:
-        item = [f"{product.find('h3', {'class': 'product-card__title'}).text} {product.find('h3', {'class': 'product name product-item-name product-card__short-desc'}).text}",  
+    for page in [1, 2, 3, 4]:
+        url = f'https://www.sivasdescalzo.com/en/footwear?p={page}'
+        s = requests.Session()
+        html = s.get(url=url, headers=headers, proxies=proxy, verify=False, timeout=15)
+        s.close()
+        soup = BeautifulSoup(html.text, 'html.parser')
+        products = soup.find_all('li',  {'class': 'item product product-item grid-col'})
+        
+        # Stores particular details in array
+        for product in products:
+            item = [
+                product.find('h3', {'class': 'product-card__title'}).text.replace(' ', '').replace('\n', ''),
+                product.find('h3', {'class': 'product name product-item-name product-card__short-desc'}).text.replace(' ', '').replace('\n', ''),  
                 product.find('a')['href'], 
-                product.find('div', {'class': 'price-box price-final_price'}).text, 
-                f"{product.find('img')['src'].split('?')[0]}?quality=50&fit=bounds&width=210"] 
-        items.append(item)
+                product.find('div', {'class': 'price-box price-final_price'}).text.replace('\n',''), 
+                f"{product.find('img')['src'].split('?')[0]}?quality=50&fit=bounds&width=210"
+            ] 
+            items.append(item)
     return items
 
 
@@ -102,10 +106,10 @@ def comparitor(item, start):
         if start == 0:
             print(item)
             discord_webhook(
-                title=item[0],
-                url=item[1],
-                price=item[2],
-                thumbnail=item[3]
+                title=f"{item[0]} {item[1]}",
+                url=item[2],
+                price=item[3],
+                thumbnail=item[4]
             )
 
 
@@ -150,7 +154,7 @@ def monitor():
                 else:
                     # For each keyword, checks whether particular item status has changed
                     for key in KEYWORDS:
-                        if key.lower() in item[0].lower():
+                        if (key.lower() in item[0].lower()) or (key.lower() in item[1].lower()):
                             comparitor(item, start)
             
             # Allows changes to be notified
