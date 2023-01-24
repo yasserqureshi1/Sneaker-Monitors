@@ -50,7 +50,10 @@ def standard_api(ITEMS, LOCATION, LANGUAGE, user_agent, proxy, KEYWORDS, start):
         'sec-fetch-dest': 'empty',
         'sec-fetch-mode': 'cors',
         'sec-fetch-site': 'same-site',
-        'user-agent': user_agent
+        'user-agent': user_agent,
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
     }
     to_discord = []
 
@@ -65,7 +68,7 @@ def standard_api(ITEMS, LOCATION, LANGUAGE, user_agent, proxy, KEYWORDS, start):
             try:
                 for product in item['productInfo']:
                     if product['availablity']['available'] == True and product['merchProduct']['status'] == 'ACTIVE':
-                        if KEYWORDS is []:
+                        if KEYWORDS == []:
                             first = 0
                             sizes = ''
                             for k in product['availableGtins']:
@@ -121,20 +124,22 @@ def brazil(ITEMS, LOCATION, LANGUAGE, user_agent, proxy, KEYWORDS, start):
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
         'accept-encoding': 'gzip, deflate, br',
         'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
-        'cache-control': 'max-age=0',
         'sec-fetch-dest': 'document',
         'sec-fetch-mode': 'navigate',
         'sec-fetch-site': 'none',
         'sec-fetch-user': '?1',
         'upgrade-insecure-requests': '1',
         'user-agent': user_agent,
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
     }
     to_discord = []
     html = requests.get(url=url, headers=headers, proxies=proxy)
     soup = BeautifulSoup(html.text, 'html.parser')
     output = soup.find_all('div', {'class': 'produto produto--esgotado'})
     for product in output:
-        if KEYWORDS is []:
+        if KEYWORDS == []:
             item = dict(
                 title=product.find('h2', {'class': 'produto__detalhe-titulo'}).text,
                 description=None,
@@ -204,7 +209,7 @@ def chile(ITEMS, LOCATION, LANGUAGE, user_agent, proxy, KEYWORDS, start):
                     ITEMS.remove(item)
         
         if sizes != '' and start == 0:
-            if KEYWORDS is []:
+            if KEYWORDS == []:
                 to_discord.append(dict(
                     title=product['productName'],
                     description=str(product['items'][0]['color'][0]),

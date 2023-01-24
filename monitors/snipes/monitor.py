@@ -149,7 +149,10 @@ def monitor():
         'accept-encoding': 'gzip, deflate, br',
         'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
         'cache-control': 'max-age=0',
-        'user-agent': user_agent_rotator.get_random_user_agent()
+        'user-agent': user_agent_rotator.get_random_user_agent(),
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
     }
 
     # Collecting all keywords (if any)
@@ -159,7 +162,7 @@ def monitor():
             items = remove_duplicates(scrape_main_site(headers, proxy))
             for item in items:
 
-                if KEYWORDS is []:
+                if KEYWORDS == []:
                     # If no keywords set, checks whether item status has changed
                     comparitor(item, start)
 

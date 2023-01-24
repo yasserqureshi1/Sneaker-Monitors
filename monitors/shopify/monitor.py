@@ -178,7 +178,12 @@ def monitor():
     else:
         proxy = {}
 
-    headers = {'User-Agent': user_agent_rotator.get_random_user_agent()}
+    headers = {
+        'User-Agent': user_agent_rotator.get_random_user_agent(),
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+    }
 
     while True:
         try:
@@ -186,7 +191,7 @@ def monitor():
             items = scrape_site(URL, proxy, headers)
             for product in items:
 
-                if KEYWORDS is []:
+                if KEYWORDS == []:
                     # If no keywords set, checks whether item status has changed
                     comparitor(product, start)
 

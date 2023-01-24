@@ -125,7 +125,11 @@ def monitor():
         proxy = {}
 
     headers = {
-        'user-agent': user_agent_rotator.get_random_user_agent()}
+        'user-agent': user_agent_rotator.get_random_user_agent(),
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+    }
 
     while True:
         try:

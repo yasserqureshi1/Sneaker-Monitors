@@ -145,6 +145,9 @@ def monitor():
         'sec-fetch-user': '?1',
         'upgrade-insecure-requests': '1',
         'user-agent': user_agent_rotator.get_random_user_agent(),
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
     }
     
     while True:
@@ -153,7 +156,7 @@ def monitor():
             items = remove_duplicates(scrape_main_site(headers, proxy))
             for product in items:
 
-                if KEYWORDS is []:
+                if KEYWORDS == []:
                     # If no keywords set, checks whether item status has changed
                     comparitor(product, start)
 

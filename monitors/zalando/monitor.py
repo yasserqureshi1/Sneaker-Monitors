@@ -142,7 +142,11 @@ def monitor():
         'User-Agent': user_agent_rotator.get_random_user_agent(),
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
         'accept-encoding': 'gzip, deflate, br',
-        'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8'}
+        'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+    }
     
     while True:
         try:
@@ -150,7 +154,7 @@ def monitor():
             items = remove_duplicates(scrape_main_site(headers, proxy))
             for item in items:
 
-                if KEYWORDS is []:
+                if KEYWORDS == []:
                     # If no keywords set, checks whether item status has changed
                     comparitor(item, start)
 
