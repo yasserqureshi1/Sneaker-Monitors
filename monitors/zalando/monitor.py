@@ -96,22 +96,8 @@ def discord_webhook(product):
         logging.info("Payload delivered successfully, code {}.".format(result.status_code))
 
 
-def checker(item):
-    """
-    Determines whether the product status has changed
-    """
-    return item in INSTOCK
-
-
-def remove_duplicates(mylist):
-    """
-    Removes duplicate values from a list
-    """
-    return [list(t) for t in set(tuple(element) for element in mylist)]
-
-
 def comparitor(item, start):
-    if not checker(item):
+    if item not in INSTOCK:
         # If product is available but not stored - sends notification and stores
         INSTOCK.append(item)
         if start == 0:
@@ -153,7 +139,7 @@ def monitor():
     while True:
         try:
             # Makes request to site and stores products 
-            items = remove_duplicates(scrape_main_site(headers, proxy))
+            items = scrape_main_site(headers, proxy)
             for item in items:
 
                 if KEYWORDS == []:
