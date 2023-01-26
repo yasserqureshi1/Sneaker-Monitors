@@ -68,7 +68,7 @@ def standard_api(ITEMS, LOCATION, LANGUAGE, user_agent, proxy, KEYWORDS, start):
         for item in output['objects']:
             try:
                 for product in item['productInfo']:
-                    if product['availablity']['available'] == True and product['merchProduct']['status'] == 'ACTIVE':
+                    if (product['availability']['available'] == True) and (product['merchProduct']['status'] == 'ACTIVE'):
                         if KEYWORDS == []:
                             first = 0
                             sizes = ''

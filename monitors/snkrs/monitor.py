@@ -104,9 +104,6 @@ def monitor():
                 discord_webhook(product['title'], product['description'], product['url'], product['thumbnail'], product['price'], product['style_code'], product['sizes'])
                 print(product['title'])
 
-        except KeyError as e:
-            pass
-
         except rq.exceptions.RequestException as e:
             logging.error(e)
             logging.info('Rotating headers and proxy')
