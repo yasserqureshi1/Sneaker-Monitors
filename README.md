@@ -107,7 +107,7 @@ It contains no personal data but may help me diagnose where the issue arises.
 
 ## License
 
-Distributed under the MIT License. See ```LICENSE``` for more information.
+Distributed under the GNU General Public License v3.0 License. See ```LICENSE``` for more information.
 
 ## Contact
 
