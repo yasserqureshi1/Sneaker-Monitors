@@ -107,9 +107,9 @@ It contains no personal data but may help me diagnose where the issue arises.
 
 ## License
 
-Distributed under the GNU General Public License v3.0 License. See ```LICENSE``` for more information.
+Distributed under the GNU General Public License v3.0 License. See ```LICENSE``` for more information. Selling this code without my consent is strictly prohibited. If sharing this or an updated copy of this repo requires this repo to be made available.
 
 ## Contact
 
-For help join my Discord server [here](https://discord.gg/b6zyJyCQUu), get the 'open source sneaker monitor' role and post an issue in the #issues channel.
+For help join my Discord server [here](https://discord.gg/b6zyJyCQUu).
 
