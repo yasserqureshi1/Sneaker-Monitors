@@ -40,15 +40,15 @@ def scrape_main_site(headers, proxy):
         html = s.get(url=url, headers=headers, proxies=proxy, verify=False, timeout=15)
         s.close()
         soup = BeautifulSoup(html.text, 'html.parser')
-        products = soup.find_all('div', {'class': 'DT5BTM w8MdNG cYylcv _1FGXgy _75qWlu iOzucJ JT3_zV vut4p9'})
+        products = soup.find_all('div', {'class': '_5qdMrS w8MdNG cYylcv BaerYO _75qWlu iOzucJ JT3_zV _Qe9k6'})
 
         for product in products:
             try:
                 item = [
-                    product.find('h3', {'class': '_0Qm8W1 u-6V88 FxZV-M pVrzNP ZkIJC- r9BRio qXofat EKabf7 nBq1-s _2MyPg2'}).text,  #name
+                    product.find('h3', {'class': 'KxHAYs lystZ1 FxZV-M _4F506m ZkIJC- r9BRio qXofat EKabf7 nBq1-s _2MyPg2'}).text,  #name
                     product.find('a')['href'],  #url
-                    product.find('h3', {'class': 'SZKKsK u-6V88 FxZV-M pVrzNP ZkIJC- r9BRio qXofat EKabf7 nBq1-s _2MyPg2'}).text,  #brand
-                    product.find('p', {'class': '_0Qm8W1 u-6V88 FxZV-M pVrzNP'}).text, #price
+                    product.find('h3', {'class': '_6zR8Lt lystZ1 FxZV-M _4F506m ZkIJC- r9BRio qXofat EKabf7 nBq1-s _2MyPg2'}).text,  #brand
+                    product.find('p', {'class': 'KxHAYs lystZ1 FxZV-M _4F506m'}).text, #price
                     product.find('img')['src']  #image
                 ]
                 items.append(item)
@@ -115,7 +115,7 @@ def monitor():
     logging.info(msg='Successfully started monitor')
 
     # Ensures that first scrape does not notify all products
-    start = 1
+    start = 0
 
     # Initialising proxy and headers
     if ENABLE_FREE_PROXY:
