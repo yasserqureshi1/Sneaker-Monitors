@@ -1,4 +1,3 @@
-<figcaption>Logo developed by <a href="https://www.instagram.com/bri.illustratesz/">@bri.illustratesz</a></figcaption>
 <p align="center">
   <a href="https://github.com/yasserqureshi1/Sneaker-Monitors/">
     <img src="https://raw.githubusercontent.com/yasserqureshi1/Sneaker-Monitors/master/static/logo.png" alt="Logo" width="auto" height="128">
@@ -7,7 +6,7 @@
   <h3 align="center">Sneaker Monitors</h3>
 
   <p align="center">
-    A collection of web monitors that notify of restocks or updates on sneaker related sites through Discord Webhook
+    A collection of web monitors that notify of restocks or releases on sneaker related sites through Discord Webhook
     <br />
     <a href="https://github.com/yasserqureshi1/Sneaker-Monitors/">Report Bug</a>
     ·
@@ -24,14 +23,14 @@
 
 Please **star** this repository to increase the awareness of the project for others to use or add to. 
 
-Check out the docs [here](https://yasserqureshi1.github.io/Sneaker-Monitors/)
-
-Join my Discord Server for code, sneakers and everything in-between! Join [here](https://discord.gg/b6zyJyCQUu)
+Join my Discord Server for code, sneakers and everything in-between! Join here: [discord.gg/YasCommunity](https://discord.gg/YasCommunity)
 
 
 ## About the Project
 This project is aimed at providing web-monitors for various sites to the sneaker community for free. 
-The monitors currently notify if a restock or release occurs via Discord Webhook.
+A monitor is a tool that tracks and alerts about changes on website.
+These monitors currently notify if a restock or release occurs via Discord Webhook on popular sneaker releated websites.
+
 Today, competition to purchase sneakers is getting increasingly difficult with resellers using paid automated tools to give them a massive advantage over everyone else.
 As such, I have and will continue to develop monitors that will help those members that struggle to finally get the sneakers they want.
 
@@ -60,11 +59,13 @@ Currently the sites that have monitors are:
 - All Shopify sites (e.g. Palace Skateboards, Hanon Shop, OVO, shopnicekicks.com, BDGA Store, Noir Fonce, Travis Scott, etc.)
 - Supreme
 - Nike SNKRS (Supports 42 countries - see the associated README file)
+- Nike
 - Footsites (Footlocker UK, US and AU)
 - Ssense
 - Zalando (UK)
 - Off-Spring (UK)
 - Snipes
+- Sivasdescalzo
 
 ## Basic Steps
 
@@ -111,5 +112,5 @@ Distributed under the GNU General Public License v3.0 License. See ```LICENSE```
 
 ## Contact
 
-For help join my Discord server [here](https://discord.gg/b6zyJyCQUu).
+Join my Discord server: [discord.gg/YasCommunity](https://discord.gg/YasCommunity)
 
