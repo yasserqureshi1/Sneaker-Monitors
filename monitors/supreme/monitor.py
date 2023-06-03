@@ -28,7 +28,7 @@ if ENABLE_FREE_PROXY:
 INSTOCK = []
 
 
-def discord_webhook(title, category, price, variant, sku, thumbnail, url):
+def discord_webhook(title, price, variant, sku, thumbnail, url):
     """
     Sends a Discord webhook notification to the specified webhook URL
     """
@@ -44,7 +44,6 @@ def discord_webhook(title, category, price, variant, sku, thumbnail, url):
             "timestamp": str(datetime.utcnow()),
             "fields": [
                 {"name": "SKU", "value": sku},
-                {"name": "Category", "value": category},
                 {"name": "Variant", "value": variant},
                 {"name": "Price", "value": price}
             ]
@@ -89,11 +88,10 @@ def comparitor(item, start):
                     print(variant["name"])
                     discord_webhook(
                         title=variant["name"],
-                        type=variant["type"].upper(),
                         price=str(variant['price']/100),
                         variant=variant['title'],
                         sku=variant["sku"],
-                        thumbnail='https:' + variant["image"],
+                        thumbnail='https:' + item["image"],
                         url='https://uk.supremenewyork.com' + item['url']
                     )
                     logging.info(msg='Successfully sent Discord notification')
