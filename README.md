@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/yasserqureshi1/Sneaker-Monitors/">
-    <img src="https://raw.githubusercontent.com/yasserqureshi1/Sneaker-Monitors/master/static/logo.png" alt="Logo" width="auto" height="128">
+    <img src="https://raw.githubusercontent.com/yasserqureshi1/Sneaker-Monitors/master/static/logo.jpg" alt="Logo" width="auto" height="128">
   </a>
   
   <h3 align="center">Sneaker Monitors</h3>
