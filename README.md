@@ -1,30 +1,9 @@
-<p align="center">
-  <a href="https://github.com/yasserqureshi1/Sneaker-Monitors/">
-    <img src="https://raw.githubusercontent.com/yasserqureshi1/Sneaker-Monitors/master/static/logo.jpg" alt="Logo" width="auto" height="128">
-  </a>
-  
-  <h3 align="center">Sneaker Monitors</h3>
+# Sneaker Monitors
 
-  <p align="center">
-    A collection of web monitors that notify of restocks or releases on sneaker related sites through Discord Webhook
-    <br />
-    <a href="https://github.com/yasserqureshi1/Sneaker-Monitors/">Report Bug</a>
-    ·
-    <a href="https://github.com/yasserqureshi1/Sneaker-Monitors/">Request Feature</a>
-  </p>
+*A collection of web monitors that notify of restocks or releases on sneaker related sites through Discord Webhook*
 
-  <p align="center">
-    <a href="https://www.paypal.com/donate?hosted_button_id=SKRAD2YFGZC5C">
-    <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" alt="Logo" width="auto" height="50" >
-  </a>
-  </p> 
-</p>
-<br />
-
-Please **star** this repository to increase the awareness of the project for others to use or add to. 
-
-Join my Discord Server for code, sneakers and everything in-between! Join here: [discord.gg/YasCommunity](https://discord.gg/YasCommunity)
-
+> [!NOTE]  
+> No longer updated or supported. Should still work - join my Discord for support [here](https://discord.gg/b6zyJyCQUu).
 
 ## About the Project
 This project is aimed at providing web-monitors for various sites to the sneaker community for free. 
@@ -34,24 +13,11 @@ These monitors currently notify if a restock or release occurs via Discord Webho
 Today, competition to purchase sneakers is getting increasingly difficult with resellers using paid automated tools to give them a massive advantage over everyone else.
 As such, I have and will continue to develop monitors that will help those members that struggle to finally get the sneakers they want.
 
-This project is continually expanding, and I would greatly appreciate any contributions. 
-When contributing please fork the project and open a Pull Request.
-
-However, due to popular demand, I am developing a paid (but competitively priced) set of hosted monitors. These will be released on my Discord Server that you can join in [#Contact](#Contact).
-
 *Below is a screenshot of the SNKRS monitor in action...*
 
 <p align="center">
   <img width="300" src="https://github.com/yasserqureshi1/Sneaker-Monitors/blob/master/static/SNKRS_example.png?raw=true">
 </p>
-
-## Contents
-* [About the Project](#about-the-project)
-* [Monitors](#monitors)
-* [Set Up](#set-up)
-* [Issues](#issues)
-* [License](#license)
-* [Contact](#contact)
 
 ## Monitors 
 
@@ -69,9 +35,7 @@ Currently the sites that have monitors are:
 
 ## Basic Steps
 
-Click on the image below to watch a YouTube tutorial on setting up the monitors...
-
-[![Watch the video](https://img.youtube.com/vi/wlhAtpUxLF4/mqdefault.jpg)](https://youtu.be/wlhAtpUxLF4)
+Youtube Link [here](https://youtu.be/wlhAtpUxLF4).
 
 1. Clone or Download the repository
     - Clone:
@@ -97,20 +61,6 @@ pip install -r requirements.txt
 **NOTE:** The script needs to be running continuously for it to keep monitoring websites. As such, you should host it on a server. I have a YouTube tutorial on this [here](https://youtu.be/nmUSSlt4JKk). However, I suggest testing this out on your PC before using a server.
 
 
-## Issues
-
-If you find an issue, please open an issue [here](https://github.com/yasserqureshi1/Sneaker-Monitors/issues/new). 
-I will try to respond fairly quickly and try to come up with solution.
-
-I may ask you to provide the log file that is produced by the monitor.
-It contains no personal data but may help me diagnose where the issue arises.
-
-
 ## License
 
 Distributed under the GNU General Public License v3.0 License. See ```LICENSE``` for more information. Selling this code without my consent is strictly prohibited. If sharing this or an updated copy of this repo requires this repo to be made freely available.
-
-## Contact
-
-Join my Discord server: [discord.gg/YasCommunity](https://discord.gg/YasCommunity)
-
