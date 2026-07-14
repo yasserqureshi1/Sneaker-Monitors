@@ -3,10 +3,11 @@ from random_user_agent.user_agent import UserAgent
 
 from bs4 import BeautifulSoup
 import requests
+from curl_cffi import requests as cf
 import urllib3
 from fp.fp import FreeProxy
 
-from datetime import datetime
+from datetime import datetime, timezone
 import time
 
 import json
@@ -41,7 +42,7 @@ def discord_webhook(title, price, variant, sku, thumbnail, url):
             "url": url,
             "color": int(COLOUR),
             "footer": {'text': 'Developed by GitHub:yasserqureshi1'},
-            "timestamp": str(datetime.utcnow()),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "fields": [
                 {"name": "SKU", "value": sku},
                 {"name": "Variant", "value": variant},
@@ -65,10 +66,13 @@ def discord_webhook(title, price, variant, sku, thumbnail, url):
 def scrape_main_site(headers, proxy):
     url = 'https://uk.supreme.com/collections/all'
 
-    html = requests.get(url, headers=headers, proxies=proxy)
+    # Supreme is now on Shopify behind Cloudflare. curl_cffi (TLS impersonation)
+    # reaches the collection page, which embeds the full product list as JSON in
+    # a <script id="products-json"> tag (products.json itself is 403-blocked).
+    html = cf.get(url, impersonate='chrome', proxies=proxy if proxy else None, timeout=20)
     soup = BeautifulSoup(html.text, 'html.parser')
 
-    products = soup.find('script',{'class':'js-first-all-products-json'})
+    products = soup.find('script', {'id': 'products-json'})
     output = json.loads(products.text)['products']
 
     return output
@@ -92,7 +96,7 @@ def comparitor(item, start):
                         variant=variant['title'],
                         sku=variant["sku"],
                         thumbnail='https:' + item["image"],
-                        url='https://uk.supremenewyork.com' + item['url']
+                        url='https://uk.supreme.com' + item['url']
                     )
                     logging.info(msg='Successfully sent Discord notification')
 
@@ -132,7 +136,7 @@ def monitor():
     while True:
         try:
             # Makes request to site and stores products 
-            stock = scrape_main_site(proxy, headers)
+            stock = scrape_main_site(headers, proxy)
             for item in stock:
                 if KEYWORDS == []:
                     # If no keywords set, checks whether item status has changed

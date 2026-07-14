@@ -145,7 +145,7 @@ def standard_api(ITEMS, LOCATION, LANGUAGE, user_agent, proxy, KEYWORDS, start):
             except KeyError:
                 pass
 
-            except:
+            except Exception:
                 print(traceback.format_exc())
 
         anchor += 50

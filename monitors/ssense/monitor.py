@@ -7,16 +7,14 @@ import requests
 import urllib3
 from fp.fp import FreeProxy
 
-from datetime import datetime
+from datetime import datetime, timezone
 import time
 
 import json
 import logging
 import traceback
 
-import asyncio
-from pyppeteer import launch
-from pyppeteer_stealth import stealth
+from curl_cffi import requests as cf
 
 from config import WEBHOOK, ENABLE_FREE_PROXY, FREE_PROXY_LOCATION, DELAY, PROXY, KEYWORDS, USERNAME, AVATAR_URL, COLOUR
 
@@ -47,7 +45,7 @@ def discord_webhook(title, id, price, url, thumbnail):
             "thumbnail": {"url": thumbnail},
             "colour": int(COLOUR),
             "footer": {"text": "Developed by GitHub:yasserqureshi1"},
-            "timestamp": str(datetime.utcnow()),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "fields": [
                 {"name": "ID", "value": id},
                 {"name": "Price", "value": price}
@@ -74,53 +72,36 @@ def checker(item):
     return item in INSTOCK
 
 
-async def get_content(user_agent, proxy):
-    if proxy == None:
-        browser = await launch()
-    else:
-        browser = await launch({'http_proxy': proxy})
-    page = await browser.newPage()
-    await stealth(page)
-    await page.emulate({
-        'userAgent': user_agent,
-        'viewport': {
-            'width': 414,
-            'height': 736,
-            'deviceScaleFactor': 3,
-            'isMobile': True,
-            'hasTouch': True,
-            'isLandscape': False
-        }
-    })
-    await page.goto('https://www.ssense.com/en-gb/men/shoes')
-    content = await page.content()
-    await page.close()
-    return content
-
-
 def scrape_main_site(user_agent, proxy):
     """
-    Scrape the Ssense site and adds each item to an array
+    Scrape the Ssense men's shoes listing.
+    Ssense sits behind Cloudflare; curl_cffi (TLS impersonation) reaches the
+    server-rendered page without a headless browser. Each product is embedded as
+    its own ld+json block, which we parse directly.
     """
     items = []
 
-    # Makes request to site
-    html = asyncio.get_event_loop().run_until_complete(get_content(user_agent, proxy))
-    soup = BeautifulSoup(html, 'html.parser')
+    r = cf.get('https://www.ssense.com/en-us/men/shoes', impersonate='chrome124',
+               proxies=proxy if proxy else None, timeout=25,
+               headers={'accept-language': 'en-US,en;q=0.9'})
+    soup = BeautifulSoup(r.text, 'html.parser')
 
-    products = soup.find_all('div', {'class': 'plp-products__product-tile'})
-    for product in products:
-        prod = str(product.find('script', {'type': 'application/ld+json'})).replace(
-            '<script type="application/ld+json">',
-            ''
-        ).replace('</script>','')
-        prod = json.loads(prod)
+    for block in soup.find_all('script', {'type': 'application/ld+json'}):
+        try:
+            prod = json.loads(block.string or block.text)
+        except (ValueError, TypeError):
+            continue
+        if prod.get('@type') != 'Product':
+            continue
+        offers = prod.get('offers') or {}
+        if isinstance(offers, list):
+            offers = offers[0] if offers else {}
         item = [
-            prod["name"],
-            prod["productID"],
-            prod["offers"]["price"],
-            prod["image"],
-            "https://www.ssense.com/en-gb"+prod["url"]
+            prod['name'],
+            prod['productID'],
+            str(offers.get('price', '')),
+            prod.get('image', ''),
+            'https://www.ssense.com/en-us' + prod['url']
         ]
         items.append(item)
 

@@ -1,13 +1,17 @@
-# NIKE MONITOR NOTES
+# Nike Monitor
 
-The NIKE monitor is able to work in a variety of countries. In this document, you will find the 2-letter country code and language code that is needed for this monitor.
+Watches Nike for new arrivals (men's shoes) in your country and posts them to your Discord. Looking for SNKRS launch drops instead? Use the [SNKRS monitor](../snkrs).
 
-To set up the monitor, please put the 2-letter country code and corresponding language code in the `DETAILS` section when configuring the monitors. The country code should come first, followed by the language code with a space between the two, as shown below:
+## Setup
+
+Open [`config.py`](config.py) and set your country and language codes (use the table below):
+
+```python
+LOCATION = "GB"       # 2-letter country code
+LANGUAGE = "en-GB"    # matching language code
 ```
-GB en-GB
-```
 
-If your country is not found below, it is because Nike use a different set-up. As such, some countries may need dedicated solutions. If this is the case, please open up an issue on GitHub or send a message via Discord.
+If your country isn't listed, Nike runs a different setup there and may need a dedicated fix — open a GitHub issue or ask in the [Discord](https://discord.gg/b6zyJyCQUu).
 
 Country | 2 Letter Country Code | Language Code
 --------|-----------------------|--------------

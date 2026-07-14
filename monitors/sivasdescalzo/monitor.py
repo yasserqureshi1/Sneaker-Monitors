@@ -4,9 +4,10 @@ from random_user_agent.user_agent import UserAgent
 from bs4 import BeautifulSoup
 import urllib3
 import requests
+from curl_cffi import requests as cf
 from fp.fp import FreeProxy
 
-from datetime import datetime
+from datetime import datetime, timezone
 import time
 
 import json
@@ -33,24 +34,28 @@ def scrape_main_site(headers, proxy):
     """
     items = []
 
-    for page in [1, 2, 3, 4]:
-        url = f'https://www.sivasdescalzo.com/en/footwear?p={page}'
-        s = requests.Session()
-        html = s.get(url=url, headers=headers, proxies=proxy, verify=False, timeout=15)
-        s.close()
-        soup = BeautifulSoup(html.text, 'html.parser')
-        products = soup.find_all('li',  {'class': 'item product product-item grid-col'})
-        
-        # Stores particular details in array
-        for product in products:
+    # sivasdescalzo is a headless Magento store behind Cloudflare. We call the
+    # same /rest/ JSON API the site uses, via curl_cffi (TLS impersonation) so
+    # the request looks like a real browser. Newest-first footwear listing.
+    url = ('https://www.sivasdescalzo.com/rest/en/V2/category?urlPath=footwear'
+           '&pageSize=96&currentPage=1&filters=%7B%7D&sort=%7B%22sorting_date%22%3A%22DESC%22%7D')
+    html = cf.get(url, impersonate='chrome', proxies=proxy if proxy else None, timeout=20)
+    products = html.json().get('data', {}).get('products', {}).get('items', [])
+
+    # Stores particular details in array
+    for product in products:
+        try:
             item = [
-                product.find('h3', {'class': 'product-card__title'}).text.replace(' ', '').replace('\n', ''),
-                product.find('h3', {'class': 'product name product-item-name product-card__short-desc'}).text.replace(' ', '').replace('\n', ''),  
-                product.find('a')['href'], 
-                product.find('div', {'class': 'price-box price-final_price'}).text.replace('\n',''), 
-                f"{product.find('img')['src'].split('?')[0]}?quality=50&fit=bounds&width=210"
-            ] 
+                product['brand_name'],                                                       # brand
+                product['name'],                                                             # name
+                product['url'],                                                              # url
+                product.get('final_price_formatted') or str(product.get('final_price', '')),  # price
+                product.get('small_image', '')                                               # image
+            ]
             items.append(item)
+        except (KeyError, TypeError):
+            logging.debug(traceback.format_exc())
+
     return items
 
 
@@ -67,7 +72,7 @@ def discord_webhook(title, url, thumbnail, price):
             "thumbnail": {"url": thumbnail},
             "footer": {"text": "Developed by GitHub:yasserqureshi1"},
             "color": int(COLOUR),
-            "timestamp": str(datetime.utcnow()),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "fields": [
                 {"name": "Price", "value": price}
             ]

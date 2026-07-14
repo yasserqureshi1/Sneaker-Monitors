@@ -4,10 +4,12 @@ from random_user_agent.user_agent import UserAgent
 
 from bs4 import BeautifulSoup
 import requests
+from curl_cffi import requests as cf
 import urllib3
+import re
 from fp.fp import FreeProxy
 
-from datetime import datetime
+from datetime import datetime, timezone
 import time
 
 import json
@@ -33,31 +35,38 @@ def scrape_main_site(headers, proxy):
     Scrape the Zalando site and adds each item to an array
     """
     items = []
-    
-    for page in [1, 2, 3, 4]:
+
+    for page in [1, 2]:
         url = f'https://www.zalando.co.uk/mens-shoes-trainers/?p={page}&order=activation_date'
-        s = requests.Session()
-        html = s.get(url=url, headers=headers, proxies=proxy, verify=False, timeout=15)
-        s.close()
+        # Zalando sits behind Akamai; curl_cffi's TLS impersonation gets a
+        # browser-like response where plain requests is blocked.
+        html = cf.get(url, impersonate='chrome', proxies=proxy if proxy else None, timeout=20)
         soup = BeautifulSoup(html.text, 'html.parser')
-        products = soup.find_all('div', {'class': '_5qdMrS w8MdNG cYylcv BaerYO _75qWlu iOzucJ JT3_zV _Qe9k6'})
+        # Read stable <article> tiles instead of Zalando's obfuscated CSS classes.
+        products = soup.find_all('article')
 
         for product in products:
             try:
+                link = product.find('a', href=True)
+                if not link:
+                    continue
+                heading = product.find(['h3', 'h2'])
+                parts = list(heading.stripped_strings) if heading else []
+                brand = parts[0] if parts else ''
+                name = parts[1] if len(parts) > 1 else brand
+                price = re.search(r'[£€$]\s?[\d.,]+', product.get_text(' '))
+                image = product.find('img')
                 item = [
-                    product.find('h3', {'class': 'KxHAYs lystZ1 FxZV-M _4F506m ZkIJC- r9BRio qXofat EKabf7 nBq1-s _2MyPg2'}).text,  #name
-                    product.find('a')['href'],  #url
-                    product.find('h3', {'class': '_6zR8Lt lystZ1 FxZV-M _4F506m ZkIJC- r9BRio qXofat EKabf7 nBq1-s _2MyPg2'}).text,  #brand
-                    product.find('p', {'class': 'KxHAYs lystZ1 FxZV-M _4F506m'}).text, #price
-                    product.find('img')['src']  #image
+                    name,                                                # name
+                    link['href'],                                        # url
+                    brand,                                               # brand
+                    price.group(0) if price else '',                     # price
+                    image['src'] if image and image.get('src') else ''   # image
                 ]
                 items.append(item)
-            except AttributeError:
-                pass
-            except Exception as e:
-                print(traceback.format_exc())
-                logging.error(msg=e)
-        
+            except (AttributeError, TypeError, KeyError):
+                logging.debug(traceback.format_exc())
+
         time.sleep(0.5)
     return items
 
@@ -75,7 +84,7 @@ def discord_webhook(product):
             "thumbnail": {"url": product[4]},
             "color": int(COLOUR),
             "footer": {"text": "Developed by GitHub:yasserqureshi1"},
-            "timestamp": str(datetime.utcnow()),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "fields": [
                 {"name": "Brand", "value": product[2]},
                 {"name": "Price", "value": product[3]}
@@ -115,7 +124,7 @@ def monitor():
     logging.info(msg='Successfully started monitor')
 
     # Ensures that first scrape does not notify all products
-    start = 0
+    start = 1
 
     # Initialising proxy and headers
     if ENABLE_FREE_PROXY:
