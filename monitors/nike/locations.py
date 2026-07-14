@@ -1,24 +1,28 @@
-import requests 
+import requests
 import json
 
 ___standard_api___ = [
-    'GB', 'US', 'AU', 'AT', 'BE', 'BG', 'CA', 'CN', 'HR', 'CZ', 'DK', 'EG', 
-    'FI', 'FR', 'DE', 'HU', 'IN', 'ID', 'IE', 'IT', 'MY', 'MX', 'MA', 'NL', 
-    'NZ', 'NO', 'PH', 'PL', 'PT', 'PR', 'RO', 'RU', 'SA', 'SG', 'SI', 'ZA', 
-    'ES', 'SE', 'CH', 'TR', 'AE', 'VN', 'JP' 
+    'GB', 'US', 'AU', 'AT', 'BE', 'BG', 'CA', 'CN', 'HR', 'CZ', 'DK', 'EG',
+    'FI', 'FR', 'DE', 'HU', 'IN', 'ID', 'IE', 'IT', 'MY', 'MX', 'MA', 'NL',
+    'NZ', 'NO', 'PH', 'PL', 'PT', 'PR', 'RO', 'RU', 'SA', 'SG', 'SI', 'ZA',
+    'ES', 'SE', 'CH', 'TR', 'AE', 'VN', 'JP'
 ]
+
+# The old cic/browse/v2 endpoint now returns 404. Nike serves the same browse
+# data from the product wall API. This is a "new arrivals" feed (men's shoes),
+# so we notify when a product first appears (dedupe on style code / productCode).
+CONSUMER_CHANNEL_ID = 'd9a5bc42-4b9c-4976-858a-f159cf99c647'
+WALL_PATH = '/w/mens-shoes-nik1zy7ok'  # Nike men's shoes; change to watch a different category
+MAX_PAGES = 5
+
 
 def standard_api(ITEMS, LOCATION, LANGUAGE, user_agent, proxy, KEYWORDS, start):
     headers = {
         'accept': '*/*',
-        'accept-encoding': 'gzip, deflate, br',
         'accept-language': 'en-GB,en;q=0.9',
-        'dnt': '1',
+        'nike-api-caller-id': 'nike:snkrs:web:1.0',
         'origin': 'https://www.nike.com',
         'referer': 'https://www.nike.com/',
-        'sec-fetch-dest': 'empty',
-        'sec-fetch-mode': 'cors',
-        'sec-fetch-site': 'same-site',
         'user-agent': user_agent,
         'Cache-Control': 'no-cache, no-store, must-revalidate',
         'Pragma': 'no-cache',
@@ -26,43 +30,44 @@ def standard_api(ITEMS, LOCATION, LANGUAGE, user_agent, proxy, KEYWORDS, start):
     }
 
     to_discord = []
-    
-    anchor = 0
-    while anchor < 181:
-        print('-- scrape --')
-        url = f'https://api.nike.com/cic/browse/v2?queryid=products&anonymousId=3BCF9783E5B8CEB165B9DB2C449B7F26&country={LOCATION}&endpoint=%2Fproduct_feed%2Frollup_threads%2Fv2%3Ffilter%3Dmarketplace({LOCATION})%26filter%3Dlanguage({LANGUAGE})%26filter%3DemployeePrice(true)%26filter%3DattributeIds(0f64ecc7-d624-4e91-b171-b83a03dd8550%2C16633190-45e5-4830-a068-232ac7aea82c)%26anchor%3D{anchor}%26consumerChannelId%3Dd9a5bc42-4b9c-4976-858a-f159cf99c647%26count%3D60%26sort%3DeffectiveStartViewDateDesc&language=en-GB&localizedRangeStr=%7BlowestPrice%7D%E2%80%94%7BhighestPrice%7D'
-        html = requests.get(url=url, timeout=20, headers=headers, proxies=proxy)
+
+    next_url = (f'https://api.nike.com/discover/product_wall/v1/marketplace/{LOCATION}'
+                f'/language/{LANGUAGE}/consumerChannelId/{CONSUMER_CHANNEL_ID}'
+                f'?path={WALL_PATH}&anchor=0&count=24')
+
+    pages = 0
+    while next_url and pages < MAX_PAGES:
+        html = requests.get(url=next_url, timeout=20, headers=headers, proxies=proxy)
         output = json.loads(html.text)
 
-        for item in output['data']['products']['products']:
-            for variant in item['colorways']:
-                if KEYWORDS == []:
-                    if (variant['inStock'] == True) and (variant['pid'] not in ITEMS):
-                        if start == 0:
-                            to_discord.append(dict(
-                                title=item['title'],
-                                colour=variant['colorDescription'],
-                                url=f"https://www.nike.com/{LOCATION}/{variant['pdpUrl'].replace('{countryLang}', LANGUAGE)}",
-                                thumbnail=variant['images']['squarishURL'],
-                                price=str(variant['price']['currentPrice']),
-                                style_code=variant['pdpUrl'].split('/')[-1]
-                            ))
+        for grouping in output.get('productGroupings', []):
+            for product in (grouping.get('products') or []):
+                try:
+                    title = product['copy']['title']
+                    code = product['productCode']
+                except (KeyError, TypeError):
+                    continue
 
-                    elif (variant['inStock'] == False) and (variant['pid'] in ITEMS):
-                        ITEMS.remove(variant['id'])
-                
-                else:
-                    for key in KEYWORDS:
-                        if key.lower() in item['title'].lower():
-                            if start == 0:
-                                to_discord.append(dict(
-                                    title=item['title'],
-                                    colour=variant['colorDescription'],
-                                    url=f"https://www.nike.com/{LOCATION}/{variant['pdpUrl'].replace('{countryLang}', LANGUAGE)}",
-                                    thumbnail=variant['images']['squarishURL'],
-                                    price=str(variant['price']['currentPrice']),
-                                    style_code=variant['pdpUrl'].split('/')[-1]
-                                ))
-                
-        anchor += 60
+                if KEYWORDS != [] and not any(key.lower() in title.lower() for key in KEYWORDS):
+                    continue
+
+                if code in ITEMS:
+                    continue
+
+                # New product - store it, and notify unless this is the first scrape
+                ITEMS.append(code)
+                if start == 0:
+                    to_discord.append(dict(
+                        title=title,
+                        colour=product.get('displayColors', {}).get('colorDescription', ''),
+                        url=product['pdpUrl']['url'],
+                        thumbnail=product.get('colorwayImages', {}).get('squarishURL', ''),
+                        price=str(product.get('prices', {}).get('currentPrice', '')),
+                        style_code=code
+                    ))
+
+        nxt = (output.get('pages') or {}).get('next')
+        next_url = ('https://api.nike.com' + nxt) if nxt else None
+        pages += 1
+
     return to_discord

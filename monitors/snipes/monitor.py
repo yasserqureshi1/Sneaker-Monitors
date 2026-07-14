@@ -29,7 +29,7 @@ if ENABLE_FREE_PROXY:
 INSTOCK = []
 
 
-def discord_webhook(title, url, id, price, colour, thumbnail):
+def discord_webhook(title, url, id, price, thumbnail):
     """
     Sends a Discord webhook notification to the specified webhook URL
     """
@@ -45,8 +45,7 @@ def discord_webhook(title, url, id, price, colour, thumbnail):
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "fields": [
                 {"name": "ID", "value": id},
-                {"name": "Price", "value": price},
-                {"name": "Colour", "value": colour}
+                {"name": "Price", "value": price}
             ]
         }]
     }
@@ -78,23 +77,31 @@ def scrape_main_site(headers, proxy):
 
     # Makes request to site
     s = requests.Session()
-    html = s.get('https://www.snipes.com/c/shoes?srule=New&sz=48', headers=headers, proxies=proxy, verify=False, timeout=50)
+    html = s.get('https://www.snipes.com/de-de/c/schuhe--3?sort=new', headers=headers, proxies=proxy, verify=False, timeout=50)
     soup = BeautifulSoup(html.text, 'html.parser')
-    array = soup.find_all('div', {'class': 'b-product-grid-tile'})
+    tiles = soup.find_all('sni-lib-product-search-item')
 
     # Stores particular details in array
-    for i in array:
-        data = json.loads(i.find('div', {'class': 'b-product-tile js-product-tile'})['data-gtm'])
-        item = [i.find('span', {'class': 'b-product-tile-brand b-product-tile-text js-product-tile-link'}).text,
-                data['name'],
-                'https://www.snipes.com/' + i.find('a', {'class': 'b-product-tile-body-link'})['href'],
-                data['id'],
-                data['price'],
-                data['dimension25'],
-                i.find('source', {'media': '(min-width: 1024px)'})['data-srcset'].split(', ')[0]
-                ]
-        items.append(item)
-    
+    for tile in tiles:
+        try:
+            link = tile.find('a', {'class': 'product-item'})
+            brand = tile.find(class_='product-brand')
+            name = tile.find(class_='product-name')
+            price = tile.find(class_='sale-price') or tile.find(class_='product-price')
+            image = tile.find('img')
+            href = link['href']
+            item = [
+                brand.get_text(strip=True),
+                name.get_text(strip=True),
+                'https://www.snipes.com' + href,
+                href.rstrip('/').split('-')[-1],
+                price.get_text(' ', strip=True),
+                image['src'] if image else ''
+            ]
+            items.append(item)
+        except (AttributeError, TypeError, KeyError):
+            continue
+
     logging.info(msg='Successfully scraped site')
     s.close()
     return items
@@ -117,8 +124,7 @@ def comparitor(item, start):
                 url=item[2],
                 id=item[3],
                 price=item[4],
-                colour=item[5],
-                thumbnail=item[6]
+                thumbnail=item[5]
             )
             print(item)
 

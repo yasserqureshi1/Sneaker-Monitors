@@ -19,8 +19,12 @@ software_names = [SoftwareName.CHROME.value]
 hardware_type = [HardwareType.MOBILE__PHONE]
 user_agent_rotator = UserAgent(software_names=software_names, hardware_type=hardware_type)
 
-if ENABLE_FREE_PROXY:  
+if ENABLE_FREE_PROXY:
     proxy_obj = FreeProxy(country_id=FREE_PROXY_LOCATION, rand=True)
+
+# Off-Spring's catalog API returns 403 to Android/Chrome UAs; iOS Safari works.
+IOS_USER_AGENT = ("Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) "
+                  "AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1")
 
 INSTOCK = []
 
@@ -144,7 +148,7 @@ def monitor():
         'sec-fetch-site': 'none',
         'sec-fetch-user': '?1',
         'upgrade-insecure-requests': '1',
-        'user-agent': user_agent_rotator.get_random_user_agent(),
+        'user-agent': IOS_USER_AGENT,
         'Cache-Control': 'no-cache, no-store, must-revalidate',
         'Pragma': 'no-cache',
         'Expires': '0'
@@ -174,7 +178,7 @@ def monitor():
             logging.info('Rotating headers and proxy')
 
             # Rotates headers
-            headers['User-Agent'] = user_agent_rotator.get_random_user_agent()
+            headers['user-agent'] = IOS_USER_AGENT
 
             if ENABLE_FREE_PROXY:
                 proxy = {'http': proxy_obj.get()}
