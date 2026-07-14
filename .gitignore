@@ -1,8 +1,25 @@
-# Project exclude paths
-/venv/
-Supreme/suplog.log
-SNKRS/SNKRSlog.log
-Shopify/Shopifylog.log
-Footsites/Footlocker/Footlockerlog.log
-.idea
-.vscode
+# Secrets / local config
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+.omc
+
+docs/

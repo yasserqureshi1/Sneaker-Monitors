@@ -5,7 +5,7 @@ import requests as rq
 import urllib3
 from fp.fp import FreeProxy
 
-from datetime import datetime
+from datetime import datetime, timezone
 import time
 
 import json
@@ -57,7 +57,7 @@ def scrape_site(url, headers, proxy):
                         'image': product['images'][0]['src'], 
                         'handle': product['handle'],
                         'variants': product['variants']}
-                except:
+                except Exception:
                     product_item = {
                         'title': product['title'], 
                         'image': None, 
@@ -96,7 +96,7 @@ def discord_webhook(title, url, thumbnail, sizes):
             "fields": fields,
             "color": int(COLOUR),
             "footer": {"text": "Developed by GitHub:yasserqureshi1"},
-            "timestamp": str(datetime.utcnow()),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }]
     }
 
@@ -188,7 +188,7 @@ def monitor():
     while True:
         try:
             # Makes request to site and stores products 
-            items = scrape_site(URL, proxy, headers)
+            items = scrape_site(URL, headers, proxy)
             for product in items:
 
                 if KEYWORDS == []:

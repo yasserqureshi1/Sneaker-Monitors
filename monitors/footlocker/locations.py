@@ -1,6 +1,8 @@
 import requests
 import json
 import time
+import logging
+import traceback
 
 
 def US(ITEMS, user_agent, proxy, KEYWORDS, start):
@@ -19,7 +21,7 @@ def US(ITEMS, user_agent, proxy, KEYWORDS, start):
 
     try:
         output = json.loads(html.text)['products']
-    except:
+    except Exception:
         print('Could not load products. Below was the response: ')
         print(html.text)
         return None
@@ -54,7 +56,7 @@ def US(ITEMS, user_agent, proxy, KEYWORDS, start):
 
 
             if start == 0 and sizes != '':
-                if KEYWORDS is []:
+                if not KEYWORDS:
                     to_discord.append(dict(
                         name=item['name'],
                         sku=product['sku'],
@@ -73,8 +75,8 @@ def US(ITEMS, user_agent, proxy, KEYWORDS, start):
                                 url='https://www.footlocker.com/product/'+product['name'].replace(' ', '-')+'/'+product['sku'] + '.html'
                             ))
 
-        except:
-            pass
+        except Exception:
+            logging.debug('Skipped a product: %s', traceback.format_exc())
 
     return to_discord
 
@@ -94,7 +96,7 @@ def UK(ITEMS, user_agent, proxy, KEYWORDS, start):
     html = requests.get(url=url, headers=headers, proxies=proxy)
     try:
         output = json.loads(html.text)['products']
-    except:
+    except Exception:
         print('Could not load products. Below was the response: ')
         print(html.text)
         return None
@@ -128,7 +130,7 @@ def UK(ITEMS, user_agent, proxy, KEYWORDS, start):
 
 
             if start == 0 and sizes != '':
-                if KEYWORDS is []:
+                if not KEYWORDS:
                     to_discord.append(dict(
                         name=item['name'],
                         sku=product['sku'],
@@ -148,8 +150,8 @@ def UK(ITEMS, user_agent, proxy, KEYWORDS, start):
                                 url='https://www.footlocker.co.uk/product/'+product['name'].replace(' ', '-')+'/'+product['sku'] + '.html'
                             ))
 
-        except:
-            pass
+        except Exception:
+            logging.debug('Skipped a product: %s', traceback.format_exc())
 
     return to_discord
 
@@ -171,7 +173,7 @@ def AU(ITEMS, user_agent, proxy, KEYWORDS, start):
     
     try:
         output = json.loads(html.text)['products']
-    except:
+    except Exception:
         print('Could not load products. Below was the response: ')
         print(html.text)
         return None
@@ -205,7 +207,7 @@ def AU(ITEMS, user_agent, proxy, KEYWORDS, start):
 
 
             if start == 0 and sizes != '':
-                if KEYWORDS is []:
+                if not KEYWORDS:
                     to_discord.append(dict(
                         name=item['name'],
                         sku=product['sku'],
@@ -224,7 +226,7 @@ def AU(ITEMS, user_agent, proxy, KEYWORDS, start):
                                 url='https://www.footlocker.com.au/product/'+product['name'].replace(' ', '-')+'/'+product['sku'] + '.html'
                             ))
 
-        except:
-            pass
+        except Exception:
+            logging.debug('Skipped a product: %s', traceback.format_exc())
 
     return to_discord

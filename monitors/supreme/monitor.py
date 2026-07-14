@@ -6,7 +6,7 @@ import requests
 import urllib3
 from fp.fp import FreeProxy
 
-from datetime import datetime
+from datetime import datetime, timezone
 import time
 
 import json
@@ -41,7 +41,7 @@ def discord_webhook(title, price, variant, sku, thumbnail, url):
             "url": url,
             "color": int(COLOUR),
             "footer": {'text': 'Developed by GitHub:yasserqureshi1'},
-            "timestamp": str(datetime.utcnow()),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "fields": [
                 {"name": "SKU", "value": sku},
                 {"name": "Variant", "value": variant},
@@ -132,7 +132,7 @@ def monitor():
     while True:
         try:
             # Makes request to site and stores products 
-            stock = scrape_main_site(proxy, headers)
+            stock = scrape_main_site(headers, proxy)
             for item in stock:
                 if KEYWORDS == []:
                     # If no keywords set, checks whether item status has changed
